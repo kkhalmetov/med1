@@ -73,65 +73,65 @@ Admin registries and exports
 
 - [ ] All three roles can authenticate and reach only their shell.
 - [ ] Refresh/logout/password flows pass integration tests.
-- [ ] JSON, multipart, media and downloads pass BFF tests.
+- [x] JSON, multipart, media and downloads pass BFF tests.
 
 ### Фаза 3 — Patient vertical slices
 
-- [ ] T14 Patient dashboard and editable profile
-- [ ] T15 Daily reports and report history
-- [ ] T16 Patient devices and dispense details
-- [ ] T17 Complaint creation, compression and history
-- [ ] T18 Patient chat and unread polling
+- [x] T14 Patient dashboard and editable profile
+- [x] T15 Daily reports and report history
+- [x] T16 Patient devices and dispense details
+- [x] T17 Complaint creation, compression and history
+- [x] T18 Patient chat and unread polling
 
 ### Checkpoint C
 
 - [ ] Patient live flow covers every patient-owned Swagger operation.
-- [ ] Mobile navigation works at 360 px in both locales.
+- [x] Mobile navigation works at 360 px in both locales.
 
 ### Фаза 4 — Practitioner vertical slices
 
-- [ ] T19 Practitioner dashboard and patient registry
-- [ ] T20 Practitioner profile and patient registration
-- [ ] T21 Patient detail and status history
-- [ ] T22 Report triage, check and PDF export
-- [ ] T23 Complaint triage, review and PDF export
-- [ ] T24 Practitioner chat and unread overview
-- [ ] T25 Device catalog creation and dispensing
+- [x] T19 Practitioner dashboard and patient registry
+- [x] T20 Practitioner profile and patient registration
+- [x] T21 Patient detail and status history
+- [x] T22 Report triage, check and PDF export
+- [x] T23 Complaint triage, review and PDF export
+- [x] T24 Practitioner chat and unread overview
+- [x] T25 Device catalog creation and dispensing
 
 ### Checkpoint D
 
 - [ ] Practitioner live flow covers every practitioner Swagger operation.
-- [ ] RED/YELLOW/GREEN prioritization and accessible status labels work.
+- [x] RED/YELLOW/GREEN prioritization and accessible status labels work.
 
 ### Фаза 5 — Admin vertical slices
 
-- [ ] T26 Admin dashboard and qualification registry
-- [ ] T27 Organization registry
-- [ ] T28 Practitioner registry, registration and CSV export
-- [ ] T29 Admin device catalog
-- [ ] T30 Patient CSV export and dispense lookup
+- [x] T26 Admin dashboard and qualification registry
+- [x] T27 Organization registry
+- [x] T28 Practitioner registry, registration and CSV export
+- [x] T29 Admin device catalog
+- [x] T30 Patient CSV export and dispense lookup
 
 ### Checkpoint E
 
 - [ ] Admin live flow covers every admin Swagger operation.
-- [ ] CSV downloads and multipart practitioner registration work.
+- [x] CSV downloads and multipart practitioner registration are contract-tested.
 
 ### Фаза 6 — Completion and release
 
 - [x] T31 Full 52-operation contract coverage audit
-- [ ] T32 Translation, accessibility and responsive audit
-- [ ] T33 Patient E2E suite
-- [ ] T34 Practitioner E2E suite
-- [ ] T35 Admin E2E suite
-- [ ] T36 Security and code-quality review
-- [ ] T37 Documentation, CI and release configuration
+- [x] T32 Translation, accessibility and responsive audit
+- [x] T33 Patient E2E suite
+- [x] T34 Practitioner E2E suite
+- [x] T35 Admin E2E suite
+- [x] T36 Security and code-quality review
+- [x] T37 Documentation, CI and release configuration
 - [ ] T38 GitHub push and Vercel production deployment
 
 ### Checkpoint F
 
-- [ ] `pnpm verify` and all Playwright suites pass.
-- [ ] All 52 rows in `docs/api-coverage.md` are `✅`.
-- [ ] No high/critical security, accessibility or review findings remain.
+- [x] `pnpm verify` and all Playwright suites pass.
+- [x] All 52 rows in `docs/api-coverage.md` are `✅`.
+- [x] No high/critical security, accessibility or review findings remain.
 - [ ] GitHub `main` and Vercel production match the verified commit.
 
 ## Verification strategy

@@ -1,6 +1,6 @@
 # Qadam — полная матрица покрытия backend API
 
-Статус: `IMPLEMENTED — 52/52 operations и 30/30 schemas; live smoke ожидает доступности backend`  
+Статус: `VERIFIED — 52/52 operations, 30/30 schemas, live login 3/3 roles`
 Проверено: 2026-07-20  
 Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 
@@ -25,108 +25,108 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
-| ⬜ | `POST /auth/make-auth` | Public | Страница входа; определение `PATIENT/PRACTITIONER/ADMIN`; HttpOnly-сессия | Успех, `400`, `401`, role redirect |
-| ⬜ | `POST /auth/refresh-access-token` | Public/BFF | Автоматическое обновление токенов и один повтор исходного запроса | Refresh success/failure, cookies rotated/cleared |
-| ⬜ | `POST /auth/logout` | Все авторизованные | Выход из меню каждой роли, очистка cookies/cache query | `200`, `401`, повторный logout безопасен |
-| ⬜ | `PATCH /auth/password/update` | Все авторизованные | Форма смены пароля в настройках каждой роли | `200`, `400`, `401`, очистка полей |
+| ✅ | `POST /auth/make-auth` | Public | Страница входа; определение `PATIENT/PRACTITIONER/ADMIN`; HttpOnly-сессия | Успех, `400`, `401`, role redirect |
+| ✅ | `POST /auth/refresh-access-token` | Public/BFF | Автоматическое обновление токенов и один повтор исходного запроса | Refresh success/failure, cookies rotated/cleared |
+| ✅ | `POST /auth/logout` | Все авторизованные | Выход из меню каждой роли, очистка cookies/cache query | `200`, `401`, повторный logout безопасен |
+| ✅ | `PATCH /auth/password/update` | Все авторизованные | Форма смены пароля в настройках каждой роли | `200`, `400`, `401`, очистка полей |
 
 ## 2. Отчёты пациентов — 6/52
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
-| ⬜ | `GET /reports?is_unchecked=` | Practitioner | Общая очередь отчётов; переключатель «только непроверенные» | `false/true`, сортировка статусов, `401/403` |
-| ⬜ | `POST /reports` | Patient | Форма ежедневного самочувствия по выбранному изделию | `201`, диапазоны, `401/403/404` |
-| ⬜ | `PATCH /reports/{id}/check` | Practitioner | Действие «Проверено» в отчёте и карточке пациента | `200`, optimistic guard, `401/403/404` |
-| ⬜ | `GET /reports/my` | Patient | История собственных отчётов | `200`, empty/error, checked state |
-| ⬜ | `GET /patients/{patientId}/reports?is_unchecked=` | Practitioner | Вкладка отчётов пациента с фильтром | `false/true`, `401/403/404` |
-| ⬜ | `GET /patients/{patientId}/reports/export-pdf` | Practitioner | Скачивание PDF из карточки пациента | PDF filename/content-type, `401/403/404` |
+| ✅ | `GET /reports?is_unchecked=` | Practitioner | Общая очередь отчётов; переключатель «только непроверенные» | `false/true`, сортировка статусов, `401/403` |
+| ✅ | `POST /reports` | Patient | Форма ежедневного самочувствия по выбранному изделию | `201`, диапазоны, `401/403/404` |
+| ✅ | `PATCH /reports/{id}/check` | Practitioner | Действие «Проверено» в отчёте и карточке пациента | `200`, optimistic guard, `401/403/404` |
+| ✅ | `GET /reports/my` | Patient | История собственных отчётов | `200`, empty/error, checked state |
+| ✅ | `GET /patients/{patientId}/reports?is_unchecked=` | Practitioner | Вкладка отчётов пациента с фильтром | `false/true`, `401/403/404` |
+| ✅ | `GET /patients/{patientId}/reports/export-pdf` | Practitioner | Скачивание PDF из карточки пациента | PDF filename/content-type, `401/403/404` |
 
 ## 3. Квалификации — 3/52
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
-| ⬜ | `GET /qualifications` | Авторизованные | Admin-таблица; selector регистрации специалиста | `200`, empty, `401` |
-| ⬜ | `POST /qualifications` | Admin | Форма/диалог создания квалификации | `201`, `401/403/409` |
-| ⬜ | `GET /qualifications/{id}` | Авторизованные | Страница/панель деталей квалификации | `200`, `401/404` |
+| ✅ | `GET /qualifications` | Авторизованные | Admin-таблица; selector регистрации специалиста | `200`, empty, `401` |
+| ✅ | `POST /qualifications` | Admin | Форма/диалог создания квалификации | `201`, `401/403/409` |
+| ✅ | `GET /qualifications/{id}` | Авторизованные | Страница/панель деталей квалификации | `200`, `401/404` |
 
 ## 4. Медицинские специалисты — 6/52
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
-| ⬜ | `GET /practitioners` | Admin | Реестр специалистов, локальный поиск/фильтры | `200`, `401/403`, empty |
-| ⬜ | `POST /practitioners` | Admin | Multipart-регистрация специалиста с фото и квалификациями | `201`, `401/403/404/409` |
-| ⬜ | `GET /practitioners/me` | Practitioner | Профиль специалиста | `200`, `401/403/404` |
-| ⬜ | `PATCH /practitioners/me` | Practitioner | Изменение телефона | `200`, `401/403/404` |
-| ⬜ | `GET /practitioners/{id}` | Авторизованные | Детали специалиста в разрешённом контексте | `200`, `401/404` |
-| ⬜ | `GET /practitioners/export` | Admin | Экспорт реестра специалистов в CSV | CSV filename/content-type, `401/403/500` |
+| ✅ | `GET /practitioners` | Admin | Реестр специалистов, локальный поиск/фильтры | `200`, `401/403`, empty |
+| ✅ | `POST /practitioners` | Admin | Multipart-регистрация специалиста с фото и квалификациями | `201`, `401/403/404/409` |
+| ✅ | `GET /practitioners/me` | Practitioner | Профиль специалиста | `200`, `401/403/404` |
+| ✅ | `PATCH /practitioners/me` | Practitioner | Изменение телефона | `200`, `401/403/404` |
+| ✅ | `GET /practitioners/{id}` | Авторизованные | Детали специалиста в разрешённом контексте | `200`, `401/404` |
+| ✅ | `GET /practitioners/export` | Admin | Экспорт реестра специалистов в CSV | CSV filename/content-type, `401/403/500` |
 
 ## 5. Пациенты — 7/52
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
-| ⬜ | `GET /patients?only_observable=` | Practitioner | Список закреплённых пациентов; фильтр действующего наблюдения | `false/true`, `401/403` |
-| ⬜ | `POST /patients` | Practitioner | Multipart-регистрация пациента с фото | `201`, `401/403/409/500` |
-| ⬜ | `PATCH /patients/{id}/status` | Practitioner | Смена `GREEN/YELLOW/RED` с комментарием | `200`, `401/403/404` |
-| ⬜ | `GET /patients/me?only_observable=` | Patient | Профиль/главная пациента; toggle актуальных изделий | `false/true`, `401/403` |
-| ⬜ | `PATCH /patients/me` | Patient | Изменение телефона и/или адреса | `200`, `401/403/404` |
-| ⬜ | `GET /patients/{id}/status-history` | Авторизованные в разрешённом контексте | Timeline статусов в карточке пациента | `200`, `401/404` |
-| ⬜ | `GET /patients/export` | Admin | Экспорт пациентов в CSV | CSV filename/content-type, `401/403/500` |
+| ✅ | `GET /patients?only_observable=` | Practitioner | Список закреплённых пациентов; фильтр действующего наблюдения | `false/true`, `401/403` |
+| ✅ | `POST /patients` | Practitioner | Multipart-регистрация пациента с фото | `201`, `401/403/409/500` |
+| ✅ | `PATCH /patients/{id}/status` | Practitioner | Смена `GREEN/YELLOW/RED` с комментарием | `200`, `401/403/404` |
+| ✅ | `GET /patients/me?only_observable=` | Patient | Профиль/главная пациента; toggle актуальных изделий | `false/true`, `401/403` |
+| ✅ | `PATCH /patients/me` | Patient | Изменение телефона и/или адреса | `200`, `401/403/404` |
+| ✅ | `GET /patients/{id}/status-history` | Авторизованные в разрешённом контексте | Timeline статусов в карточке пациента | `200`, `401/404` |
+| ✅ | `GET /patients/export` | Admin | Экспорт пациентов в CSV | CSV filename/content-type, `401/403/500` |
 
 ## 6. Чат — 8/52
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
-| ⬜ | `GET /patients/{patientId}/chat/messages` | Practitioner | История чата выбранного пациента; mark-as-read семантика | `200`, `401/403/404` |
-| ⬜ | `POST /patients/{patientId}/chat/messages` | Practitioner | Отправка текста пациенту | `201`, `401/403/404` |
-| ⬜ | `POST /patients/{patientId}/chat/messages/photo` | Practitioner | Одно JPEG/PNG/WebP-фото после client resize/compression, необязательная подпись | Policy validation, `201`, `400/403/404` |
-| ⬜ | `GET /chat/messages` | Patient | История чата со своим специалистом; mark-as-read семантика | `200`, `401/403` |
-| ⬜ | `POST /chat/messages` | Patient | Отправка текста специалисту | `201`, `400/401/403` |
-| ⬜ | `POST /chat/messages/photo` | Patient | Одно JPEG/PNG/WebP-фото после client resize/compression, необязательная подпись | Policy validation, `201`, `400/401/403` |
-| ⬜ | `GET /chat/unread` | Practitioner | Сводные unread-бейджи по пациентам | `200`, polling, `401/403` |
-| ⬜ | `GET /chat/messages/unread` | Patient | Unread-бейдж сообщений специалиста | `200`, polling, `401/403` |
+| ✅ | `GET /patients/{patientId}/chat/messages` | Practitioner | История чата выбранного пациента; mark-as-read семантика | `200`, `401/403/404` |
+| ✅ | `POST /patients/{patientId}/chat/messages` | Practitioner | Отправка текста пациенту | `201`, `401/403/404` |
+| ✅ | `POST /patients/{patientId}/chat/messages/photo` | Practitioner | Одно JPEG/PNG/WebP-фото после client resize/compression, необязательная подпись | Policy validation, `201`, `400/403/404` |
+| ✅ | `GET /chat/messages` | Patient | История чата со своим специалистом; mark-as-read семантика | `200`, `401/403` |
+| ✅ | `POST /chat/messages` | Patient | Отправка текста специалисту | `201`, `400/401/403` |
+| ✅ | `POST /chat/messages/photo` | Patient | Одно JPEG/PNG/WebP-фото после client resize/compression, необязательная подпись | Policy validation, `201`, `400/401/403` |
+| ✅ | `GET /chat/unread` | Practitioner | Сводные unread-бейджи по пациентам | `200`, polling, `401/403` |
+| ✅ | `GET /chat/messages/unread` | Patient | Unread-бейдж сообщений специалиста | `200`, polling, `401/403` |
 
 ## 7. Медицинские организации — 3/52
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
-| ⬜ | `GET /organizations` | Авторизованные | Admin-реестр; selectors специалиста/изделия | `200`, empty, `401` |
-| ⬜ | `POST /organizations` | Admin | Форма создания организации | `201`, `401/403/409` |
-| ⬜ | `GET /organizations/{id}` | Авторизованные | Детальная страница/панель организации | `200`, `401/404` |
+| ✅ | `GET /organizations` | Авторизованные | Admin-реестр; selectors специалиста/изделия | `200`, empty, `401` |
+| ✅ | `POST /organizations` | Admin | Форма создания организации | `201`, `401/403/409` |
+| ✅ | `GET /organizations/{id}` | Авторизованные | Детальная страница/панель организации | `200`, `401/404` |
 
 ## 8. Изделия — 3/52
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
-| ⬜ | `GET /devices` | Авторизованные | Каталог изделий и selectors выдачи/отчёта | `200`, empty, `401` |
-| ⬜ | `POST /devices` | Admin, Practitioner | Форма создания протеза/ортеза | `201`, `401/403/404` |
-| ⬜ | `GET /devices/{id}` | Авторизованные | Детальная карточка изделия | `200`, `401/404` |
+| ✅ | `GET /devices` | Авторизованные | Каталог изделий и selectors выдачи/отчёта | `200`, empty, `401` |
+| ✅ | `POST /devices` | Admin, Practitioner | Форма создания протеза/ортеза | `201`, `401/403/404` |
+| ✅ | `GET /devices/{id}` | Авторизованные | Детальная карточка изделия | `200`, `401/404` |
 
 ## 9. Акты выдачи изделий — 4/52
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
-| ⬜ | `POST /device-dispenses` | Practitioner | Форма выдачи изделия пациенту | `201`, `401/403/404` |
-| ⬜ | `GET /patients/{patientId}/device-dispenses?only_observable=` | Practitioner, Admin | Вкладка выдач пациента; фильтр действующего наблюдения | `false/true`, `401/404` |
-| ⬜ | `GET /device-dispenses/{id}` | Авторизованные | Детали акта выдачи из доступных списков | `200`, `401/404` |
-| ⬜ | `GET /device-dispenses/me?only_observable=` | Patient | Мои акты выдачи; фильтр действующего наблюдения | `false/true`, `401/403/404` |
+| ✅ | `POST /device-dispenses` | Practitioner | Форма выдачи изделия пациенту | `201`, `401/403/404` |
+| ✅ | `GET /patients/{patientId}/device-dispenses?only_observable=` | Practitioner, Admin | Вкладка выдач пациента; фильтр действующего наблюдения | `false/true`, `401/404` |
+| ✅ | `GET /device-dispenses/{id}` | Авторизованные | Детали акта выдачи из доступных списков | `200`, `401/404` |
+| ✅ | `GET /device-dispenses/me?only_observable=` | Patient | Мои акты выдачи; фильтр действующего наблюдения | `false/true`, `401/403/404` |
 
 ## 10. Жалобы на изделия — 7/52
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
-| ⬜ | `GET /device-complains?not_reviewed=` | Practitioner | Общая очередь жалоб; фильтр нерассмотренных | `false/true`, сортировка статусов, `401/403` |
-| ⬜ | `POST /device-complains` | Patient | Multipart-жалоба: до пяти JPEG/PNG/WebP после client resize/compression | Policy validation, сохранение формы при `400`, `201/400/401/403` |
-| ⬜ | `PATCH /device-complains/{id}/review` | Practitioner | Статус и обязательное решение по жалобе | `200`, `401/403/404` |
-| ⬜ | `GET /patients/{patientId}/device-complains?not_reviewed=` | Practitioner | Жалобы пациента с фильтром | `false/true`, `401/403/404` |
-| ⬜ | `GET /patients/{patientId}/device-complains/export-pdf` | Practitioner | Скачивание PDF жалоб пациента | PDF filename/content-type, `401/403/404` |
-| ⬜ | `GET /device-complains/{id}` | Авторизованные в разрешённом контексте | Детальная карточка жалобы и фото | `200`, `401/404` |
-| ⬜ | `GET /device-complains/my?reviewed=` | Patient | Мои жалобы; переключатель reviewed | `false/true`, `401/403` |
+| ✅ | `GET /device-complains?not_reviewed=` | Practitioner | Общая очередь жалоб; фильтр нерассмотренных | `false/true`, сортировка статусов, `401/403` |
+| ✅ | `POST /device-complains` | Patient | Multipart-жалоба: до пяти JPEG/PNG/WebP после client resize/compression | Policy validation, сохранение формы при `400`, `201/400/401/403` |
+| ✅ | `PATCH /device-complains/{id}/review` | Practitioner | Статус и обязательное решение по жалобе | `200`, `401/403/404` |
+| ✅ | `GET /patients/{patientId}/device-complains?not_reviewed=` | Practitioner | Жалобы пациента с фильтром | `false/true`, `401/403/404` |
+| ✅ | `GET /patients/{patientId}/device-complains/export-pdf` | Practitioner | Скачивание PDF жалоб пациента | PDF filename/content-type, `401/403/404` |
+| ✅ | `GET /device-complains/{id}` | Авторизованные в разрешённом контексте | Детальная карточка жалобы и фото | `200`, `401/404` |
+| ✅ | `GET /device-complains/my?reviewed=` | Patient | Мои жалобы; переключатель reviewed | `false/true`, `401/403` |
 
 ## 11. Защищённые файлы — 1/52
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
-| ⬜ | `GET /files?path=` | Авторизованные | Same-origin media proxy для аватаров, фото чата и жалоб | `200`, content-type, placeholder, `401/404`, path allowlist |
+| ✅ | `GET /files?path=` | Авторизованные | Same-origin media proxy для аватаров, фото чата и жалоб | `200`, content-type, placeholder, `401/404`, path allowlist |
 
 ## Покрытие 30 схем
 

@@ -4,6 +4,7 @@ node_modules/
 # Next.js
 .next/
 out/
+.vercel/
 
 # Test and quality artifacts
 coverage/
@@ -39,4 +40,3 @@ npm-debug.log*
 # Local QA artifacts
 .artifacts/
 .tmp/
-
