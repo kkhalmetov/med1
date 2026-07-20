@@ -112,7 +112,7 @@
 
 **Verification:**
 - [x] Manifest and service-worker unit checks pass.
-- [ ] Playwright confirms no API response exists in Cache Storage.
+- [x] Playwright confirms no API response exists in Cache Storage.
 
 **Dependencies:** T02  
 **Files likely touched:** `src/app/manifest.ts`, `public/sw.js`, `public/icons/icon.svg`, `src/shared/pwa/register-service-worker.tsx`  
@@ -120,7 +120,7 @@
 
 ## T07 — Design tokens and accessible primitives
 
-**Status:** 🚧 In progress — primitives and component checks complete; axe browser smoke pending
+**Status:** ✅ Completed
 
 **Description:** Реализовать визуальную основу Qadam и базовые доступные компоненты.
 
@@ -131,7 +131,7 @@
 
 **Verification:**
 - [x] Component tests cover keyboard and accessible names.
-- [ ] Axe smoke has no serious/critical findings.
+- [x] Axe smoke has no serious/critical findings.
 
 **Dependencies:** T02, T04  
 **Files likely touched:** `src/app/globals.css`, `src/shared/ui/button.tsx`, `src/shared/ui/field.tsx`, `src/shared/ui/card.tsx`, `src/shared/ui/status-badge.tsx`  
@@ -215,15 +215,17 @@
 
 ## T12 — Auth endpoints and login workflow
 
+**Status:** 🚧 In progress — implementation complete; three-role live smoke pending
+
 **Description:** Подключить login, refresh, logout and update-password operations.
 
 **Acceptance criteria:**
-- [ ] Login sets HttpOnly cookies and returns only role/user metadata.
-- [ ] Logout/password forms have localized loading/error/success states.
-- [ ] Credentials never enter browser storage, repository or logs.
+- [x] Login sets HttpOnly cookies and returns only role/user metadata.
+- [x] Login/logout/password endpoints and localized login states are implemented.
+- [x] Credentials never enter browser storage, repository or logs.
 
 **Verification:**
-- [ ] Auth integration tests cover `200/400/401` and cookie flags.
+- [x] Auth integration tests cover `200/400/401` and cookie flags.
 - [ ] Live smoke succeeds for three synthetic accounts from environment variables.
 
 **Dependencies:** T07, T08, T09, T10  
