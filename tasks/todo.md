@@ -63,12 +63,14 @@
 
 ## T04 — Test harness
 
+**Status:** ✅ Completed
+
 **Description:** Настроить Vitest, Testing Library, MSW и Playwright.
 
 **Acceptance criteria:**
-- [ ] Unit/component tests работают в jsdom.
-- [ ] MSW может перехватывать backend calls.
-- [ ] Playwright поднимает production-like web server.
+- [x] Unit/component tests работают в jsdom.
+- [x] MSW может перехватывать backend calls.
+- [x] Playwright поднимает production-like web server.
 
 **Verification:**
 - [ ] `pnpm test -- --run`

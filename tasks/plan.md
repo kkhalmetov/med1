@@ -49,7 +49,7 @@ Admin registries and exports
 - [x] T01 Repository hygiene and environment contract
 - [x] T02 Next.js runtime scaffold
 - [x] T03 Lint, format and typecheck toolchain
-- [ ] T04 Unit/component/E2E test harness
+- [x] T04 Unit/component/E2E test harness
 - [ ] T05 OpenAPI snapshot and generated API types
 - [ ] T06 PWA manifest, icons and safe service worker
 
