@@ -78,13 +78,10 @@ test('admin sees patient guidance instead of a generic dispense lookup error', a
     },
   )
   await page.goto('/ru/admin/dispenses')
+  await expect(page.getByText('Введение ID пациента')).toBeVisible()
   await page.getByLabel('Идентификатор пациента').fill(practitionerId)
 
-  await expect(
-    page.getByText(
-      'Пациент с таким идентификатором не найден. Для поиска актов укажите ID пациента — ID специалиста или акта не подойдёт.',
-    ),
-  ).toBeVisible()
+  await expect(page.getByText('Пациент с таким идентификатором не найден.')).toBeVisible()
   await expect(page.getByText('Не удалось выполнить действие. Попробуйте ещё раз.')).toHaveCount(0)
 })
 
