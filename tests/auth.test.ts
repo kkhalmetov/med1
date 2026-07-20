@@ -46,6 +46,13 @@ describe('authentication boundary', () => {
       qadam_refresh: 'refresh-fixture',
       qadam_role: 'PATIENT',
     })
+    expect(fetcher).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        signal: expect.any(AbortSignal),
+        headers: expect.objectContaining({ 'x-request-id': expect.any(String) }),
+      }),
+    )
   })
 
   it.each([400, 401])('does not create a session after backend %s', async (status) => {

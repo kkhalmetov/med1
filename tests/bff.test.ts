@@ -32,7 +32,10 @@ function createSession(
   }
 }
 
-afterEach(() => vi.unstubAllGlobals())
+afterEach(() => {
+  vi.restoreAllMocks()
+  vi.unstubAllGlobals()
+})
 
 describe('backend operation policy', () => {
   it('contains and resolves every one of the 52 Swagger operations', () => {
@@ -159,6 +162,7 @@ describe('backend proxy', () => {
   })
 
   it('converts backend network failure to a safe 503 response', async () => {
+    const errorLog = vi.spyOn(console, 'error').mockImplementation(() => undefined)
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('network down')))
 
     const response = await proxyBackendRequest(
@@ -169,5 +173,7 @@ describe('backend proxy', () => {
 
     expect(response.status).toBe(503)
     await expect(response.json()).resolves.toEqual({ code: 'BACKEND_UNAVAILABLE' })
+    expect(response.headers.get('x-request-id')).toMatch(/^[0-9a-f-]{36}$/)
+    expect(errorLog).toHaveBeenCalledWith(expect.stringContaining('"event":"backend_proxy_failed"'))
   })
 })

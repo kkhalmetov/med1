@@ -5,6 +5,7 @@ import {
   writeSession,
   type SessionStore,
 } from './session'
+import { backendRequestSignal, logBackendRequestFailure } from '../backend/observability'
 
 const DEFAULT_BACKEND_BASE_URL = 'http://45.141.100.245:8080/disabled-support-service/api/v1'
 
@@ -25,15 +26,18 @@ export async function authenticateCredentials(
   store: SessionStore,
   fetcher: Fetcher = fetch,
 ) {
+  const requestId = crypto.randomUUID()
   let response: Response
   try {
     response = await fetcher(backendUrl('/auth/make-auth'), {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: { 'content-type': 'application/json', 'x-request-id': requestId },
       body: JSON.stringify(credentials),
       cache: 'no-store',
+      signal: backendRequestSignal(),
     })
-  } catch {
+  } catch (error) {
+    logBackendRequestFailure('backend_auth_failed', requestId, error)
     return { ok: false as const, status: 503, data: { code: 'BACKEND_UNAVAILABLE' } }
   }
   if (!response.ok) {

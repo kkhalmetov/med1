@@ -6,6 +6,7 @@ import {
   writeSession,
   type SessionStore,
 } from '../auth/session'
+import { backendRequestSignal, logBackendRequestFailure } from './observability'
 import { resolveBackendOperation } from './policy'
 
 export type { SessionStore } from '../auth/session'
@@ -25,7 +26,7 @@ function backendBaseUrl() {
   return parsed.toString().replace(/\/$/, '')
 }
 
-function safeResponse(response: Response) {
+function safeResponse(response: Response, requestId: string) {
   const headers = new Headers()
   for (const name of ['content-type', 'content-disposition']) {
     const value = response.headers.get(name)
@@ -33,18 +34,20 @@ function safeResponse(response: Response) {
   }
   headers.set('cache-control', 'private, no-store, max-age=0')
   headers.set('x-content-type-options', 'nosniff')
+  headers.set('x-request-id', requestId)
   return new Response(response.body, { status: response.status, headers })
 }
 
-async function refreshSession(store: SessionStore) {
+async function refreshSession(store: SessionStore, requestId: string) {
   const refreshToken = store.get(sessionCookieNames.refresh)
   if (!refreshToken) return null
 
   const response = await fetch(`${backendBaseUrl()}/auth/refresh-access-token`, {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
+    headers: { 'content-type': 'application/json', 'x-request-id': requestId },
     body: JSON.stringify({ refresh_token: refreshToken }),
     cache: 'no-store',
+    signal: backendRequestSignal(),
   })
   if (!response.ok) return null
   const session = parseBackendSession(await response.json())
@@ -62,6 +65,7 @@ async function performBackendRequest(
   request: Request,
   path: string,
   store: SessionStore,
+  requestId: string,
 ): Promise<Response> {
   const url = new URL(request.url)
   const operation = resolveBackendOperation(request.method, path, url.searchParams)
@@ -75,7 +79,10 @@ async function performBackendRequest(
   const rawBody = request.body ? await request.arrayBuffer() : undefined
   const contentType = request.headers.get('content-type')
   const send = (accessToken?: string) => {
-    const headers: Record<string, string> = { accept: request.headers.get('accept') ?? '*/*' }
+    const headers: Record<string, string> = {
+      accept: request.headers.get('accept') ?? '*/*',
+      'x-request-id': requestId,
+    }
     if (contentType) headers['content-type'] = contentType
     if (accessToken) headers.authorization = `Bearer ${accessToken}`
     return fetch(`${backendBaseUrl()}${path}${url.search}`, {
@@ -84,17 +91,18 @@ async function performBackendRequest(
       ...(rawBody === undefined ? {} : { body: rawBody }),
       cache: 'no-store',
       redirect: 'manual',
+      signal: backendRequestSignal(),
     })
   }
 
   const current = readSession(store)
   let response = await send(current.accessToken)
   if (response.status === 401 && current.refreshToken) {
-    const refreshed = await refreshSession(store)
+    const refreshed = await refreshSession(store, requestId)
     if (refreshed) response = await send(refreshed.accessToken)
     else clearSession(store)
   }
-  return safeResponse(response)
+  return safeResponse(response, requestId)
 }
 
 export async function proxyBackendRequest(
@@ -102,14 +110,19 @@ export async function proxyBackendRequest(
   path: string,
   store: SessionStore,
 ): Promise<Response> {
+  const requestId = crypto.randomUUID()
   try {
-    return await performBackendRequest(request, path, store)
-  } catch {
+    return await performBackendRequest(request, path, store, requestId)
+  } catch (error) {
+    logBackendRequestFailure('backend_proxy_failed', requestId, error)
     return Response.json(
       { code: 'BACKEND_UNAVAILABLE' },
       {
         status: 503,
-        headers: { 'cache-control': 'private, no-store, max-age=0' },
+        headers: {
+          'cache-control': 'private, no-store, max-age=0',
+          'x-request-id': requestId,
+        },
       },
     )
   }
