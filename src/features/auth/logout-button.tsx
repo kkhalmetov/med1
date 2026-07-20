@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { useRouter } from '@/i18n/navigation'
 
-export function LogoutButton() {
+export function LogoutButton({ compact = false }: { compact?: boolean }) {
   const t = useTranslations('auth')
   const router = useRouter()
   const [pending, setPending] = useState(false)
@@ -21,9 +21,15 @@ export function LogoutButton() {
   }
 
   return (
-    <button className="app-shell__logout" disabled={pending} onClick={logout} type="button">
+    <button
+      aria-label={compact ? t('logout') : undefined}
+      className={`app-shell__logout${compact ? ' app-shell__logout--compact' : ''}`}
+      disabled={pending}
+      onClick={logout}
+      type="button"
+    >
       <LogOut aria-hidden="true" size={18} />
-      <span>{t('logout')}</span>
+      <span className={compact ? 'sr-only' : undefined}>{t('logout')}</span>
     </button>
   )
 }

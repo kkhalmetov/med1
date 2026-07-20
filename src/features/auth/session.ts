@@ -6,10 +6,14 @@ export function canAccessRole(actual: UserRole, required: UserRole) {
   return actual === required
 }
 
+export function rolePath(role: UserRole) {
+  if (role === 'PATIENT') return '/patient' as const
+  if (role === 'PRACTITIONER') return '/practitioner' as const
+  return '/admin' as const
+}
+
 export function roleHome(role: UserRole, locale: Locale) {
-  if (role === 'PATIENT') return `/${locale}/patient` as const
-  if (role === 'PRACTITIONER') return `/${locale}/practitioner` as const
-  return `/${locale}/admin` as const
+  return `/${locale}${rolePath(role)}` as const
 }
 
 export function isUserRole(value: string | undefined): value is UserRole {

@@ -925,6 +925,22 @@ svg {
   color: white;
   background: rgb(255 255 255 / 7%);
 }
+.app-shell__logout.app-shell__logout--compact {
+  width: 42px;
+  min-height: 42px;
+  display: none;
+  place-items: center;
+  margin-top: 0;
+  padding: 0;
+  color: var(--ink-650);
+  background: var(--brand-50);
+  border: 1px solid var(--line);
+  border-radius: 13px;
+}
+.app-shell__logout.app-shell__logout--compact:hover {
+  color: var(--brand-800);
+  background: #e2eee9;
+}
 .app-shell__main {
   min-width: 0;
 }
@@ -1089,6 +1105,12 @@ svg {
   }
   .app-shell__topbar > .brand {
     display: inline-flex;
+  }
+  .app-shell__topbar > .brand > span {
+    display: none;
+  }
+  .app-shell__logout.app-shell__logout--compact {
+    display: grid;
   }
   .app-shell__content {
     padding: 24px 15px;

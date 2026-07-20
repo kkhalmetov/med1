@@ -96,3 +96,31 @@ test('patient product routes fit a 360 px viewport', async ({ page }) => {
     ).toBe(true)
   }
 })
+
+test('patient mobile shell marks only the current route and keeps account actions available', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 820 })
+  await page.goto('/ru/patient/chat')
+
+  const navigation = page.locator('.bottom-nav')
+  await expect(navigation.getByRole('link', { name: 'Чат' })).toHaveAttribute(
+    'aria-current',
+    'page',
+  )
+  await expect(navigation.getByRole('link', { name: 'Главная' })).not.toHaveAttribute(
+    'aria-current',
+    'page',
+  )
+  await expect(
+    page.locator('.app-shell__topbar').getByRole('link', { name: 'Qadam' }),
+  ).toHaveAttribute('href', '/ru/patient')
+  await expect(page.getByRole('button', { name: 'Выйти' })).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
+    true,
+  )
+  await page.screenshot({ path: 'test-results/qadam-mobile-shell.png', fullPage: true })
+  await page.locator('.app-shell__topbar').getByRole('link', { name: 'Qadam' }).click()
+  await expect(page).toHaveURL(/\/ru\/patient$/)
+  await expect(page.getByRole('button', { name: 'Выйти' })).toBeVisible()
+})

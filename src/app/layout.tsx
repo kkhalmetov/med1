@@ -23,7 +23,7 @@ type RootLayoutProps = Readonly<{
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="ru">
+    <html data-scroll-behavior="smooth" lang="ru">
       <body>
         {children}
         <RegisterServiceWorker />

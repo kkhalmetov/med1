@@ -81,4 +81,8 @@ test('admin registry fits a 360 px viewport', async ({ page }) => {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   )
+  await expect(
+    page.locator('.app-shell__topbar').getByRole('link', { name: 'Qadam' }),
+  ).toHaveAttribute('href', '/ru/admin')
+  await expect(page.getByRole('button', { name: 'Выйти' })).toBeVisible()
 })

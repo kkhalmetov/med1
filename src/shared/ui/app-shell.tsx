@@ -16,7 +16,7 @@ import {
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import type { ReactNode } from 'react'
-import type { UserRole } from '@/features/auth/session'
+import { rolePath, type UserRole } from '@/features/auth/session'
 import { LogoutButton } from '@/features/auth/logout-button'
 import { Link, usePathname } from '@/i18n/navigation'
 import { Brand } from './brand'
@@ -28,10 +28,14 @@ interface NavItem {
   label: string
 }
 
-function navigationFor(role: UserRole, t: ReturnType<typeof useTranslations<'nav'>>): NavItem[] {
+function navigationFor(
+  role: UserRole,
+  dashboardHref: string,
+  t: ReturnType<typeof useTranslations<'nav'>>,
+): NavItem[] {
   const shared = {
     home: {
-      href: role === 'PATIENT' ? '/patient' : role === 'PRACTITIONER' ? '/practitioner' : '/admin',
+      href: dashboardHref,
       icon: Home,
       label: t('home'),
     },
@@ -69,23 +73,27 @@ function navigationFor(role: UserRole, t: ReturnType<typeof useTranslations<'nav
   ]
 }
 
+function isActiveRoute(pathname: string, href: string, dashboardHref: string) {
+  return pathname === href || (href !== dashboardHref && pathname.startsWith(`${href}/`))
+}
+
 export function AppShell({ role, children }: { role: UserRole; children: ReactNode }) {
   const t = useTranslations('nav')
   const enums = useTranslations('enums')
   const pathname = usePathname()
-  const items = navigationFor(role, t)
+  const dashboardHref = rolePath(role)
+  const items = navigationFor(role, dashboardHref, t)
 
   return (
     <div className="app-shell">
       <aside className="app-shell__sidebar">
-        <Brand compact />
+        <Brand compact href={dashboardHref} />
         <div className="app-shell__role">
           <span>{enums(role)}</span>
         </div>
         <nav className="app-nav" aria-label={t('menu')}>
           {items.map(({ href, icon: Icon, label }) => {
-            const active =
-              pathname === href || (href !== items[0]?.href && pathname.startsWith(`${href}/`))
+            const active = isActiveRoute(pathname, href, dashboardHref)
             return (
               <Link
                 aria-current={active ? 'page' : undefined}
@@ -104,7 +112,7 @@ export function AppShell({ role, children }: { role: UserRole; children: ReactNo
 
       <div className="app-shell__main">
         <header className="app-shell__topbar">
-          <Brand compact />
+          <Brand compact href={dashboardHref} />
           <div className="app-shell__topbar-actions">
             <LocaleSwitcher />
             <Link
@@ -114,6 +122,7 @@ export function AppShell({ role, children }: { role: UserRole; children: ReactNo
             >
               <UserRound aria-hidden="true" size={20} />
             </Link>
+            <LogoutButton compact />
           </div>
         </header>
         <main className="app-shell__content">{children}</main>
@@ -121,7 +130,7 @@ export function AppShell({ role, children }: { role: UserRole; children: ReactNo
 
       <nav className="bottom-nav" aria-label={t('menu')}>
         {items.slice(0, 5).map(({ href, icon: Icon, label }) => {
-          const active = pathname === href || pathname.startsWith(`${href}/`)
+          const active = isActiveRoute(pathname, href, dashboardHref)
           return (
             <Link aria-current={active ? 'page' : undefined} href={href} key={href}>
               <Icon aria-hidden="true" size={20} />

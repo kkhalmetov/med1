@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 
-export function Brand({ compact = false, href = '/' }: { compact?: boolean; href?: '/' | '#top' }) {
+export function Brand({ compact = false, href = '/' }: { compact?: boolean; href?: string }) {
   const t = useTranslations('brand')
   const content = (
     <>
@@ -19,7 +19,7 @@ export function Brand({ compact = false, href = '/' }: { compact?: boolean; href
       {content}
     </a>
   ) : (
-    <Link className="brand" href="/" aria-label="Qadam">
+    <Link className="brand" href={href} aria-label="Qadam">
       {content}
     </Link>
   )
