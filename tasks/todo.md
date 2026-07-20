@@ -1,6 +1,6 @@
 # Qadam — implementable task list
 
-Статус: `IN PROGRESS — plan approved`  
+Статус: `COMPLETED — release verified`
 Правило: задача отмечается завершённой только после acceptance и verification.
 
 ## T01 — Repository hygiene and environment contract
@@ -706,17 +706,19 @@
 
 ## T38 — GitHub and Vercel release
 
+**Status:** ✅ Completed
+
 **Description:** Commit verified work, push `main`, configure Vercel environment and deploy production.
 
 **Acceptance criteria:**
-- [ ] Git history is clean, remote is `kkhalmetov/med1`, verified commit is on `main`.
-- [ ] Vercel production deployment succeeds with server-only environment variables.
-- [ ] Production smoke passes for all three roles and matches the pushed commit.
+- [x] Git history is clean, remote is `kkhalmetov/med1`, verified commit is on `main`.
+- [x] Vercel production deployment succeeds with server-only environment variables.
+- [x] Production smoke passes for all three roles and matches the pushed commit.
 
 **Verification:**
-- [ ] `git status --short --branch` is clean.
-- [ ] GitHub remote commit SHA equals deployed Vercel SHA.
-- [ ] Public URL passes health/login smoke without technical transport warnings.
+- [x] `git status --short --branch` is clean before release metadata update.
+- [x] GitHub remote commit SHA equals deployed Vercel SHA.
+- [x] Public URL passes health/login smoke without technical transport warnings.
 
 **Dependencies:** T37  
 **Files likely touched:** No source changes expected; release metadata only  

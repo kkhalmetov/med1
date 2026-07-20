@@ -29,7 +29,7 @@ pnpm audit --audit-level=moderate
 ## Первая привязка Vercel
 
 1. Авторизоваться: `vercel login`.
-2. Из корня выполнить `vercel link` и выбрать/создать проект `qadam`.
+2. Из корня выполнить `vercel link` и выбрать/создать проект `qadamm`.
 3. В Vercel Project Settings → Environment Variables добавить для Production, Preview и Development:
 
    ```text
@@ -47,6 +47,8 @@ vercel deploy --prod
 ```
 
 CLI должен вернуть production deployment URL. Vercel автоматически определяет Next.js; `vercel.json` фиксирует framework, region и build/install commands.
+
+Текущий production alias: `https://qadamm-alpha.vercel.app`.
 
 ## Проверка после деплоя
 

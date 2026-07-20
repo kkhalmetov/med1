@@ -1,6 +1,6 @@
 # План реализации Qadam
 
-Статус: `APPROVED — implementation started`  
+Статус: `COMPLETED — GitHub and Vercel production verified`
 Основание: `docs/qadam-spec.md`, `docs/api-coverage.md`  
 Дата: 2026-07-20
 
@@ -125,14 +125,14 @@ Admin registries and exports
 - [x] T35 Admin E2E suite
 - [x] T36 Security and code-quality review
 - [x] T37 Documentation, CI and release configuration
-- [ ] T38 GitHub push and Vercel production deployment
+- [x] T38 GitHub push and Vercel production deployment
 
 ### Checkpoint F
 
 - [x] `pnpm verify` and all Playwright suites pass.
 - [x] All 52 rows in `docs/api-coverage.md` are `✅`.
 - [x] No high/critical security, accessibility or review findings remain.
-- [ ] GitHub `main` and Vercel production match the verified commit.
+- [x] GitHub `main` and Vercel production match the verified commit.
 
 ## Verification strategy
 
