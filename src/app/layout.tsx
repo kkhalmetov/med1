@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
+import { RegisterServiceWorker } from '@/shared/pwa/register-service-worker'
 
 export const metadata: Metadata = {
   title: {
@@ -8,6 +9,11 @@ export const metadata: Metadata = {
   },
   description: 'Цифровое сопровождение после выдачи протеза или ортеза',
   applicationName: 'Qadam',
+  manifest: '/manifest.webmanifest',
+  icons: {
+    icon: '/icons/qadam.svg',
+    apple: '/icons/qadam.svg',
+  },
 }
 
 type RootLayoutProps = Readonly<{
@@ -17,7 +23,10 @@ type RootLayoutProps = Readonly<{
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="ru">
-      <body>{children}</body>
+      <body>
+        {children}
+        <RegisterServiceWorker />
+      </body>
     </html>
   )
 }

@@ -51,13 +51,13 @@ Admin registries and exports
 - [x] T03 Lint, format and typecheck toolchain
 - [x] T04 Unit/component/E2E test harness
 - [x] T05 OpenAPI snapshot and generated API types
-- [ ] T06 PWA manifest, icons and safe service worker
+- [x] T06 PWA manifest, icons and safe service worker
 
 ### Checkpoint A
 
-- [ ] Install, lint, typecheck, tests and production build succeed.
-- [ ] No secret value is tracked.
-- [ ] OpenAPI snapshot reports 41 paths, 52 operations and 30 schemas.
+- [x] Install, lint, typecheck, tests and production build succeed.
+- [x] No secret value is tracked.
+- [x] OpenAPI snapshot reports 41 paths, 52 operations and 30 schemas.
 
 ### Фаза 2 — Shared application platform
 

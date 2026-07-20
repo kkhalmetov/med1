@@ -101,15 +101,17 @@
 
 ## T06 — PWA manifest and safe service worker
 
+**Status:** ✅ Completed
+
 **Description:** Сделать приложение устанавливаемым, не кэшируя API или protected data.
 
 **Acceptance criteria:**
-- [ ] Manifest содержит Qadam identity, theme and icons.
-- [ ] Service worker кэширует только versioned static shell/assets.
-- [ ] `/api`, protected media and authenticated HTML bypass Cache Storage.
+- [x] Manifest содержит Qadam identity, theme and icons.
+- [x] Service worker кэширует только versioned static shell/assets.
+- [x] `/api`, protected media and authenticated HTML bypass Cache Storage.
 
 **Verification:**
-- [ ] Manifest and service-worker unit checks pass.
+- [x] Manifest and service-worker unit checks pass.
 - [ ] Playwright confirms no API response exists in Cache Storage.
 
 **Dependencies:** T02  

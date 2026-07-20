@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Qadam</title>
+  <rect width="512" height="512" rx="112" fill="#0b5d4b"/>
+  <path d="M147 329c37-57 67-94 108-118 35-20 72-29 110-28" fill="none" stroke="#e5b95c" stroke-width="36" stroke-linecap="round"/>
+  <circle cx="150" cy="329" r="38" fill="#f7faf7"/>
+  <circle cx="255" cy="211" r="38" fill="#f7faf7"/>
+  <circle cx="365" cy="183" r="38" fill="#f7faf7"/>
+</svg>
