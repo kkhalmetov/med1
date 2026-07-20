@@ -64,7 +64,7 @@ Admin registries and exports
 - [ ] T07 Design tokens and accessible primitives
 - [x] T08 Russian/Kazakh routing and translation contract
 - [x] T09 Typed client, runtime validation and Query provider
-- [ ] T10 Allowlisted BFF transport and token refresh
+- [x] T10 Allowlisted BFF transport and token refresh
 - [ ] T11 Protected media and binary downloads
 - [ ] T12 Auth endpoints, login and password workflow
 - [ ] T13 Role guards and three application shells

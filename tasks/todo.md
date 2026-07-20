@@ -177,16 +177,18 @@
 
 ## T10 — Allowlisted BFF transport and refresh
 
+**Status:** ✅ Completed
+
 **Description:** Реализовать fixed-origin backend transport, allowlist and one-shot token refresh.
 
 **Acceptance criteria:**
-- [ ] Только Swagger method/path/query combinations проходят proxy.
-- [ ] JSON and multipart bodies stream correctly.
-- [ ] One `401` triggers one refresh/retry; failure clears session.
+- [x] Только Swagger method/path/query combinations проходят proxy.
+- [x] JSON and multipart bodies передаются без изменения content type.
+- [x] One `401` triggers one refresh/retry; failure clears session.
 
 **Verification:**
-- [ ] Integration tests cover allow/deny, JSON, multipart and refresh loop guard.
-- [ ] No token appears in client response or logs.
+- [x] Integration tests cover allow/deny, JSON, multipart and refresh loop guard.
+- [x] No token appears in client response or logs.
 
 **Dependencies:** T04, T05  
 **Files likely touched:** `src/server/backend/policy.ts`, `src/server/backend/fetch.ts`, `src/server/auth/cookies.ts`, `src/app/api/backend/[...path]/route.ts`, `tests/bff.test.ts`  
