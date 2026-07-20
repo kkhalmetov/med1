@@ -66,6 +66,26 @@ test('admin dispense search controls share one baseline', async ({ page }) => {
   ).toBeLessThanOrEqual(2)
 })
 
+test('admin sees patient guidance instead of a generic dispense lookup error', async ({ page }) => {
+  const practitionerId = 'a8a71537-9b95-4ae0-ba84-4986424d98f1'
+  await page.route(
+    `**/api/backend/patients/${practitionerId}/device-dispenses?**`,
+    async (route) => {
+      await route.fulfill({
+        json: { message: `Пациент с id=${practitionerId} не найден(а)`, status: '404 NOT_FOUND' },
+        status: 404,
+      })
+    },
+  )
+  await page.goto('/ru/admin/dispenses')
+  await page.getByLabel('Идентификатор пациента').fill(practitionerId)
+
+  await expect(
+    page.getByText('Пациент с таким идентификатором не найден. Проверьте ID из CSV-выгрузки.'),
+  ).toBeVisible()
+  await expect(page.getByText('Не удалось выполнить действие. Попробуйте ещё раз.')).toHaveCount(0)
+})
+
 test('admin photo attachment uses the Qadam file picker', async ({ page }) => {
   await page.goto('/ru/admin/practitioners')
   await page.getByRole('button', { name: 'Зарегистрировать специалиста' }).click()

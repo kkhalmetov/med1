@@ -167,6 +167,7 @@
     "organizationsDescription": "Медицинские организации, подключённые к Qadam",
     "patientIdentifier": "Идентификатор пациента",
     "patientIdHint": "Идентификатор пациента можно взять из CSV-выгрузки",
+    "patientNotFound": "Пациент с таким идентификатором не найден. Проверьте ID из CSV-выгрузки.",
     "practitionerCreated": "Учётная запись специалиста создана",
     "practitionersDescription": "Специалисты, организации и квалификации",
     "profileDescription": "Безопасность учётной записи администратора",

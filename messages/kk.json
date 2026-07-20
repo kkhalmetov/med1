@@ -167,6 +167,7 @@
     "organizationsDescription": "Qadam жүйесіне қосылған медициналық ұйымдар",
     "patientIdentifier": "Пациент идентификаторы",
     "patientIdHint": "Пациент идентификаторын CSV файлынан алуға болады",
+    "patientNotFound": "Мұндай идентификаторы бар пациент табылмады. CSV экспортындағы ID-ді тексеріңіз.",
     "practitionerCreated": "Маманның есептік жазбасы құрылды",
     "practitionersDescription": "Мамандар, ұйымдар және біліктіліктер",
     "profileDescription": "Әкімші есептік жазбасының қауіпсіздігі",

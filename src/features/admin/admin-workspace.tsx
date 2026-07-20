@@ -6,6 +6,7 @@ import { useState, type FormEvent, type ReactNode } from 'react'
 import { PasswordForm } from '@/features/auth/password-form'
 import { apiRequest } from '@/shared/api/client'
 import { fetchDownload, saveDownload } from '@/shared/api/download'
+import { ApiError } from '@/shared/api/error'
 import type { components } from '@/shared/api/schema'
 import { useApiQuery } from '@/shared/api/use-api-query'
 import { prepareImages } from '@/shared/media/image-pipeline'
@@ -788,6 +789,10 @@ function AdminDispenseResults({
     `/patients/${patientId}/device-dispenses`,
     { query: { only_observable: filter === 'active' } },
   )
+  const errorLabel =
+    query.error instanceof ApiError && query.error.code === 'NOT_FOUND'
+      ? t('admin.patientNotFound')
+      : t('errors.generic')
   return (
     <div className="product-layout">
       <ProductPanel title={t('admin.dispenseTitle')}>
@@ -796,7 +801,7 @@ function AdminDispenseResults({
           error={query.isError}
           empty={!query.data?.length}
           loadingLabel={t('common.loading')}
-          errorLabel={t('errors.generic')}
+          errorLabel={errorLabel}
           emptyLabel={t('common.empty')}
         />
         {query.data?.length ? (
