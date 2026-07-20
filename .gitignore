@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Test and quality artifacts
+coverage/
+playwright-report/
+test-results/
+blob-report/
+*.lcov
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Package manager and tooling caches
+.pnpm-store/
+.turbo/
+.eslintcache
+*.tsbuildinfo
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+pnpm-debug.log*
+npm-debug.log*
+
+# Local QA artifacts
+.artifacts/
+.tmp/
+
