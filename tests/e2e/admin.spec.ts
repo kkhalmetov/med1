@@ -53,6 +53,28 @@ test('admin can reach practitioner, organization, device, export and dispense to
   }
 })
 
+test('admin dispense search controls share one baseline', async ({ page }) => {
+  await page.goto('/ru/admin/dispenses')
+  const input = page.getByLabel('Идентификатор пациента')
+  const filter = page.getByRole('group', { name: 'Фильтр' })
+  const inputBox = await input.boundingBox()
+  const filterBox = await filter.boundingBox()
+  expect(inputBox).not.toBeNull()
+  expect(filterBox).not.toBeNull()
+  expect(
+    Math.abs(inputBox!.y + inputBox!.height - (filterBox!.y + filterBox!.height)),
+  ).toBeLessThanOrEqual(2)
+})
+
+test('admin photo attachment uses the Qadam file picker', async ({ page }) => {
+  await page.goto('/ru/admin/practitioners')
+  await page.getByRole('button', { name: 'Зарегистрировать специалиста' }).click()
+  const picker = page.locator('.product-file-control')
+  await expect(picker).toBeVisible()
+  await expect(picker.getByText('Выбрать фото')).toBeVisible()
+  await expect(picker.locator('input[type="file"]')).toHaveClass(/sr-only/)
+})
+
 test('admin registry fits a 360 px viewport', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 820 })
   await page.goto('/ru/admin/practitioners')

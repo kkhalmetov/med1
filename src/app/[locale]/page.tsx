@@ -8,7 +8,7 @@ export default async function LocaleHomePage() {
   const t = await getTranslations('landing')
 
   return (
-    <main className="public-shell">
+    <main className="public-shell" id="top">
       <header className="public-header">
         <Brand />
         <nav className="public-header__actions" aria-label="Primary">
@@ -92,7 +92,7 @@ export default async function LocaleHomePage() {
       </section>
 
       <footer className="public-footer">
-        <Brand compact />
+        <Brand compact href="#top" />
         <span>© 2026 Qadam</span>
       </footer>
     </main>

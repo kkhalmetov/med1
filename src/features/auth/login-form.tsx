@@ -23,33 +23,36 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<LoginValues>({ resolver: zodResolver(loginSchema) })
 
-  const submit = handleSubmit(async (values) => {
-    setServerError(undefined)
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(values),
-      })
-      if (!response.ok) {
-        setServerError(response.status === 401 ? t('invalid') : t('invalid'))
-        return
-      }
-      const session = (await response.json()) as { role: keyof typeof roleDestinations }
-      const destination = roleDestinations[session.role]
-      if (!destination) {
+  const submit = handleSubmit(
+    async (values) => {
+      setServerError(undefined)
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(values),
+        })
+        if (!response.ok) {
+          setServerError(t('invalid'))
+          return
+        }
+        const session = (await response.json()) as { role: keyof typeof roleDestinations }
+        const destination = roleDestinations[session.role]
+        if (!destination) {
+          setServerError(t('invalid'))
+          return
+        }
+        router.replace(destination)
+        router.refresh()
+      } catch {
         setServerError(t('invalid'))
-        return
       }
-      router.replace(destination)
-      router.refresh()
-    } catch {
-      setServerError(t('invalid'))
-    }
-  })
+    },
+    () => setServerError(t('invalid')),
+  )
 
   return (
     <form className="login-form" onSubmit={submit} noValidate>
@@ -68,7 +71,6 @@ export function LoginForm() {
       ) : null}
       <Field
         autoComplete="email"
-        error={errors.email ? t('invalid') : undefined}
         label={t('email')}
         placeholder="name@example.kz"
         type="email"
@@ -76,7 +78,6 @@ export function LoginForm() {
       />
       <Field
         autoComplete="current-password"
-        error={errors.password ? t('invalid') : undefined}
         label={t('password')}
         type="password"
         {...register('password')}

@@ -11,6 +11,11 @@ test('opens the localized Qadam shell', async ({ page }) => {
   await expect(signIn).toBeVisible()
   await expect(signIn).toHaveCSS('text-decoration-line', 'none')
   await expect(howItWorks).toHaveCSS('text-decoration-line', 'none')
+  const footerLogo = page.locator('footer').getByRole('link', { name: 'Qadam' })
+  await expect(footerLogo).toHaveAttribute('href', /#top$/)
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+  await footerLogo.click()
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
   await page.screenshot({ path: 'test-results/qadam-landing.png', fullPage: true })
 })
 
@@ -33,6 +38,15 @@ test('login copy, error and submit content fit at 320 px', async ({ page }) => {
   expect(box).not.toBeNull()
   expect(iconBox).not.toBeNull()
   expect(iconBox!.x + iconBox!.width).toBeLessThanOrEqual(box!.x + box!.width)
+})
+
+test('login validation uses one red alert without inline field messages', async ({ page }) => {
+  await page.goto('/ru/login')
+  await page.getByLabel('Электронная почта').fill('not-an-email')
+  await page.getByRole('button', { name: 'Войти' }).click()
+
+  await expect(page.locator('.form-alert')).toHaveText('Проверьте почту или пароль')
+  await expect(page.locator('.field__message--error')).toHaveCount(0)
 })
 
 test('has no serious accessibility findings or horizontal overflow', async ({ page }) => {

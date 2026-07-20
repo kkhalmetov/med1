@@ -1340,9 +1340,6 @@ svg {
   min-height: 112px;
   resize: vertical;
 }
-.product-field input[type='file'] {
-  padding: 8px;
-}
 .product-field input:focus,
 .product-field select:focus,
 .product-field textarea:focus {
@@ -1356,6 +1353,79 @@ svg {
 }
 .product-field--wide {
   grid-column: 1 / -1;
+}
+.product-file-control {
+  min-width: 0;
+  min-height: 50px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 5px;
+  background: white;
+  border: 1px solid #c5d3cf;
+  border-radius: 12px;
+  transition: 150ms ease;
+}
+.product-file-control > input.sr-only {
+  width: 1px;
+  min-height: 1px;
+  padding: 0;
+  margin: -1px;
+  border: 0;
+}
+.product-file-control:focus-within {
+  border-color: var(--brand-600);
+  box-shadow: var(--focus);
+}
+.product-file-control__button {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 7px 12px;
+  color: var(--brand-800);
+  background: var(--brand-50);
+  border: 1px solid #b9d5cc;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 0.84rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+.product-file-control__button:hover {
+  background: #e2eee9;
+}
+.product-file-control__button:focus-visible {
+  outline: none;
+}
+.product-file-control__name {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink-500);
+  font-size: 0.84rem;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dispense-search-controls {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+.dispense-search-controls > .product-field {
+  max-width: 560px;
+}
+.product-filter-field {
+  display: grid;
+  gap: 7px;
+}
+.product-filter-field > span {
+  color: var(--ink-800);
+  font-size: 0.89rem;
+  font-weight: 750;
 }
 .product-form__actions,
 .toolbar {
@@ -1554,6 +1624,28 @@ button.entity-card[aria-pressed='true'] {
   }
   .product-panel__action .button {
     width: 100%;
+  }
+  .dispense-search-controls {
+    grid-template-columns: 1fr;
+  }
+  .dispense-search-controls > .product-field {
+    max-width: none;
+  }
+  .product-filter-field .segmented {
+    width: 100%;
+  }
+  .product-filter-field .segmented button {
+    flex: 1;
+  }
+  .product-file-control {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .product-file-control__button {
+    width: 100%;
+  }
+  .product-file-control__name {
+    padding: 3px 7px 5px;
   }
   .message-bubble {
     width: 90%;

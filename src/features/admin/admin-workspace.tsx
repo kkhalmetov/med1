@@ -18,6 +18,7 @@ import {
   DetailList,
   EntityCard,
   EntityGrid,
+  FileField,
   FormActions,
   FormGrid,
   formatDate,
@@ -402,12 +403,13 @@ function PractitionerForm({
             </option>
           ))}
         </SelectField>
-        <InputField
+        <FileField
           accept="image/*"
           className="product-field--wide"
+          chooseLabel={t('common.choosePhoto')}
+          emptyLabel={t('common.noFileSelected')}
           label={t('fields.photo')}
           name="photo"
-          type="file"
         />
       </FormGrid>
       <ActionMessage error={action.error} message={action.message} />
@@ -726,22 +728,25 @@ function AdminDispenses() {
     >
       <ActionMessage error={action.error} message={action.message} />
       <ProductPanel title={t('admin.findPatientDispenses')} description={t('admin.patientIdHint')}>
-        <div className="toolbar">
+        <div className="dispense-search-controls">
           <InputField
             label={t('admin.patientIdentifier')}
             value={patientId}
             onChange={(event) => setPatientId(event.target.value.trim())}
             placeholder="00000000-0000-0000-0000-000000000000"
           />
-          <SegmentedControl
-            label={t('common.filter')}
-            value={filter}
-            onChange={setFilter}
-            options={[
-              { value: 'active', label: t('patients.observableOnly') },
-              { value: 'all', label: t('common.all') },
-            ]}
-          />
+          <div className="product-filter-field">
+            <span>{t('common.filter')}</span>
+            <SegmentedControl
+              label={t('common.filter')}
+              value={filter}
+              onChange={setFilter}
+              options={[
+                { value: 'active', label: t('patients.observableOnly') },
+                { value: 'all', label: t('common.all') },
+              ]}
+            />
+          </div>
         </div>
       </ProductPanel>
       {enabledId ? (

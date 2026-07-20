@@ -1,7 +1,10 @@
 'use client'
 
-import { AlertCircle, ChevronRight, LoaderCircle, X } from 'lucide-react'
+import { AlertCircle, ChevronRight, LoaderCircle, Paperclip, X } from 'lucide-react'
 import {
+  useEffect,
+  useId,
+  useRef,
   useState,
   type FormEvent,
   type InputHTMLAttributes,
@@ -132,6 +135,70 @@ export function InputField({
       <input {...props} />
       {hint ? <small>{hint}</small> : null}
     </label>
+  )
+}
+
+export function FileField({
+  label,
+  chooseLabel,
+  emptyLabel,
+  hint,
+  className = '',
+  id,
+  onChange,
+  ...props
+}: Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
+  label: string
+  chooseLabel: string
+  emptyLabel: string
+  hint?: string | undefined
+}) {
+  const generatedId = useId()
+  const inputId = id ?? generatedId
+  const hintId = `${inputId}-hint`
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [fileNames, setFileNames] = useState<string[]>([])
+
+  useEffect(() => {
+    const form = inputRef.current?.form
+    const clearSelection = () => setFileNames([])
+    form?.addEventListener('reset', clearSelection)
+    return () => form?.removeEventListener('reset', clearSelection)
+  }, [])
+
+  return (
+    <div className={`product-field ${className}`.trim()}>
+      <span id={`${inputId}-label`}>{label}</span>
+      <div className="product-file-control">
+        <input
+          {...props}
+          aria-describedby={hint ? hintId : undefined}
+          aria-labelledby={`${inputId}-label`}
+          className="sr-only"
+          id={inputId}
+          onChange={(event) => {
+            setFileNames(Array.from(event.currentTarget.files ?? [], (file) => file.name))
+            onChange?.(event)
+          }}
+          ref={inputRef}
+          tabIndex={-1}
+          type="file"
+        />
+        <button
+          aria-controls={inputId}
+          className="product-file-control__button"
+          onClick={() => inputRef.current?.click()}
+          type="button"
+        >
+          <Paperclip aria-hidden="true" size={17} />
+          {chooseLabel}
+        </button>
+        <span className="product-file-control__name" title={fileNames.join(', ')}>
+          {fileNames.length ? fileNames.join(', ') : emptyLabel}
+        </span>
+      </div>
+      {hint ? <small id={hintId}>{hint}</small> : null}
+    </div>
   )
 }
 

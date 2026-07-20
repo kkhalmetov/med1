@@ -66,12 +66,33 @@ test('patient complaint, chat, devices and profile actions are exposed', async (
   }
 })
 
+test('patient photo attachment uses the Qadam file picker', async ({ page }) => {
+  await page.goto('/ru/patient/complaints')
+  await page.getByRole('button', { name: 'Создать жалобу' }).click()
+  const picker = page.locator('.product-file-control')
+  await expect(picker).toBeVisible()
+  await expect(picker.getByText('Выбрать фото')).toBeVisible()
+  await expect(picker.locator('input[type="file"]')).toHaveClass(/sr-only/)
+})
+
 test('patient product routes fit a 360 px viewport', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 820 })
   for (const path of ['reports', 'complaints', 'chat', 'devices', 'profile']) {
     await page.goto(`/ru/patient/${path}`)
+    const viewport = await page.evaluate(() => ({
+      fits: document.documentElement.scrollWidth <= window.innerWidth,
+      overflow: Array.from(document.querySelectorAll<HTMLElement>('body *'))
+        .filter((element) => element.getBoundingClientRect().right > window.innerWidth + 0.5)
+        .slice(0, 5)
+        .map((element) => ({
+          className: element.className,
+          right: Math.round(element.getBoundingClientRect().right),
+          tag: element.tagName,
+        })),
+    }))
     expect(
-      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      viewport.fits,
+      `/ru/patient/${path} must fit the 360 px viewport; overflow: ${JSON.stringify(viewport.overflow)}`,
     ).toBe(true)
   }
 })

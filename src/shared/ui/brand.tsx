@@ -2,15 +2,25 @@ import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 
-export function Brand({ compact = false }: { compact?: boolean }) {
+export function Brand({ compact = false, href = '/' }: { compact?: boolean; href?: '/' | '#top' }) {
   const t = useTranslations('brand')
-  return (
-    <Link className="brand" href="/" aria-label="Qadam">
+  const content = (
+    <>
       <Image alt="" height={42} priority src="/icons/qadam.svg" width={42} />
       <span>
         <strong>Qadam</strong>
         {compact ? null : <small>{t('slogan')}</small>}
       </span>
+    </>
+  )
+
+  return href === '#top' ? (
+    <a className="brand" href="#top" aria-label="Qadam">
+      {content}
+    </a>
+  ) : (
+    <Link className="brand" href="/" aria-label="Qadam">
+      {content}
     </Link>
   )
 }

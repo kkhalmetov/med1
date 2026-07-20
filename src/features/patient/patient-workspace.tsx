@@ -19,6 +19,7 @@ import {
   DetailList,
   EntityCard,
   EntityGrid,
+  FileField,
   FormActions,
   FormGrid,
   formatDate,
@@ -353,13 +354,14 @@ function ComplaintForm({ dispenses, onCreated }: { dispenses: Dispense[]; onCrea
           label={t('complaints.comment')}
           name="comment"
         />
-        <InputField
+        <FileField
           accept="image/*"
           className="product-field--wide"
+          chooseLabel={t('common.choosePhoto')}
+          emptyLabel={t('common.noFileSelected')}
           label={t('complaints.photos')}
           multiple
           name="photos"
-          type="file"
           hint={t('product.photoHint')}
         />
       </FormGrid>
@@ -548,7 +550,13 @@ function MessageComposer({ onSent }: { onSent: () => void }) {
   return (
     <ProductForm onSubmit={submit}>
       <TextareaField label={t('chat.message')} name="content" />
-      <InputField accept="image/*" label={t('chat.photo')} name="photo" type="file" />
+      <FileField
+        accept="image/*"
+        chooseLabel={t('common.choosePhoto')}
+        emptyLabel={t('common.noFileSelected')}
+        label={t('chat.photo')}
+        name="photo"
+      />
       <ActionMessage error={action.error} message={action.message} />
       <FormActions>
         <SubmitButton

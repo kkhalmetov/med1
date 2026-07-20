@@ -59,6 +59,15 @@ test('practitioner checks a report from the patient queue', async ({ page }) => 
   await expect(page.getByText(/\b(GET|POST|PATCH)\b/)).toHaveCount(0)
 })
 
+test('practitioner photo attachment uses the Qadam file picker', async ({ page }) => {
+  await page.goto('/ru/practitioner/patients')
+  await page.getByRole('button', { name: 'Зарегистрировать пациента' }).click()
+  const picker = page.locator('.product-file-control')
+  await expect(picker).toBeVisible()
+  await expect(picker.getByText('Выбрать фото')).toBeVisible()
+  await expect(picker.locator('input[type="file"]')).toHaveClass(/sr-only/)
+})
+
 test('practitioner workspace fits a 360 px viewport', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 820 })
   await page.goto('/ru/practitioner/patients')

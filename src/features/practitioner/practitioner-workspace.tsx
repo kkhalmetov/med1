@@ -20,6 +20,7 @@ import {
   DetailList,
   EntityCard,
   EntityGrid,
+  FileField,
   FormActions,
   FormGrid,
   formatDate,
@@ -128,7 +129,13 @@ function PatientRegistration({ onCreated }: { onCreated: () => void }) {
             </option>
           ))}
         </SelectField>
-        <InputField accept="image/*" label={t('fields.photo')} name="photo" type="file" />
+        <FileField
+          accept="image/*"
+          chooseLabel={t('common.choosePhoto')}
+          emptyLabel={t('common.noFileSelected')}
+          label={t('fields.photo')}
+          name="photo"
+        />
       </FormGrid>
       <ActionMessage error={action.error} message={action.message} />
       <FormActions>
@@ -769,7 +776,13 @@ function PractitionerChatPanel({ patient }: { patient: Patient }) {
       ) : null}
       <ProductForm onSubmit={submit}>
         <TextareaField label={t('chat.message')} name="content" />
-        <InputField accept="image/*" label={t('chat.photo')} name="photo" type="file" />
+        <FileField
+          accept="image/*"
+          chooseLabel={t('common.choosePhoto')}
+          emptyLabel={t('common.noFileSelected')}
+          label={t('chat.photo')}
+          name="photo"
+        />
         <ActionMessage error={action.error} message={action.message} />
         <FormActions>
           <SubmitButton
