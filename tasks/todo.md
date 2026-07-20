@@ -139,16 +139,18 @@
 
 ## T08 — Russian/Kazakh routing and translation contract
 
+**Status:** ✅ Completed
+
 **Description:** Настроить locale routing, dictionaries and enum translations.
 
 **Acceptance criteria:**
-- [ ] `/ru` and `/kk` resolve and preserve locale selection.
-- [ ] All Swagger enums have both translations.
-- [ ] Dictionary parity test fails on missing keys.
+- [x] `/ru` and `/kk` resolve and preserve locale selection.
+- [x] All Swagger enums have both translations.
+- [x] Dictionary parity test fails on missing keys.
 
 **Verification:**
-- [ ] `pnpm test -- --run i18n`
-- [ ] Manual locale switch preserves current logical page.
+- [x] `pnpm test -- --run tests/i18n.test.ts`
+- [x] Locale path unit check preserves current logical page.
 
 **Dependencies:** T02, T04  
 **Files likely touched:** `src/i18n/routing.ts`, `src/i18n/request.ts`, `messages/ru.json`, `messages/kk.json`, `tests/i18n.test.ts`  

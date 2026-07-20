@@ -62,7 +62,7 @@ Admin registries and exports
 ### Фаза 2 — Shared application platform
 
 - [ ] T07 Design tokens and accessible primitives
-- [ ] T08 Russian/Kazakh routing and translation contract
+- [x] T08 Russian/Kazakh routing and translation contract
 - [ ] T09 Typed client, runtime validation and Query provider
 - [ ] T10 Allowlisted BFF transport and token refresh
 - [ ] T11 Protected media and binary downloads
