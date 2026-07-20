@@ -95,3 +95,4 @@ CI запускается на каждом push и pull request: проверя
 2. При изменении backend сначала запустить `pnpm api:check`, затем осознанно обновить snapshot через `pnpm api:sync`.
 3. Новая backend-операция считается завершённой только после UI, BFF, RU/KK-текстов и тестов.
 4. Перед merge обязательны `pnpm verify`, `pnpm api:coverage`, `pnpm test:e2e` и audit.
+5. Новые dependency build scripts требуют отдельного review и явного добавления в `onlyBuiltDependencies`.
