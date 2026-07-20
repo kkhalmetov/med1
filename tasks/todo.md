@@ -120,15 +120,17 @@
 
 ## T07 — Design tokens and accessible primitives
 
+**Status:** 🚧 In progress — primitives and component checks complete; axe browser smoke pending
+
 **Description:** Реализовать визуальную основу Qadam и базовые доступные компоненты.
 
 **Acceptance criteria:**
-- [ ] Brand/status tokens meet contrast and never rely on color alone.
-- [ ] Button, input, card and status badge have focus/error/disabled states.
-- [ ] Components work from 360 px upward.
+- [x] Brand/status tokens meet contrast and never rely on color alone.
+- [x] Button, input, card and status badge have focus/error/disabled states.
+- [x] Components work from 360 px upward.
 
 **Verification:**
-- [ ] Component tests cover keyboard and accessible names.
+- [x] Component tests cover keyboard and accessible names.
 - [ ] Axe smoke has no serious/critical findings.
 
 **Dependencies:** T02, T04  
