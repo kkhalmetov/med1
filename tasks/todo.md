@@ -158,16 +158,18 @@
 
 ## T09 — Typed client and Query provider
 
+**Status:** ✅ Completed
+
 **Description:** Создать client-side API adapter, error model and TanStack Query provider.
 
 **Acceptance criteria:**
-- [ ] Typed methods preserve query/body/response types.
-- [ ] Errors normalize status, message and retryability.
-- [ ] Queries default to `no persistence` and sensible retries.
+- [x] Typed methods preserve query/body/response types.
+- [x] Errors normalize status, message and retryability.
+- [x] Queries default to `no persistence` and sensible retries.
 
 **Verification:**
-- [ ] Focused tests cover success, validation error, timeout and abort.
-- [ ] `pnpm typecheck`
+- [x] Focused tests cover success, validation error, timeout and abort.
+- [x] `pnpm typecheck`
 
 **Dependencies:** T04, T05  
 **Files likely touched:** `src/shared/api/client.ts`, `src/shared/api/error.ts`, `src/shared/api/query-provider.tsx`, `tests/api-client.test.ts`  

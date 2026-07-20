@@ -3,6 +3,7 @@ import { setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { routing } from '@/i18n/routing'
+import { ApiQueryProvider } from '@/shared/api/query-provider'
 
 interface LocaleLayoutProps {
   children: ReactNode
@@ -18,5 +19,9 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   if (!hasLocale(routing.locales, locale)) notFound()
   setRequestLocale(locale)
 
-  return <NextIntlClientProvider>{children}</NextIntlClientProvider>
+  return (
+    <NextIntlClientProvider>
+      <ApiQueryProvider>{children}</ApiQueryProvider>
+    </NextIntlClientProvider>
+  )
 }
