@@ -24,6 +24,8 @@
 
 ## T02 — Next.js runtime scaffold
 
+**Status:** ✅ Completed
+
 **Description:** Создать минимальное Next.js 16 приложение с pnpm, TypeScript strict и App Router.
 
 **Acceptance criteria:**

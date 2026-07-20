@@ -1,0 +1,9 @@
+packages:
+  - .
+
+minimumReleaseAge: 1440
+minimumReleaseAgeStrict: true
+
+minimumReleaseAgeExclude:
+  - '@tanstack/query-core@5.101.3'
+  - '@tanstack/react-query@5.101.3'

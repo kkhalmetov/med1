@@ -47,7 +47,7 @@ Admin registries and exports
 ### Фаза 1 — Foundation
 
 - [x] T01 Repository hygiene and environment contract
-- [ ] T02 Next.js runtime scaffold
+- [x] T02 Next.js runtime scaffold
 - [ ] T03 Lint, format and typecheck toolchain
 - [ ] T04 Unit/component/E2E test harness
 - [ ] T05 OpenAPI snapshot and generated API types
