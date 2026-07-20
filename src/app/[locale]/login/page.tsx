@@ -2,8 +2,10 @@ import { LoginForm } from '@/features/auth/login-form'
 import { Link } from '@/i18n/navigation'
 import { Brand } from '@/shared/ui/brand'
 import { LocaleSwitcher } from '@/shared/ui/locale-switcher'
+import { getTranslations } from 'next-intl/server'
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const t = await getTranslations('auth')
   return (
     <main className="auth-page">
       <header className="public-header auth-page__header">
@@ -20,7 +22,7 @@ export default function LoginPage() {
         <div>
           <LoginForm />
           <Link className="auth-page__back" href="/">
-            ← Qadam
+            ← {t('backHome')}
           </Link>
         </div>
       </div>

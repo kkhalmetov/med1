@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { authOperationIds, operationGroups } from '@/shared/api/operation-catalog'
+import { productOperationMap } from '@/shared/api/product-operation-map'
 import { backendOperations } from '@/server/backend/policy'
 import { getOperationDefinitions } from '@/server/backend/form-contract'
 
@@ -11,6 +12,12 @@ describe('frontend operation catalog', () => {
     expect(
       backendOperations.map(({ operationId }) => operationId).filter((id) => !covered.has(id)),
     ).toEqual([])
+    expect(Object.keys(productOperationMap).sort()).toEqual(
+      backendOperations.map(({ operationId }) => operationId).sort(),
+    )
+    expect(Object.values(productOperationMap).every((scenario) => scenario.includes('/'))).toBe(
+      true,
+    )
   })
 
   it('preserves exact report field bounds from OpenAPI', () => {

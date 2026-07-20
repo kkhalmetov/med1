@@ -1,7 +1,7 @@
 # План реализации Qadam
 
-Статус: `COMPLETED — GitHub and Vercel production verified`
-Основание: `docs/qadam-spec.md`, `docs/api-coverage.md`  
+Статус: `IN PROGRESS — product UX correction`
+Основание: `docs/qadam-spec.md`, `docs/qadam-ux-correction-spec.md`, `docs/api-coverage.md`
 Дата: 2026-07-20
 
 ## Обзор
@@ -133,6 +133,23 @@ Admin registries and exports
 - [x] All 52 rows in `docs/api-coverage.md` are `✅`.
 - [x] No high/critical security, accessibility or review findings remain.
 - [x] GitHub `main` and Vercel production match the verified commit.
+
+### Фаза 7 — Исправление продуктового UX
+
+- [x] T39 Зафиксировать требования production-ревью и регрессионные тесты
+- [x] T40 Исправить лендинг, вход, смену пароля и patient dashboard
+- [x] T41 Заменить patient workbench на предметные сценарии
+- [x] T42 Заменить practitioner workbench на реестры, карточки и рабочие очереди
+- [x] T43 Заменить admin workbench на реестры, карточки и формы
+- [x] T44 Повторно проверить 52/52, RU/KK, responsive и accessibility
+- [ ] T45 Code review, push и Vercel production deployment
+
+### Checkpoint G
+
+- [x] На ролевых экранах нет `GET/POST/PATCH`, operationId, raw JSON и ручного запуска endpoint.
+- [x] Все 52 backend-операции доступны через предметные пользовательские сценарии.
+- [x] Все восемь пунктов production-ревью исправлены и покрыты тестами.
+- [ ] GitHub `main` и Vercel production содержат один verified commit.
 
 ## Verification strategy
 

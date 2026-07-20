@@ -1,7 +1,91 @@
 # Qadam — implementable task list
 
-Статус: `COMPLETED — release verified`
+Статус: `IN PROGRESS — product UX correction`
 Правило: задача отмечается завершённой только после acceptance и verification.
+
+## T39 — Production UX correction specification and regression tests
+
+**Status:** ✅ Completed
+
+**Description:** Зафиксировать пользовательское ревью и добавить падающие тесты на отсутствие технического workbench и восемь точечных исправлений.
+
+**Acceptance criteria:**
+- [x] Delta-спецификация содержит точные требования и границы API.
+- [x] Тесты фиксируют копирайт, layout и запрет технических HTTP-меток.
+
+**Verification:** focused Vitest/Playwright tests fail before implementation and pass after it.
+
+**Dependencies:** T38
+
+## T40 — Public/auth/profile/patient dashboard polish
+
+**Status:** ✅ Completed
+
+**Description:** Исправить восемь точечных замечаний лендинга, входа, смены пароля и главной пациента в RU/KK.
+
+**Acceptance criteria:** см. раздел 2 `docs/qadam-ux-correction-spec.md`.
+
+**Verification:** component tests, 320/360 px browser check, locale parity.
+
+**Dependencies:** T39
+
+## T41 — Patient product scenarios
+
+**Status:** ✅ Completed
+
+**Description:** Заменить generic workbench пациента на отчёты, ТСР, жалобы, чат и профиль с контекстными действиями.
+
+**Acceptance criteria:** все patient-owned Swagger-операции доступны без технических терминов и ручных UUID.
+
+**Verification:** patient component/E2E suite and API coverage.
+
+**Dependencies:** T40
+
+## T42 — Practitioner product scenarios
+
+**Status:** ✅ Completed
+
+**Description:** Реализовать реестр и карточку пациента, очереди отчётов/жалоб, чат, ТСР/выдачу и профиль.
+
+**Acceptance criteria:** все practitioner Swagger-операции доступны из контекста выбранного пациента/сущности.
+
+**Verification:** practitioner component/E2E suite and API coverage.
+
+**Dependencies:** T41
+
+## T43 — Admin product scenarios
+
+**Status:** ✅ Completed
+
+**Description:** Реализовать административные реестры, карточки, формы создания, выдачи и экспорты.
+
+**Acceptance criteria:** все admin Swagger-операции доступны через предметный UI без технических терминов.
+
+**Verification:** admin component/E2E suite and API coverage.
+
+**Dependencies:** T42
+
+## T44 — Full verification and review
+
+**Status:** ✅ Completed
+
+**Description:** Проверить 52/52, RU/KK, responsive, accessibility, security и качество кода.
+
+**Acceptance criteria:** все критерии раздела 5 delta-спецификации выполнены.
+
+**Verification:** `pnpm verify`, full Playwright, live role smoke, manual screenshots.
+
+**Dependencies:** T40–T43
+
+## T45 — GitHub and Vercel corrected release
+
+**Status:** 🚧 In progress
+
+**Description:** Закоммитить, отправить в `main`, развернуть production и проверить публичный URL.
+
+**Acceptance criteria:** GitHub SHA equals verified Vercel production SHA; rollback target recorded.
+
+**Dependencies:** T44
 
 ## T01 — Repository hygiene and environment contract
 

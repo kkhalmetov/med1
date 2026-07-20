@@ -5,11 +5,34 @@ test('opens the localized Qadam shell', async ({ page }) => {
   await page.goto('/ru')
 
   await expect(page).toHaveTitle(/Qadam/)
-  await expect(
-    page.getByRole('heading', { name: 'Поддержка после выдачи протеза или ортеза' }),
-  ).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Войти в Qadam' }).first()).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Поддержка после выдачи ТСР' })).toBeVisible()
+  const signIn = page.getByRole('link', { name: 'Войти в Qadam' }).first()
+  const howItWorks = page.getByRole('link', { name: 'Как это работает' })
+  await expect(signIn).toBeVisible()
+  await expect(signIn).toHaveCSS('text-decoration-line', 'none')
+  await expect(howItWorks).toHaveCSS('text-decoration-line', 'none')
   await page.screenshot({ path: 'test-results/qadam-landing.png', fullPage: true })
+})
+
+test('login copy, error and submit content fit at 320 px', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 820 })
+  await page.route('**/api/auth/login', (route) =>
+    route.fulfill({ json: { message: 'Unauthorized' }, status: 401 }),
+  )
+  await page.goto('/ru/login')
+
+  await expect(page.getByRole('link', { name: 'Вернуться на главную' })).toBeVisible()
+  await page.getByLabel('Электронная почта').fill('wrong@example.kz')
+  await page.getByLabel('Пароль').fill('wrong-password')
+  await page.getByRole('button', { name: 'Войти' }).click()
+  await expect(page.locator('.form-alert')).toHaveText('Проверьте почту или пароль')
+
+  const button = page.getByRole('button', { name: 'Войти' })
+  const box = await button.boundingBox()
+  const iconBox = await button.locator('svg').boundingBox()
+  expect(box).not.toBeNull()
+  expect(iconBox).not.toBeNull()
+  expect(iconBox!.x + iconBox!.width).toBeLessThanOrEqual(box!.x + box!.width)
 })
 
 test('has no serious accessibility findings or horizontal overflow', async ({ page }) => {
@@ -61,12 +84,13 @@ test('protects role areas and exposes keyboard-reachable patient navigation', as
   await page.goto('/ru/patient')
   await expect(page.getByRole('heading', { name: 'Ваш сегодняшний шаг' })).toBeVisible()
   await expect(page.getByRole('navigation', { name: 'Меню' }).first()).toBeVisible()
+  await expect(page.getByText('Только под наблюдением')).toHaveCount(0)
 
   await page.goto('/ru/admin')
   await expect(page).toHaveURL(/\/ru\/patient$/)
 })
 
-test('executes a patient backend workflow from the localized workspace', async ({
+test('patient reports use a product form without technical API controls', async ({
   context,
   page,
 }) => {
@@ -80,28 +104,29 @@ test('executes a patient backend workflow from the localized workspace', async (
       path: '/',
     },
   ])
+  await page.route('**/api/backend/device-dispenses/me**', (route) =>
+    route.fulfill({
+      json: [{ id: 'dispense-1', deviceId: 'device-1', deviceName: 'ТСР для ноги' }],
+    }),
+  )
   await page.route('**/api/backend/reports/my', (route) =>
     route.fulfill({ json: [{ id: 'report-1', painLevel: 3, statusColor: 'GREEN' }] }),
   )
   await page.goto('/ru/patient/reports')
 
-  const createReport = page.getByRole('article').filter({ hasText: 'Отправить ежедневный отчёт' })
-  await createReport.getByRole('button').click()
-  await expect(createReport.locator('input[name="painLevel"]')).toHaveAttribute('min', '0')
-  await expect(createReport.locator('input[name="discomfortLevel"]')).toHaveAttribute('min', '0')
-
-  const history = page.getByRole('article').filter({ hasText: 'Моя история отчётов' })
-  await history.getByRole('button').first().click()
-  await history.getByRole('button', { name: /Выполнить/ }).click()
-  await expect(history.getByText('Стабильное состояние')).toBeVisible()
-  await expect(history.getByText('3')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Ежедневные отчёты' })).toBeVisible()
+  await page.getByRole('button', { name: 'Заполнить отчёт' }).click()
+  await expect(page.locator('input[name="discomfortLevel"]')).toHaveAttribute('min', '0')
+  await expect(page.locator('input[name="discomfortLevel"]')).toHaveAttribute('max', '10')
+  await expect(page.getByText(/\b(GET|POST|PATCH)\b/)).toHaveCount(0)
+  await expect(page.getByRole('button', { name: /Выполнить|Запустить/ })).toHaveCount(0)
 })
 
 test('keeps core pages within 360–1440 px without horizontal overflow', async ({
   page,
 }, testInfo) => {
   test.skip(testInfo.project.name !== 'chromium')
-  for (const width of [360, 768, 1280, 1440]) {
+  for (const width of [320, 360, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 })
     await page.goto('/ru')
     expect(

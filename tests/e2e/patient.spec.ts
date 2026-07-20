@@ -15,6 +15,10 @@ test.beforeEach(async ({ context, page }) => {
           currentDevices: [],
         },
       })
+    } else if (pathname.endsWith('/device-dispenses/me')) {
+      await route.fulfill({
+        json: [{ id: 'dispense-1', deviceId: 'device-1', deviceName: 'Ортез для ноги' }],
+      })
     } else if (route.request().method() === 'POST') {
       await route.fulfill({ json: { id: 'created-1', statusColor: 'GREEN' }, status: 201 })
     } else {
@@ -26,6 +30,7 @@ test.beforeEach(async ({ context, page }) => {
 test('patient dashboard, report and role accessibility @a11y', async ({ page }) => {
   await page.goto('/ru/patient')
   await expect(page.getByRole('heading', { name: 'Здравствуйте, Алия' })).toBeVisible()
+  await expect(page.getByText('Только под наблюдением')).toHaveCount(0)
   expect(
     (await new AxeBuilder({ page }).analyze()).violations.filter(
       ({ impact }) => impact === 'critical' || impact === 'serious',
@@ -33,25 +38,40 @@ test('patient dashboard, report and role accessibility @a11y', async ({ page }) 
   ).toEqual([])
 
   await page.goto('/ru/patient/reports')
-  const report = page.getByRole('article').filter({ hasText: 'Отправить ежедневный отчёт' })
-  await report.getByRole('button').first().click()
-  await report.locator('input[name="deviceId"]').fill('00000000-0000-4000-8000-000000000002')
-  await report.locator('input[name="painLevel"]').fill('2')
-  await report.locator('input[name="discomfortLevel"]').fill('3')
-  await report.locator('input[name="mobilityLevel"]').fill('8')
-  await report.locator('input[name="sleepQuality"]').fill('7')
-  await report.getByRole('button', { name: /Выполнить/ }).click()
-  await expect(report.getByText('Стабильное состояние')).toBeVisible()
+  await page.getByRole('button', { name: 'Заполнить отчёт' }).click()
+  await page.getByLabel('Изделие').selectOption('device-1')
+  await page.getByLabel('Уровень боли').fill('2')
+  await page.getByLabel('Дискомфорт').fill('0')
+  await page.getByLabel('Подвижность').fill('8')
+  await page.getByLabel('Качество сна').fill('7')
+  const requestPromise = page.waitForRequest(
+    (request) => request.url().endsWith('/api/backend/reports') && request.method() === 'POST',
+  )
+  await page.getByRole('button', { name: 'Отправить' }).click()
+  const payload = (await requestPromise).postDataJSON()
+  expect(payload).toMatchObject({ deviceId: 'device-1', painLevel: 2, discomfortLevel: 0 })
+  await expect(page.getByText(/\b(GET|POST|PATCH)\b/)).toHaveCount(0)
 })
 
 test('patient complaint, chat, devices and profile actions are exposed', async ({ page }) => {
   for (const [path, label] of [
     ['/ru/patient/complaints', 'Создать жалобу'],
-    ['/ru/patient/chat', 'Написать специалисту'],
-    ['/ru/patient/devices', 'Мои акты выдачи'],
-    ['/ru/patient/profile', 'Изменить профиль пациента'],
+    ['/ru/patient/chat', 'Сообщение'],
+    ['/ru/patient/devices', 'Мои ТСР'],
+    ['/ru/patient/profile', 'Личные данные'],
   ] as const) {
     await page.goto(path)
-    await expect(page.getByText(label)).toBeVisible()
+    await expect(page.getByText(label).first()).toBeVisible()
+    await expect(page.getByText(/\b(GET|POST|PATCH)\b/)).toHaveCount(0)
+  }
+})
+
+test('patient product routes fit a 360 px viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 820 })
+  for (const path of ['reports', 'complaints', 'chat', 'devices', 'profile']) {
+    await page.goto(`/ru/patient/${path}`)
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+    ).toBe(true)
   }
 })

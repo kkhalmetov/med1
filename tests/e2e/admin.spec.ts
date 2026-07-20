@@ -24,24 +24,39 @@ test('admin dashboard and registries are accessible @a11y', async ({ page }) => 
   ).toEqual([])
 
   await page.goto('/ru/admin/qualifications')
-  const create = page.getByRole('article').filter({ hasText: 'Создать квалификацию' })
-  await create.getByRole('button').first().click()
-  await create.locator('input[name="name"]').fill('Реабилитолог')
-  await create.getByRole('button', { name: /Выполнить/ }).click()
-  await expect(create.getByText('Реабилитолог')).toBeVisible()
+  await page.getByRole('button', { name: 'Добавить квалификацию' }).click()
+  await page.getByLabel('Название').fill('Реабилитолог')
+  await page.getByLabel('Код').fill('REHAB')
+  const requestPromise = page.waitForRequest(
+    (request) =>
+      request.url().endsWith('/api/backend/qualifications') && request.method() === 'POST',
+  )
+  await page.getByRole('button', { name: 'Добавить квалификацию' }).last().click()
+  expect((await requestPromise).postDataJSON()).toEqual({ name: 'Реабилитолог', code: 'REHAB' })
+  await expect(page.getByText(/\b(GET|POST|PATCH)\b/)).toHaveCount(0)
 })
 
 test('admin can reach practitioner, organization, device, export and dispense tools', async ({
   page,
 }) => {
   for (const [path, label] of [
-    ['/ru/admin/organizations', 'Создать медицинскую организацию'],
+    ['/ru/admin/organizations', 'Добавить организацию'],
     ['/ru/admin/practitioners', 'Зарегистрировать специалиста'],
-    ['/ru/admin/devices', 'Добавить изделие'],
-    ['/ru/admin/dispenses', 'Скачать пациентов в CSV'],
+    ['/ru/admin/devices', 'Добавить ТСР'],
+    ['/ru/admin/dispenses', 'Акты выдачи'],
     ['/ru/admin/profile', 'Сменить пароль'],
   ] as const) {
     await page.goto(path)
-    await expect(page.getByText(label)).toBeVisible()
+    await expect(page.getByText(label).first()).toBeVisible()
+    await expect(page.getByText(/\b(GET|POST|PATCH)\b/)).toHaveCount(0)
+    await expect(page.getByRole('button', { name: /Выполнить|Запустить/ })).toHaveCount(0)
   }
+})
+
+test('admin registry fits a 360 px viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 820 })
+  await page.goto('/ru/admin/practitioners')
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
+    true,
+  )
 })

@@ -29,6 +29,7 @@
 5. Исправлен moderate PostCSS advisory через workspace override `8.5.10`.
 6. Origin validation адаптирован к public host за Vercel/Next proxy без ослабления foreign-origin deny policy.
 7. Live E2E переведён на in-page request без заполнения DOM, чтобы Playwright error context не мог сохранить credentials.
+8. После замены workbench формы по-прежнему используют только allowlisted BFF; protected image paths проходят существующую path policy, а CSV/PDF — binary transport.
 
 ## Остаточные ограничения
 

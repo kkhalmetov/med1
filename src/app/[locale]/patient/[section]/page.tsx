@@ -1,16 +1,7 @@
-import { getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
-import { operationGroups } from '@/shared/api/operation-catalog'
-import { getOperationDefinitions } from '@/server/backend/form-contract'
-import { WorkspacePage } from '@/shared/ui/workspace-page'
+import { PatientWorkspace } from '@/features/patient/patient-workspace'
 
-const sections = {
-  reports: ['patientReports', 'reports.title'],
-  devices: ['patientDevices', 'devices.title'],
-  complaints: ['patientComplaints', 'complaints.title'],
-  chat: ['patientChat', 'chat.title'],
-  profile: ['patientProfile', 'profile.title'],
-} as const
+const sections = ['reports', 'devices', 'complaints', 'chat', 'profile'] as const
 
 export default async function PatientSectionPage({
   params,
@@ -18,15 +9,6 @@ export default async function PatientSectionPage({
   params: Promise<{ section: string }>
 }) {
   const { section } = await params
-  if (!(section in sections)) notFound()
-  const [group, titleKey] = sections[section as keyof typeof sections]
-  const t = await getTranslations()
-  return (
-    <WorkspacePage
-      definitions={getOperationDefinitions(operationGroups[group])}
-      eyebrow="Qadam"
-      includePassword={section === 'profile'}
-      title={t(titleKey)}
-    />
-  )
+  if (!sections.includes(section as (typeof sections)[number])) notFound()
+  return <PatientWorkspace section={section as (typeof sections)[number]} />
 }

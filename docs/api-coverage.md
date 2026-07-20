@@ -11,6 +11,7 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 - Локальный `swagger.md`: **52 операции**.
 - Разница множеств `METHOD + PATH`: **0** в обе стороны.
 - Frontend action registry: **52/52**; проверяется командой `pnpm api:coverage`.
+- Product scenario map: **52/52**; каждая операция привязана к предметному экрану/действию без пользовательски видимых HTTP-методов.
 - Runtime/form schema coverage: **30/30**; поля, required, enum и диапазоны строятся из OpenAPI snapshot.
 - Публичные операции: только `POST /auth/make-auth` и `POST /auth/refresh-access-token`.
 - Остальные 50 операций требуют Bearer JWT.

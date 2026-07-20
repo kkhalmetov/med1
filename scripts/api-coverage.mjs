@@ -3,8 +3,8 @@ import { readFile } from 'node:fs/promises'
 const snapshot = JSON.parse(
   await readFile(new URL('../openapi/qadam.json', import.meta.url), 'utf8'),
 )
-const catalogSource = await readFile(
-  new URL('../src/shared/api/operation-catalog.ts', import.meta.url),
+const productMapSource = await readFile(
+  new URL('../src/shared/api/product-operation-map.ts', import.meta.url),
   'utf8',
 )
 const methods = new Set(['get', 'post', 'put', 'patch', 'delete', 'options', 'head', 'trace'])
@@ -15,8 +15,10 @@ const backendIds = new Set(
       .map(([, operation]) => operation.operationId),
   ),
 )
+const mapBody =
+  productMapSource.match(/productOperationMap\s*=\s*\{([\s\S]*?)\}\s*as const/)?.[1] ?? ''
 const frontendIds = new Set(
-  [...catalogSource.matchAll(/'([A-Za-z][A-Za-z0-9_]*)'/g)].map((match) => match[1]),
+  [...mapBody.matchAll(/^\s*([A-Za-z][A-Za-z0-9_]*):/gm)].map((match) => match[1]),
 )
 const missing = [...backendIds].filter((operationId) => !frontendIds.has(operationId))
 const extra = [...frontendIds].filter((operationId) => !backendIds.has(operationId))

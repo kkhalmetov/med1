@@ -2,7 +2,6 @@
 
 import { Activity, MessageCircle, PackageOpen, UserRound } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
 import type { components } from '@/shared/api/schema'
 import { useApiQuery } from '@/shared/api/use-api-query'
 import { Link } from '@/i18n/navigation'
@@ -17,15 +16,14 @@ const tones = { GREEN: 'success', YELLOW: 'warning', RED: 'danger' } as const
 
 export function PatientDashboard() {
   const t = useTranslations()
-  const [observableOnly, setObservableOnly] = useState(true)
-  const patient = useApiQuery<Patient>(['patient', 'me', observableOnly], '/patients/me', {
-    query: { only_observable: observableOnly },
+  const patient = useApiQuery<Patient>(['patient', 'me', 'observable'], '/patients/me', {
+    query: { only_observable: true },
   })
   const dispenses = useApiQuery<Dispense[]>(
-    ['dispenses', 'me', observableOnly],
+    ['dispenses', 'me', 'observable'],
     '/device-dispenses/me',
     {
-      query: { only_observable: observableOnly },
+      query: { only_observable: true },
     },
   )
   const reports = useApiQuery<Report[]>(['reports', 'my'], '/reports/my')
@@ -45,14 +43,6 @@ export function PatientDashboard() {
         </div>
         <StatusBadge tone={tones[status]}>{t(`enums.${status}` as never)}</StatusBadge>
       </header>
-      <label className="filter-toggle">
-        <input
-          checked={observableOnly}
-          onChange={(event) => setObservableOnly(event.target.checked)}
-          type="checkbox"
-        />
-        <span>{t('patients.observableOnly')}</span>
-      </label>
       {patient.isError ? (
         <div className="form-alert" role="alert">
           {t('errors.generic')}
