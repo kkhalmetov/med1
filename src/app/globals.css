@@ -836,3 +836,301 @@ svg {
     border-radius: 22px;
   }
 }
+
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 258px minmax(0, 1fr);
+  background: #f3f6f3;
+}
+.app-shell__sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 25px 18px 18px;
+  color: white;
+  background: var(--ink-950);
+}
+.app-shell__sidebar .brand {
+  padding-inline: 8px;
+  color: white;
+}
+.app-shell__sidebar .brand img {
+  box-shadow: none;
+}
+.app-shell__role {
+  margin: 25px 8px 13px;
+  color: #9bc8ba;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.app-nav {
+  display: grid;
+  gap: 4px;
+}
+.app-nav__link {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  color: #c9d9d4;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 650;
+  transition: 150ms ease;
+}
+.app-nav__link:hover {
+  color: white;
+  background: rgb(255 255 255 / 7%);
+}
+.app-nav__link[aria-current='page'] {
+  color: var(--ink-950);
+  background: #9be0c9;
+}
+.app-shell__logout {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  padding: 0 12px;
+  color: #c9d9d4;
+  background: transparent;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 650;
+}
+.app-shell__logout:hover {
+  color: white;
+  background: rgb(255 255 255 / 7%);
+}
+.app-shell__main {
+  min-width: 0;
+}
+.app-shell__topbar {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 0 clamp(20px, 4vw, 48px);
+  background: rgb(255 255 255 / 72%);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(16px);
+}
+.app-shell__topbar > .brand {
+  display: none;
+}
+.app-shell__topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.app-shell__avatar {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  color: white;
+  background: var(--brand-700);
+  border-radius: 13px;
+  text-decoration: none;
+}
+.app-shell__content {
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 48px);
+}
+.bottom-nav {
+  display: none;
+}
+.dashboard-page {
+  display: grid;
+  gap: 25px;
+}
+.page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.page-heading h1 {
+  margin: 7px 0 0;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  line-height: 1.1;
+  letter-spacing: -0.05em;
+}
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.dashboard-action {
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(145deg, white, var(--brand-50));
+}
+.dashboard-action p {
+  color: var(--ink-650);
+}
+.dashboard-action .button {
+  width: fit-content;
+  margin-top: auto;
+  text-decoration: none;
+}
+.empty-illustration {
+  min-height: 145px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 12px;
+  color: var(--ink-500);
+}
+.empty-illustration svg {
+  color: #85ae9f;
+}
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.stat-grid .card {
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.stat-card__value {
+  font-size: 2.8rem;
+  line-height: 1;
+  letter-spacing: -0.06em;
+}
+.empty-state {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-500);
+}
+.admin-entry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.admin-entry-grid a {
+  min-height: 170px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 20px;
+  padding: 26px;
+  color: var(--ink-950);
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  transition: 160ms ease;
+}
+.admin-entry-grid a:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+.admin-entry-grid a svg {
+  grid-column: 1 / -1;
+  color: var(--brand-700);
+}
+
+@media (max-width: 1040px) {
+  .app-shell {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+  .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .app-shell {
+    display: block;
+    padding-bottom: 74px;
+  }
+  .app-shell__sidebar {
+    display: none;
+  }
+  .app-shell__topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    height: 68px;
+    justify-content: space-between;
+    padding-inline: 16px;
+  }
+  .app-shell__topbar > .brand {
+    display: inline-flex;
+  }
+  .app-shell__content {
+    padding: 24px 15px;
+  }
+  .bottom-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 30;
+    min-height: 70px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 7px 5px max(7px, env(safe-area-inset-bottom));
+    background: rgb(255 254 251 / 96%);
+    border-top: 1px solid var(--line);
+    box-shadow: 0 -8px 25px rgb(16 47 43 / 8%);
+    backdrop-filter: blur(16px);
+  }
+  .bottom-nav a {
+    min-width: 0;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 3px;
+    color: var(--ink-500);
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 0.62rem;
+    font-weight: 700;
+  }
+  .bottom-nav a[aria-current='page'] {
+    color: var(--brand-700);
+    background: var(--brand-50);
+  }
+  .bottom-nav span {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .dashboard-grid,
+  .admin-entry-grid {
+    grid-template-columns: 1fr;
+  }
+  .page-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 440px) {
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+  .app-shell__topbar .locale-switcher > svg {
+    display: none;
+  }
+}

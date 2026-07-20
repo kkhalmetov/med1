@@ -67,7 +67,7 @@ Admin registries and exports
 - [x] T10 Allowlisted BFF transport and token refresh
 - [x] T11 Protected media and binary downloads
 - [ ] T12 Auth endpoints, login and password workflow
-- [ ] T13 Role guards and three application shells
+- [x] T13 Role guards and three application shells
 
 ### Checkpoint B
 

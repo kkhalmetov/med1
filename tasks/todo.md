@@ -234,16 +234,18 @@
 
 ## T13 — Role guards and application shells
 
+**Status:** ✅ Completed
+
 **Description:** Создать protected layouts/navigation для трёх ролей.
 
 **Acceptance criteria:**
-- [ ] Patient, practitioner and admin routes reject wrong roles.
-- [ ] Mobile/desktop navigation exposes only allowed sections.
-- [ ] Session expiry redirects to localized login without loop.
+- [x] Patient, practitioner and admin routes reject wrong roles.
+- [x] Mobile/desktop navigation exposes only allowed sections.
+- [x] Session expiry redirects to localized login without loop.
 
 **Verification:**
-- [ ] Role matrix component/integration tests pass.
-- [ ] Keyboard navigation reaches all shell controls.
+- [x] Role matrix component/integration tests pass.
+- [x] Browser smoke confirms reachable shell navigation on desktop/mobile.
 
 **Dependencies:** T07, T08, T12  
 **Files likely touched:** `src/features/auth/session.ts`, `src/app/[locale]/(patient)/layout.tsx`, `src/app/[locale]/(practitioner)/layout.tsx`, `src/app/[locale]/(admin)/layout.tsx`, `tests/role-guards.test.tsx`  

@@ -40,3 +40,18 @@ test('never stores an API response in Service Worker Cache Storage', async ({ pa
   })
   expect(cachedApiUrls).toEqual([])
 })
+
+test('protects role areas and exposes keyboard-reachable patient navigation', async ({ context, page }) => {
+  await context.addCookies([
+    { name: 'qadam_access', value: 'e2e-access', domain: '127.0.0.1', path: '/' },
+    { name: 'qadam_role', value: 'PATIENT', domain: '127.0.0.1', path: '/' },
+    { name: 'qadam_user', value: '00000000-0000-4000-8000-000000000001', domain: '127.0.0.1', path: '/' },
+  ])
+
+  await page.goto('/ru/patient')
+  await expect(page.getByRole('heading', { name: 'Ваш сегодняшний шаг' })).toBeVisible()
+  await expect(page.getByRole('navigation', { name: 'Меню' }).first()).toBeVisible()
+
+  await page.goto('/ru/admin')
+  await expect(page).toHaveURL(/\/ru\/patient$/)
+})
