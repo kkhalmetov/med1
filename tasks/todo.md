@@ -1,6 +1,6 @@
 # Qadam — implementable task list
 
-Статус: `IN PROGRESS — product UX correction`
+Статус: `COMPLETED — corrected release verified`
 Правило: задача отмечается завершённой только после acceptance и verification.
 
 ## T39 — Production UX correction specification and regression tests
@@ -79,7 +79,7 @@
 
 ## T45 — GitHub and Vercel corrected release
 
-**Status:** 🚧 In progress
+**Status:** ✅ Completed
 
 **Description:** Закоммитить, отправить в `main`, развернуть production и проверить публичный URL.
 

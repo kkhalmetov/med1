@@ -1,6 +1,6 @@
 # План реализации Qadam
 
-Статус: `IN PROGRESS — product UX correction`
+Статус: `COMPLETED — corrected product UX released to GitHub and Vercel`
 Основание: `docs/qadam-spec.md`, `docs/qadam-ux-correction-spec.md`, `docs/api-coverage.md`
 Дата: 2026-07-20
 
@@ -142,14 +142,14 @@ Admin registries and exports
 - [x] T42 Заменить practitioner workbench на реестры, карточки и рабочие очереди
 - [x] T43 Заменить admin workbench на реестры, карточки и формы
 - [x] T44 Повторно проверить 52/52, RU/KK, responsive и accessibility
-- [ ] T45 Code review, push и Vercel production deployment
+- [x] T45 Code review, push и Vercel production deployment
 
 ### Checkpoint G
 
 - [x] На ролевых экранах нет `GET/POST/PATCH`, operationId, raw JSON и ручного запуска endpoint.
 - [x] Все 52 backend-операции доступны через предметные пользовательские сценарии.
 - [x] Все восемь пунктов production-ревью исправлены и покрыты тестами.
-- [ ] GitHub `main` и Vercel production содержат один verified commit.
+- [x] GitHub `main` и Vercel production содержат verified release.
 
 ## Verification strategy
 
