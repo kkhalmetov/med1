@@ -17,7 +17,7 @@
 - Binary proxy не меняет bytes/content type/disposition и не копирует потенциально неверный `Content-Length`.
 - Upload policy: JPEG/PNG/WebP, source до 10 MB, complaint до 5 файлов/chat до 1, max dimension 1600 px, WebP compression и общий target до 4 MB.
 - React экранирует backend/user text; `dangerouslySetInnerHTML`, browser token storage и analytics отсутствуют.
-- Supply chain: exact versions, lockfile, minimum release age и explicit `onlyBuiltDependencies` allowlist для пяти проверенных native/tooling packages; остальные lifecycle scripts запрещены pnpm. `postcss >=8.5.10` override закрывает advisory, `pnpm audit --audit-level=moderate` — 0 findings.
+- Supply chain: exact versions, lockfile, minimum release age и explicit `allowBuilds` map для пяти проверенных native/tooling packages; остальные lifecycle scripts запрещены pnpm. `postcss >=8.5.10` override закрывает advisory, `pnpm audit --audit-level=moderate` — 0 findings.
 - Secret scan по значениям трёх demo accounts — clean; credentials доступны только через ignored local/Vercel environment variables.
 
 ## Исправления по итогам review
