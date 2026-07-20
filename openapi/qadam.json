@@ -3348,7 +3348,7 @@
             "type": "integer",
             "format": "int32",
             "maximum": 10,
-            "minimum": 1
+            "minimum": 0
           },
           "mobilityLevel": {
             "type": "integer",

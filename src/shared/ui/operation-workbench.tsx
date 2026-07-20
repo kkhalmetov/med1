@@ -136,6 +136,7 @@ function OperationCard({ operation }: { operation: OperationDefinition }) {
   const t = useTranslations()
   const [open, setOpen] = useState(false)
   const [pending, setPending] = useState(false)
+  const pendingRef = useRef(false)
   const [result, setResult] = useState<unknown>()
   const [error, setError] = useState<string>()
   const formRef = useRef<HTMLFormElement>(null)
@@ -154,6 +155,8 @@ function OperationCard({ operation }: { operation: OperationDefinition }) {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (pendingRef.current) return
+    pendingRef.current = true
     setPending(true)
     setError(undefined)
     const data = new FormData(event.currentTarget)
@@ -241,6 +244,7 @@ function OperationCard({ operation }: { operation: OperationDefinition }) {
                     : 'generic'
       setError(t(`errors.${key}` as never))
     } finally {
+      pendingRef.current = false
       setPending(false)
     }
   }

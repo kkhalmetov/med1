@@ -43,7 +43,12 @@ function fieldFromSchema(
     min: typeof schema.minimum === 'number' ? schema.minimum : undefined,
     max: typeof schema.maximum === 'number' ? schema.maximum : undefined,
     minLength: typeof schema.minLength === 'number' ? schema.minLength : undefined,
-    pattern: typeof schema.pattern === 'string' ? schema.pattern : undefined,
+    pattern:
+      typeof schema.pattern === 'string'
+        ? schema.pattern
+        : schema.format === 'uuid'
+          ? '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}'
+          : undefined,
     multiple: schemaType === 'array',
   }
 }

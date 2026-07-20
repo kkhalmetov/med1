@@ -88,11 +88,24 @@ test('executes a patient backend workflow from the localized workspace', async (
   const createReport = page.getByRole('article').filter({ hasText: 'Отправить ежедневный отчёт' })
   await createReport.getByRole('button').click()
   await expect(createReport.locator('input[name="painLevel"]')).toHaveAttribute('min', '0')
-  await expect(createReport.locator('input[name="discomfortLevel"]')).toHaveAttribute('min', '1')
+  await expect(createReport.locator('input[name="discomfortLevel"]')).toHaveAttribute('min', '0')
 
   const history = page.getByRole('article').filter({ hasText: 'Моя история отчётов' })
   await history.getByRole('button').first().click()
   await history.getByRole('button', { name: /Выполнить/ }).click()
   await expect(history.getByText('Стабильное состояние')).toBeVisible()
   await expect(history.getByText('3')).toBeVisible()
+})
+
+test('keeps core pages within 360–1440 px without horizontal overflow', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== 'chromium')
+  for (const width of [360, 768, 1280, 1440]) {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('/ru')
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+    ).toBe(true)
+  }
 })

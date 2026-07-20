@@ -20,7 +20,7 @@ describe('frontend operation catalog', () => {
       max: 10,
     })
     expect(report?.fields.find(({ name }) => name === 'discomfortLevel')).toMatchObject({
-      min: 1,
+      min: 0,
       max: 10,
       required: true,
     })

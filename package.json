@@ -21,6 +21,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest",
     "test:e2e": "playwright test",
+    "test:a11y": "playwright test --grep @a11y",
     "verify": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test -- --run && pnpm build"
   },
   "dependencies": {

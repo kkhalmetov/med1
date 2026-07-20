@@ -27,7 +27,7 @@ function backendBaseUrl() {
 
 function safeResponse(response: Response) {
   const headers = new Headers()
-  for (const name of ['content-type', 'content-disposition', 'content-length']) {
+  for (const name of ['content-type', 'content-disposition']) {
     const value = response.headers.get(name)
     if (value) headers.set(name, value)
   }
