@@ -91,5 +91,16 @@ export function resolveBackendOperation(
   ) {
     return null
   }
+  if (operation.operationId === 'getFile') {
+    const filePath = searchParams.get('path') ?? ''
+    const invalidFilePath =
+      filePath.length === 0 ||
+      filePath.length > 2_048 ||
+      filePath.startsWith('/') ||
+      filePath.includes('\\') ||
+      filePath.includes(':') ||
+      filePath.split('/').some((segment) => segment === '..' || segment === '.')
+    if (invalidFilePath) return null
+  }
   return operation
 }

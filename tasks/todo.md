@@ -196,16 +196,18 @@
 
 ## T11 — Protected media and downloads
 
+**Status:** ✅ Completed
+
 **Description:** Корректно проксировать `/files`, CSV and PDF responses.
 
 **Acceptance criteria:**
-- [ ] Media keeps content type and uses safe placeholders on `404`.
-- [ ] CSV/PDF keep body, filename and disposition.
-- [ ] All responses are `no-store`.
+- [x] Media keeps content type and uses safe placeholders on `404`.
+- [x] CSV/PDF keep body, filename and disposition.
+- [x] All responses are `no-store`.
 
 **Verification:**
-- [ ] Binary fixture hashes match before/after proxy.
-- [ ] Path/query policy rejects malformed requests.
+- [x] Binary fixture hashes match before/after proxy.
+- [x] Path/query policy rejects malformed requests.
 
 **Dependencies:** T10  
 **Files likely touched:** `src/server/backend/binary.ts`, `src/shared/api/download.ts`, `src/shared/ui/protected-image.tsx`, `tests/binary-proxy.test.ts`  
