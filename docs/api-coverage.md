@@ -1,6 +1,6 @@
 # Qadam — полная матрица покрытия backend API
 
-Статус: `SPECIFIED — реализация ещё не начата`  
+Статус: `IMPLEMENTED — 52/52 operations и 30/30 schemas; live smoke ожидает доступности backend`  
 Проверено: 2026-07-20  
 Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 
@@ -10,6 +10,8 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 - Live Swagger: **41 path, 52 операции, 30 схем, 11 групп**.
 - Локальный `swagger.md`: **52 операции**.
 - Разница множеств `METHOD + PATH`: **0** в обе стороны.
+- Frontend action registry: **52/52**; проверяется командой `pnpm api:coverage`.
+- Runtime/form schema coverage: **30/30**; поля, required, enum и диапазоны строятся из OpenAPI snapshot.
 - Публичные операции: только `POST /auth/make-auth` и `POST /auth/refresh-access-token`.
 - Остальные 50 операций требуют Bearer JWT.
 

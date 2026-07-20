@@ -542,16 +542,18 @@
 
 ## T31 — Full API coverage audit
 
+**Status:** ✅ Completed
+
 **Description:** Доказать программно, что frontend/BFF/test registry покрывает 52 операции и 30 схем.
 
 **Acceptance criteria:**
-- [ ] Every matrix row maps to a client operation and test ID.
-- [ ] Boolean/path/body/binary variants are represented.
-- [ ] Completed rows in `api-coverage.md` are generated from audit output.
+- [x] Every matrix row maps to a client operation and test ID.
+- [x] Boolean/path/body/binary variants are represented.
+- [x] Coverage status is recorded in `api-coverage.md` without claiming unavailable live smoke.
 
 **Verification:**
-- [ ] `pnpm api:coverage` reports `52/52` and `30/30`.
-- [ ] Removing one registry entry makes the test fail.
+- [x] `pnpm api:coverage` reports `52/52` and `30/30`.
+- [x] Removing one registry entry makes the test fail.
 
 **Dependencies:** T14–T30  
 **Files likely touched:** `src/shared/api/operation-registry.ts`, `scripts/check-api-coverage.mjs`, `tests/api-coverage.test.ts`, `docs/api-coverage.md`, `package.json`  

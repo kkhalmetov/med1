@@ -16,10 +16,12 @@ test('has no serious accessibility findings or horizontal overflow', async ({ pa
   await page.goto('/kk')
 
   const results = await new AxeBuilder({ page }).analyze()
-  expect(results.violations.filter(({ impact }) => impact === 'critical' || impact === 'serious')).toEqual(
-    [],
+  expect(
+    results.violations.filter(({ impact }) => impact === 'critical' || impact === 'serious'),
+  ).toEqual([])
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
+    true,
   )
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
 })
 
 test('never stores an API response in Service Worker Cache Storage', async ({ page }) => {
@@ -41,11 +43,19 @@ test('never stores an API response in Service Worker Cache Storage', async ({ pa
   expect(cachedApiUrls).toEqual([])
 })
 
-test('protects role areas and exposes keyboard-reachable patient navigation', async ({ context, page }) => {
+test('protects role areas and exposes keyboard-reachable patient navigation', async ({
+  context,
+  page,
+}) => {
   await context.addCookies([
     { name: 'qadam_access', value: 'e2e-access', domain: '127.0.0.1', path: '/' },
     { name: 'qadam_role', value: 'PATIENT', domain: '127.0.0.1', path: '/' },
-    { name: 'qadam_user', value: '00000000-0000-4000-8000-000000000001', domain: '127.0.0.1', path: '/' },
+    {
+      name: 'qadam_user',
+      value: '00000000-0000-4000-8000-000000000001',
+      domain: '127.0.0.1',
+      path: '/',
+    },
   ])
 
   await page.goto('/ru/patient')
@@ -54,4 +64,35 @@ test('protects role areas and exposes keyboard-reachable patient navigation', as
 
   await page.goto('/ru/admin')
   await expect(page).toHaveURL(/\/ru\/patient$/)
+})
+
+test('executes a patient backend workflow from the localized workspace', async ({
+  context,
+  page,
+}) => {
+  await context.addCookies([
+    { name: 'qadam_access', value: 'e2e-access', domain: '127.0.0.1', path: '/' },
+    { name: 'qadam_role', value: 'PATIENT', domain: '127.0.0.1', path: '/' },
+    {
+      name: 'qadam_user',
+      value: '00000000-0000-4000-8000-000000000001',
+      domain: '127.0.0.1',
+      path: '/',
+    },
+  ])
+  await page.route('**/api/backend/reports/my', (route) =>
+    route.fulfill({ json: [{ id: 'report-1', painLevel: 3, statusColor: 'GREEN' }] }),
+  )
+  await page.goto('/ru/patient/reports')
+
+  const createReport = page.getByRole('article').filter({ hasText: 'Отправить ежедневный отчёт' })
+  await createReport.getByRole('button').click()
+  await expect(createReport.locator('input[name="painLevel"]')).toHaveAttribute('min', '0')
+  await expect(createReport.locator('input[name="discomfortLevel"]')).toHaveAttribute('min', '1')
+
+  const history = page.getByRole('article').filter({ hasText: 'Моя история отчётов' })
+  await history.getByRole('button').first().click()
+  await history.getByRole('button', { name: /Выполнить/ }).click()
+  await expect(history.getByText('Стабильное состояние')).toBeVisible()
+  await expect(history.getByText('3')).toBeVisible()
 })

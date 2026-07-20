@@ -17,6 +17,7 @@
     "api:sync": "node scripts/openapi-contract.mjs sync && pnpm api:types",
     "api:types": "openapi-typescript openapi/qadam.json -o src/shared/api/schema.d.ts",
     "api:check": "node scripts/openapi-contract.mjs check",
+    "api:coverage": "node scripts/api-coverage.mjs && vitest --run tests/operation-catalog.test.ts",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest",
     "test:e2e": "playwright test",

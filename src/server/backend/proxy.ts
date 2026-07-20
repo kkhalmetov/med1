@@ -58,7 +58,7 @@ function validateContentType(contentTypes: string[], request: Request) {
   return Boolean(contentType && contentTypes.includes(contentType))
 }
 
-export async function proxyBackendRequest(
+async function performBackendRequest(
   request: Request,
   path: string,
   store: SessionStore,
@@ -95,4 +95,22 @@ export async function proxyBackendRequest(
     else clearSession(store)
   }
   return safeResponse(response)
+}
+
+export async function proxyBackendRequest(
+  request: Request,
+  path: string,
+  store: SessionStore,
+): Promise<Response> {
+  try {
+    return await performBackendRequest(request, path, store)
+  } catch {
+    return Response.json(
+      { code: 'BACKEND_UNAVAILABLE' },
+      {
+        status: 503,
+        headers: { 'cache-control': 'private, no-store, max-age=0' },
+      },
+    )
+  }
 }

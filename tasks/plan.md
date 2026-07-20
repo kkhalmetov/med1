@@ -118,7 +118,7 @@ Admin registries and exports
 
 ### Фаза 6 — Completion and release
 
-- [ ] T31 Full 52-operation contract coverage audit
+- [x] T31 Full 52-operation contract coverage audit
 - [ ] T32 Translation, accessibility and responsive audit
 - [ ] T33 Patient E2E suite
 - [ ] T34 Practitioner E2E suite

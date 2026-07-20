@@ -25,12 +25,17 @@ export async function authenticateCredentials(
   store: SessionStore,
   fetcher: Fetcher = fetch,
 ) {
-  const response = await fetcher(backendUrl('/auth/make-auth'), {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(credentials),
-    cache: 'no-store',
-  })
+  let response: Response
+  try {
+    response = await fetcher(backendUrl('/auth/make-auth'), {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(credentials),
+      cache: 'no-store',
+    })
+  } catch {
+    return { ok: false as const, status: 503, data: { code: 'BACKEND_UNAVAILABLE' } }
+  }
   if (!response.ok) {
     clearSession(store)
     return {
@@ -63,6 +68,8 @@ export async function logoutBackendSession(store: SessionStore, fetcher: Fetcher
         cache: 'no-store',
       })
     }
+  } catch {
+    // Local session termination must succeed even when the backend is unavailable.
   } finally {
     clearSession(store)
   }
@@ -75,15 +82,20 @@ export async function updateBackendPassword(
 ) {
   const { accessToken } = readSession(store)
   if (!accessToken) return { status: 401, data: { code: 'UNAUTHORIZED' } }
-  const response = await fetcher(backendUrl('/auth/password/update'), {
-    method: 'PATCH',
-    headers: {
-      authorization: `Bearer ${accessToken}`,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify(input),
-    cache: 'no-store',
-  })
+  let response: Response
+  try {
+    response = await fetcher(backendUrl('/auth/password/update'), {
+      method: 'PATCH',
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(input),
+      cache: 'no-store',
+    })
+  } catch {
+    return { status: 503, data: { code: 'BACKEND_UNAVAILABLE' } }
+  }
   return {
     status: response.status,
     data: response.ok ? { ok: true } : { code: response.status === 400 ? 'BAD_REQUEST' : 'ERROR' },

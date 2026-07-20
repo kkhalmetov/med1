@@ -157,4 +157,17 @@ describe('backend proxy', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2)
     expect(session.values).toEqual({})
   })
+
+  it('converts backend network failure to a safe 503 response', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('network down')))
+
+    const response = await proxyBackendRequest(
+      new Request('http://qadam.test/api/backend/patients/me'),
+      '/patients/me',
+      createSession({ qadam_access: 'access' }),
+    )
+
+    expect(response.status).toBe(503)
+    await expect(response.json()).resolves.toEqual({ code: 'BACKEND_UNAVAILABLE' })
+  })
 })
