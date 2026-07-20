@@ -44,16 +44,18 @@
 
 ## T03 — Lint, format and typecheck toolchain
 
+**Status:** ✅ Completed
+
 **Description:** Настроить ESLint/Prettier и единый `verify` command.
 
 **Acceptance criteria:**
-- [ ] Scripts `lint`, `lint:fix`, `format`, `format:check`, `typecheck`, `verify` работают.
-- [ ] Strict TypeScript и import boundaries проверяются автоматически.
+- [x] Scripts `lint`, `lint:fix`, `format`, `format:check`, `typecheck`, `verify` работают.
+- [x] Strict TypeScript и import boundaries проверяются автоматически.
 
 **Verification:**
-- [ ] `pnpm lint`
-- [ ] `pnpm format:check`
-- [ ] `pnpm typecheck`
+- [x] `pnpm lint`
+- [x] `pnpm format:check`
+- [x] `pnpm typecheck`
 
 **Dependencies:** T02  
 **Files likely touched:** `eslint.config.mjs`, `.prettierrc.json`, `.prettierignore`, `package.json`  
