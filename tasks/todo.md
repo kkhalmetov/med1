@@ -5,6 +5,8 @@
 
 ## T01 — Repository hygiene and environment contract
 
+**Status:** ✅ Completed in `546e37b`
+
 **Description:** Подготовить безопасную основу репозитория и описание переменных окружения без значений.
 
 **Acceptance criteria:**
