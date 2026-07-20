@@ -1,0 +1,4424 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://45.141.100.245:8080/disabled-support-service/api/v1",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/reports": {
+      "get": {
+        "tags": [
+          "Отчёты пациентов"
+        ],
+        "summary": "Сводка отчётов всех прикреплённых пациентов",
+        "description": "Требуется роль PRACTITIONER. Возвращает отчёты всех пациентов, закреплённых за вызывающим врачом. Сортировка по статусу пациента - сначала отчеты красных, затем желтых и зеленых",
+        "operationId": "findAllMyPatientsReports",
+        "parameters": [
+          {
+            "name": "is_unchecked",
+            "in": "query",
+            "description": "Фильтр: только непроверенные отчёты",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "example": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QuestionnaireResponseResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Отчёты пациентов"
+        ],
+        "summary": "Подача отчёта о самочувствии",
+        "description": "Требуется роль PATIENT. Отчёт всегда подаётся от имени вызывающего пациента",
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuestionnaireResponseCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionnaireResponseResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Изделие с таким id не найдено"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/qualifications": {
+      "get": {
+        "tags": [
+          "Квалификации"
+        ],
+        "summary": "Поиск всех квалификаций",
+        "operationId": "findAll",
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QualificationResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Квалификации"
+        ],
+        "summary": "Добавление квалификации",
+        "description": "Требуется роль ADMIN",
+        "operationId": "create_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QualificationCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/QualificationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Уже существует",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "409",
+                  "message": "Квалификация с таким названием уже существует"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/practitioners": {
+      "get": {
+        "tags": [
+          "Мед. специалисты"
+        ],
+        "summary": "Поиск всех специалистов",
+        "description": "Требуется роль ADMIN",
+        "operationId": "findAll_1",
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PractitionerResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Мед. специалисты"
+        ],
+        "summary": "Регистрация специалиста",
+        "description": "Требуется роль ADMIN",
+        "operationId": "register",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/PractitionerRegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PractitionerResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Организация с таким id не найдена"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Специалист с таким ИИН уже зарегистрирован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "409",
+                  "message": "Специалист с таким ИИН уже зарегистрирован"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/patients": {
+      "get": {
+        "tags": [
+          "Пациенты"
+        ],
+        "summary": "Поиск своих пациентов",
+        "description": "Требуется роль PRACTITIONER. Возвращает пациентов, закреплённых за вызывающим врачом, вместе с информацией о выдачах изделий и остаточных сроках наблюдения",
+        "operationId": "findMyPatients",
+        "parameters": [
+          {
+            "name": "only_observable",
+            "in": "query",
+            "description": "Фильтр: включить информацию только о текущих протезах/ортезах или о всех",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "example": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PatientResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Пациенты"
+        ],
+        "summary": "Регистрация пациента",
+        "description": "Требуется роль PRACTITIONER. Пациент автоматически привязывается к вызывающему врачу",
+        "operationId": "register_1",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/PatientRegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Пациент с таким ИИН уже зарегистрирован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "409",
+                  "message": "Пациент с таким ИИН уже зарегистрирован"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ошибка на сервере",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "500",
+                  "message": "Ошибка на сервере"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/patients/{patientId}/chat/messages": {
+      "get": {
+        "tags": [
+          "Чат"
+        ],
+        "summary": "Получение всей переписки с пациентом (врачом)",
+        "description": "Требуется роль PRACTITIONER. Непрочитанные сообщения от пациента при этом помечаются прочитанными",
+        "operationId": "findAllAsPractitionerForPatient",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChatMessageResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Пациент закреплён за другим специалистом",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Пациент закреплён за другим специалистом"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Пациент с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Чат"
+        ],
+        "summary": "Отправка текстового сообщения пациенту (врачом)",
+        "description": "Требуется роль PRACTITIONER. Пациент должен быть закреплён за вызывающим врачом",
+        "operationId": "sendAsPractitioner",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatMessageCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatMessageResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Пациент закреплён за другим специалистом",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Пациент закреплён за другим специалистом"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Пациент с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/patients/{patientId}/chat/messages/photo": {
+      "post": {
+        "tags": [
+          "Чат"
+        ],
+        "summary": "Отправка сообщения с фото пациенту (врачом)",
+        "description": "Требуется роль PRACTITIONER. multipart/form-data: photo — файл изображения, content — необязательная подпись",
+        "operationId": "sendPhotoAsPractitioner",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatMessageWithPhotoCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatMessageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Пустое сообщение или недопустимый тип файла",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "400",
+                  "message": "Сообщение должно содержать текст или фото"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Пациент закреплён за другим специалистом",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Пациент закреплён за другим специалистом"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Пациент с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/organizations": {
+      "get": {
+        "tags": [
+          "Мед. организации"
+        ],
+        "summary": "Поиск всех мед. организаций",
+        "operationId": "findAll_2",
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrganizationResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Мед. организации"
+        ],
+        "summary": "Добавление мед. организации",
+        "description": "Требуется роль ADMIN",
+        "operationId": "create_2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Уже существует",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "409",
+                  "message": "Организация с таким названием уже существует"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/devices": {
+      "get": {
+        "tags": [
+          "Изделия (протезы/ортезы)"
+        ],
+        "summary": "Поиск всех изделий",
+        "operationId": "findAll_3",
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeviceResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Изделия (протезы/ортезы)"
+        ],
+        "summary": "Добавление изделия",
+        "description": "Требуется роль ADMIN или PRACTITIONER",
+        "operationId": "create_3",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Организация с таким id не найдена"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/device-dispenses": {
+      "post": {
+        "tags": [
+          "Акты выдачи изделий"
+        ],
+        "summary": "Добавление информации об акте выдаче изделия",
+        "description": "Требуется роль PRACTITIONER",
+        "operationId": "create_4",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceDispenseCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceDispenseResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Уже существует",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Пациент не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/device-complains": {
+      "get": {
+        "tags": [
+          "Жалобы на изделия"
+        ],
+        "summary": "Жалобы всех прикреплённых пациентов",
+        "description": "Требуется роль PRACTITIONER. Сортировка по статусу пациента — сначала жалобы красных, затем жёлтых и зелёных",
+        "operationId": "findAllMyPatientsComplaints",
+        "parameters": [
+          {
+            "name": "not_reviewed",
+            "in": "query",
+            "description": "Фильтр: только нерассмотренные жалобы",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "example": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeviceComplainResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Жалобы на изделия"
+        ],
+        "summary": "Подача жалобы на изделие (пациентом)",
+        "description": "Требуется роль PATIENT. multipart/form-data: reason — причина, comment — комментарий, deviceDispenseId — акт выдачи изделия, photos — фото проблемных мест. Лечащий врач пациента получает уведомление на почту",
+        "operationId": "create_5",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceComplainCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceComplainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Некорректный запрос (например, чужая выдача изделия или недопустимый тип файла)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "400",
+                  "message": "Указанная выдача изделия не относится к вам"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/chat/messages": {
+      "get": {
+        "tags": [
+          "Чат"
+        ],
+        "summary": "Получение всей переписки со своим врачом (пациентом)",
+        "description": "Требуется роль PATIENT. Непрочитанные сообщения от врача при этом помечаются прочитанными",
+        "operationId": "findAllAsPatient",
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChatMessageResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Чат"
+        ],
+        "summary": "Отправка текстового сообщения своему врачу (пациентом)",
+        "description": "Требуется роль PATIENT. Получатель — врач, закреплённый за пациентом",
+        "operationId": "sendAsPatient",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatMessageCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatMessageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "У пациента нет закреплённого врача",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "400",
+                  "message": "Вам ещё не назначен лечащий специалист — отправка сообщений недоступна"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/chat/messages/photo": {
+      "post": {
+        "tags": [
+          "Чат"
+        ],
+        "summary": "Отправка сообщения с фото своему врачу (пациентом)",
+        "description": "Требуется роль PATIENT. multipart/form-data: photo — файл изображения, content — необязательная подпись",
+        "operationId": "sendPhotoAsPatient",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatMessageWithPhotoCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatMessageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Пустое сообщение или недопустимый тип файла",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "400",
+                  "message": "Сообщение должно содержать текст или фото"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/auth/refresh-access-token": {
+      "post": {
+        "tags": [
+          "Аутентификация. Управление токенами, сессиями"
+        ],
+        "summary": "Обновление токена доступа",
+        "description": "Токен доступа можно обновить по refresh токену",
+        "operationId": "refreshAccessToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshAccessTokenRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Успешное обновление токена доступа",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Некорректный запрос (например, неправильно сконфигурирован токен/токен истек/токен отсутствует)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "400",
+                  "message": "Refresh токен истек или неправильно сконфигурирован"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Пользователь, которому принадлежит токен, не найден",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Пользователь не найден"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/make-auth": {
+      "post": {
+        "tags": [
+          "Аутентификация. Управление токенами, сессиями"
+        ],
+        "summary": "Аутентификация пользователя",
+        "operationId": "authenticate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Успешная аутентификация",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Некорректный запрос (например, неверные данные или данные отсутствуют)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "400",
+                  "message": "Поле email не может быть пустым"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Неуспешная аутентификация (введены неверные данные/аккаунт не активирован/аккаунт заблокирован)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Ошибка аутентификации. Введеные неправильные данные"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Аутентификация. Управление токенами, сессиями"
+        ],
+        "summary": "Завершение сессии",
+        "description": "Инвалидация access и refresh токенов пользователя",
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "Успешное завершение сессии",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Пользователь не аутентифицирован",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/reports/{id}/check": {
+      "patch": {
+        "tags": [
+          "Отчёты пациентов"
+        ],
+        "summary": "Отметка отчёта как проверенного",
+        "description": "Требуется роль PRACTITIONER. Проверить можно только отчёт своего пациента. В отчёте фиксируются checkedBy (вызывающий врач) и checkedAt",
+        "operationId": "check",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuestionnaireResponseResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Отчёт пациента другого специалиста",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Отчёт принадлежит пациенту другого специалиста"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Отчёт с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/practitioners/me": {
+      "get": {
+        "tags": [
+          "Мед. специалисты"
+        ],
+        "summary": "Получение информации о себе (мед. специалистом)",
+        "description": "Требуется роль PRACTITIONER",
+        "operationId": "findMe",
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PractitionerResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Нет доступа"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Специалист с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Мед. специалисты"
+        ],
+        "summary": "Обновление информации о специалисте",
+        "description": "Требуется роль PRACTITIONER",
+        "operationId": "updateMe",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PractitionerSelfUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PractitionerResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Специалист с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/patients/{id}/status": {
+      "patch": {
+        "tags": [
+          "Пациенты"
+        ],
+        "summary": "Изменение статуса пациента",
+        "description": "Требуется роль PRACTITIONER",
+        "operationId": "changeStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatientStatusChangeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientStatusChangeResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Пациент с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/patients/me": {
+      "get": {
+        "tags": [
+          "Пациенты"
+        ],
+        "summary": "Получение информации о себе (пациентом).",
+        "description": "Требуется роль PATIENT. Возвращает информацию о пациенте, включая информацию о выдачах изделий",
+        "operationId": "findMe_1",
+        "parameters": [
+          {
+            "name": "only_observable",
+            "in": "query",
+            "description": "Фильтр: включить информацию только о текущих протезах/ортезах или о всех",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "example": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Пациенты"
+        ],
+        "summary": "Обновление информации о себе (пациентом)",
+        "description": "Требуется роль PATIENT. Доступно изменение телефона и адреса",
+        "operationId": "updateMe_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatientSelfUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Пациент с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/device-complains/{id}/review": {
+      "patch": {
+        "tags": [
+          "Жалобы на изделия"
+        ],
+        "summary": "Рассмотрение жалобы",
+        "description": "Требуется роль PRACTITIONER. Рассмотреть можно только жалобу своего пациента. Фиксируются статус, решение (reviewDecision), проверяющий и время; пациент получает уведомление на почту",
+        "operationId": "review",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceComplainReviewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceComplainResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Жалоба пациента другого специалиста",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Жалоба принадлежит пациенту другого специалиста"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Жалоба с таким id не найдена"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/auth/password/update": {
+      "patch": {
+        "tags": [
+          "Аутентификация. Управление токенами, сессиями"
+        ],
+        "summary": "Обновление пароля",
+        "operationId": "updatePassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Неправильно введен старый пароль",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "400",
+                  "message": "Неправильно введен старый пароль"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Пользователь не аутентифицирован",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/reports/my": {
+      "get": {
+        "tags": [
+          "Отчёты пациентов"
+        ],
+        "summary": "Просмотр своих отчётов (пациентом)",
+        "description": "Требуется роль PATIENT",
+        "operationId": "findOwn",
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QuestionnaireResponseResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/qualifications/{id}": {
+      "get": {
+        "tags": [
+          "Квалификации"
+        ],
+        "summary": "Поиск квалификации по id",
+        "operationId": "findById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/QualificationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Квалификации с таким id не существует"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/practitioners/{id}": {
+      "get": {
+        "tags": [
+          "Мед. специалисты"
+        ],
+        "summary": "Поиск специалиста по id",
+        "operationId": "findById_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PractitionerResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Специалист с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/practitioners/export": {
+      "get": {
+        "tags": [
+          "Мед. специалисты"
+        ],
+        "summary": "Экспорт информации о специалистах в CSV",
+        "description": "Требуется роль ADMIN",
+        "operationId": "exportCsv",
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ошибка на сервере",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "500",
+                  "message": "Ошибка на сервере"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/patients/{patientId}/reports": {
+      "get": {
+        "tags": [
+          "Отчёты пациентов"
+        ],
+        "summary": "Сводка отчётов конкретного пациента",
+        "description": "Требуется роль PRACTITIONER. Пациент должен быть закреплён за вызывающим врачом",
+        "operationId": "findByPatient",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "is_unchecked",
+            "in": "query",
+            "description": "Фильтр: только непроверенные отчёты",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "example": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/QuestionnaireResponseResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Пациент закреплён за другим специалистом",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Пациент закреплён за другим специалистом"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Пациент с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/patients/{patientId}/reports/export-pdf": {
+      "get": {
+        "tags": [
+          "Отчёты пациентов"
+        ],
+        "summary": "Экспорт всех отчётов пациента в PDF",
+        "description": "Требуется роль PRACTITIONER. Пациент должен быть закреплён за вызывающим врачом. PDF содержит уровни боли, дискомфорта, подвижности, сна и комментарии по дням",
+        "operationId": "exportPdf",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех (application/pdf)",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Пациент закреплён за другим специалистом",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Пациент закреплён за другим специалистом"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Пациент с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/patients/{patientId}/device-dispenses": {
+      "get": {
+        "tags": [
+          "Акты выдачи изделий"
+        ],
+        "summary": "Поиск всех актов выдачи изделий конкретному пациенту",
+        "description": "Требуется роль PRACTITIONER или ADMIN",
+        "operationId": "findByPatient_1",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "only_observable",
+            "in": "query",
+            "description": "Фильтр: включить информацию только об актах выдачи изделий, все еще находящихся под наблюдением",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "example": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeviceDispenseResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Не найдено"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/patients/{patientId}/device-complains": {
+      "get": {
+        "tags": [
+          "Жалобы на изделия"
+        ],
+        "summary": "Жалобы конкретного пациента",
+        "description": "Требуется роль PRACTITIONER. Пациент должен быть закреплён за вызывающим врачом",
+        "operationId": "findByPatient_2",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "not_reviewed",
+            "in": "query",
+            "description": "Фильтр: только нерассмотренные жалобы",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "example": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeviceComplainResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Пациент закреплён за другим специалистом",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Пациент закреплён за другим специалистом"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Пациент с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/patients/{patientId}/device-complains/export-pdf": {
+      "get": {
+        "tags": [
+          "Жалобы на изделия"
+        ],
+        "summary": "Экспорт жалоб пациента в PDF",
+        "description": "Требуется роль PRACTITIONER. Пациент должен быть закреплён за вызывающим врачом. PDF содержит все жалобы пациента: дата, изделие, причина, комментарий, статус, решение",
+        "operationId": "exportPdf_1",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех (application/pdf)",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Пациент закреплён за другим специалистом",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Пациент закреплён за другим специалистом"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Пациент с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/patients/{id}/status-history": {
+      "get": {
+        "tags": [
+          "Пациенты"
+        ],
+        "summary": "История изменений статуса пациента",
+        "operationId": "statusHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PatientStatusChangeResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Пациент с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/patients/export": {
+      "get": {
+        "tags": [
+          "Пациенты"
+        ],
+        "summary": "Экспорт информации о пациентах в CSV",
+        "description": "Требуется роль ADMIN",
+        "operationId": "exportCsv_1",
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ошибка на сервере",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "500",
+                  "message": "Ошибка на сервере"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/organizations/{id}": {
+      "get": {
+        "tags": [
+          "Мед. организации"
+        ],
+        "summary": "Поиск мед. организации по id",
+        "operationId": "findById_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Организации с таким id не существует"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/files": {
+      "get": {
+        "tags": [
+          "Управление файлами"
+        ],
+        "summary": "Получение файла по path (путь)",
+        "operationId": "getFile",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Файл не найден по пути"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/devices/{id}": {
+      "get": {
+        "tags": [
+          "Изделия (протезы/ортезы)"
+        ],
+        "summary": "Поиск изделия по id",
+        "operationId": "findById_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Изделия с таким id не существует"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/device-dispenses/{id}": {
+      "get": {
+        "tags": [
+          "Акты выдачи изделий"
+        ],
+        "summary": "Поиск акта выдачи по id",
+        "operationId": "findById_4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceDispenseResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Не найдено"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/device-dispenses/me": {
+      "get": {
+        "tags": [
+          "Акты выдачи изделий"
+        ],
+        "summary": "Поиск всех актов выдачи (собственных - для запрашиваемого пациента)",
+        "description": "Требуется роль PATIENT",
+        "operationId": "findMy",
+        "parameters": [
+          {
+            "name": "only_observable",
+            "in": "query",
+            "description": "Фильтр: включить информацию только об актах выдачи изделий, все еще находящихся под наблюдением",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "example": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeviceDispenseResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Пациент с таким id не существует"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/device-complains/{id}": {
+      "get": {
+        "tags": [
+          "Жалобы на изделия"
+        ],
+        "summary": "Поиск жалобы по id",
+        "operationId": "findById_5",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceComplainResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Жалоба не найдена"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/device-complains/my": {
+      "get": {
+        "tags": [
+          "Жалобы на изделия"
+        ],
+        "summary": "Просмотр своих жалоб (пациентом)",
+        "description": "Требуется роль PATIENT",
+        "operationId": "findOwn_1",
+        "parameters": [
+          {
+            "name": "reviewed",
+            "in": "query",
+            "description": "Фильтр: только рассмотренные жалобы",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "example": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeviceComplainResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/chat/unread": {
+      "get": {
+        "tags": [
+          "Чат"
+        ],
+        "summary": "Получение непрочитанных сообщений от всех пациентов (врачом)",
+        "description": "Требуется роль PRACTITIONER. Сводно по всем закреплённым пациентам; сообщения прочитанными НЕ помечаются (для счётчика/бейджа)",
+        "operationId": "findUnreadAsPractitioner",
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChatMessageResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Пациент закреплён за другим специалистом",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Пациент закреплён за другим специалистом"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/chat/messages/unread": {
+      "get": {
+        "tags": [
+          "Чат"
+        ],
+        "summary": "Получение непрочитанных сообщений от врача (пациентом)",
+        "description": "Требуется роль PATIENT. Сообщения прочитанными НЕ помечаются (для счётчика/бейджа)",
+        "operationId": "findUnreadAsPatient",
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChatMessageResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "QuestionnaireResponseCreateRequest": {
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "painLevel": {
+            "type": "integer",
+            "format": "int32",
+            "maximum": 10,
+            "minimum": 0
+          },
+          "discomfortLevel": {
+            "type": "integer",
+            "format": "int32",
+            "maximum": 10,
+            "minimum": 1
+          },
+          "mobilityLevel": {
+            "type": "integer",
+            "format": "int32",
+            "maximum": 10,
+            "minimum": 0
+          },
+          "sleepQuality": {
+            "type": "integer",
+            "format": "int32",
+            "maximum": 10,
+            "minimum": 0
+          },
+          "comment": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "deviceId",
+          "discomfortLevel",
+          "painLevel"
+        ]
+      },
+      "QuestionnaireResponseResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patientFullName": {
+            "type": "string"
+          },
+          "statusColor": {
+            "type": "string",
+            "enum": [
+              "GREEN",
+              "YELLOW",
+              "RED"
+            ]
+          },
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deviceName": {
+            "type": "string"
+          },
+          "targetBodyPart": {
+            "type": "string",
+            "enum": [
+              "ARM",
+              "LEG",
+              "BACK",
+              "NECK"
+            ]
+          },
+          "submittedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "painLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "discomfortLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mobilityLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sleepQuality": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "checkedByPractitionerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "checkedByFullName": {
+            "type": "string"
+          },
+          "checkedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "QualificationCreateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "code": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "QualificationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      },
+      "PractitionerRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "iin": {
+            "type": "string",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "phone": {
+            "type": "string",
+            "minLength": 1
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "licenseNumber": {
+            "type": "string",
+            "minLength": 1
+          },
+          "qualificationsId": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "minItems": 1
+          },
+          "photo": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": [
+          "email",
+          "firstName",
+          "iin",
+          "lastName",
+          "licenseNumber",
+          "organizationId",
+          "phone",
+          "qualificationsId"
+        ]
+      },
+      "PractitionerResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "licenseNumber": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationName": {
+            "type": "string"
+          },
+          "imagePath": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "iin": {
+            "type": "string"
+          },
+          "qualifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QualificationResponse"
+            }
+          }
+        }
+      },
+      "PatientRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "iin": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\d{12}"
+          },
+          "firstName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "MALE",
+              "FEMALE",
+              "OTHER"
+            ]
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "phone": {
+            "type": "string",
+            "minLength": 1
+          },
+          "city": {
+            "type": "string",
+            "minLength": 1
+          },
+          "address": {
+            "type": "string",
+            "minLength": 1
+          },
+          "disabledGroup": {
+            "type": "string",
+            "enum": [
+              "FIRST",
+              "SECOND",
+              "THIRD"
+            ]
+          },
+          "photo": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": [
+          "address",
+          "birthDate",
+          "city",
+          "email",
+          "firstName",
+          "gender",
+          "iin",
+          "lastName",
+          "phone"
+        ]
+      },
+      "PatientDeviceSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deviceName": {
+            "type": "string"
+          },
+          "deviceType": {
+            "type": "string",
+            "enum": [
+              "PROSTHESIS",
+              "ORTHOSIS"
+            ]
+          },
+          "issuedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "observationEndsAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "remainingObservationDays": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PatientResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "iin": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "MALE",
+              "FEMALE",
+              "OTHER"
+            ]
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "disabledGroup": {
+            "type": "string",
+            "enum": [
+              "FIRST",
+              "SECOND",
+              "THIRD"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "GREEN",
+              "YELLOW",
+              "RED"
+            ]
+          },
+          "imagePath": {
+            "type": "string"
+          },
+          "practitionerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "practitionerFullName": {
+            "type": "string"
+          },
+          "currentDevices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatientDeviceSummaryResponse"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ChatMessageCreateRequest": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "ChatMessageResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patientFullName": {
+            "type": "string"
+          },
+          "practitionerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "practitionerFullName": {
+            "type": "string"
+          },
+          "senderType": {
+            "type": "string",
+            "enum": [
+              "PATIENT",
+              "PRACTITIONER"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "sentAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "readAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ChatMessageWithPhotoCreateRequest": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      },
+      "OrganizationCreateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "OrganizationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "DeviceCreateRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "PROSTHESIS",
+              "ORTHOSIS"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "code": {
+            "type": "string"
+          },
+          "targetBodyPart": {
+            "type": "string",
+            "enum": [
+              "ARM",
+              "LEG",
+              "BACK",
+              "NECK"
+            ]
+          },
+          "expectedYears": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "expectedMonths": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "expectedDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string"
+          },
+          "manufacturer": {
+            "type": "string",
+            "minLength": 1
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "expectedDays",
+          "expectedMonths",
+          "expectedYears",
+          "manufacturer",
+          "name",
+          "organizationId",
+          "targetBodyPart",
+          "type"
+        ]
+      },
+      "DeviceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "PROSTHESIS",
+              "ORTHOSIS"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "targetBodyPart": {
+            "type": "string",
+            "enum": [
+              "ARM",
+              "LEG",
+              "BACK",
+              "NECK"
+            ]
+          },
+          "expectedYears": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "expectedMonths": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "expectedDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string"
+          },
+          "manufacturer": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationName": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "DeviceDispenseCreateRequest": {
+        "type": "object",
+        "properties": {
+          "patientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "issuedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "observeYears": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "observeMonths": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "observeDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "deviceId",
+          "issuedAt",
+          "patientId"
+        ]
+      },
+      "DeviceDispenseResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patientFullName": {
+            "type": "string"
+          },
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deviceName": {
+            "type": "string"
+          },
+          "practitionerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "practitionerFullName": {
+            "type": "string"
+          },
+          "issuedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "observeYears": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "observeMonths": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "observeDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "DeviceComplainCreateRequest": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "enum": [
+              "BREAKAGE",
+              "WEAR_AND_TEAR",
+              "DISCOMFORT",
+              "OTHER"
+            ]
+          },
+          "comment": {
+            "type": "string"
+          },
+          "deviceDispenseId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "photos": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        },
+        "required": [
+          "deviceDispenseId",
+          "reason"
+        ]
+      },
+      "DeviceComplainPhotoResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "imagePath": {
+            "type": "string"
+          }
+        }
+      },
+      "DeviceComplainResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patientFullName": {
+            "type": "string"
+          },
+          "deviceDispenseId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "deviceName": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "BREAKAGE",
+              "WEAR_AND_TEAR",
+              "DISCOMFORT",
+              "OTHER"
+            ]
+          },
+          "comment": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "IN_REVIEW",
+              "APPROVED",
+              "REJECTED",
+              "COMPLETED"
+            ]
+          },
+          "reviewedByPractitionerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reviewedByFullName": {
+            "type": "string"
+          },
+          "reviewedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reviewDecision": {
+            "type": "string"
+          },
+          "photos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceComplainPhotoResponse"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "RefreshAccessTokenRequestDto": {
+        "type": "object",
+        "properties": {
+          "refresh_token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "refresh_token"
+        ]
+      },
+      "AuthResponseDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "PATIENT",
+              "PRACTITIONER",
+              "ADMIN"
+            ]
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "access_token": {
+            "type": "string"
+          },
+          "refresh_token": {
+            "type": "string"
+          }
+        }
+      },
+      "AuthRequestDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "PractitionerSelfUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "phone"
+        ]
+      },
+      "PatientStatusChangeRequest": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "GREEN",
+              "YELLOW",
+              "RED"
+            ]
+          },
+          "comment": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "PatientStatusChangeResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "GREEN",
+              "YELLOW",
+              "RED"
+            ]
+          },
+          "changedByPractitionerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "changedByFullName": {
+            "type": "string"
+          },
+          "changedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "comment": {
+            "type": "string"
+          }
+        }
+      },
+      "PatientSelfUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          }
+        }
+      },
+      "DeviceComplainReviewRequest": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "IN_REVIEW",
+              "APPROVED",
+              "REJECTED",
+              "COMPLETED"
+            ]
+          },
+          "reviewDecision": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "reviewDecision",
+          "status"
+        ]
+      },
+      "UpdatePasswordRequest": {
+        "type": "object",
+        "properties": {
+          "old_password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "new_password": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "new_password",
+          "old_password"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

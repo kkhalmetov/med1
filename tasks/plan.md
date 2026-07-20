@@ -50,7 +50,7 @@ Admin registries and exports
 - [x] T02 Next.js runtime scaffold
 - [x] T03 Lint, format and typecheck toolchain
 - [x] T04 Unit/component/E2E test harness
-- [ ] T05 OpenAPI snapshot and generated API types
+- [x] T05 OpenAPI snapshot and generated API types
 - [ ] T06 PWA manifest, icons and safe service worker
 
 ### Checkpoint A

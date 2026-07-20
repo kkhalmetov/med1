@@ -73,8 +73,8 @@
 - [x] Playwright поднимает production-like web server.
 
 **Verification:**
-- [ ] `pnpm test -- --run`
-- [ ] `pnpm test:e2e -- --list`
+- [x] `pnpm test -- --run`
+- [x] `pnpm test:e2e --list`
 
 **Dependencies:** T02  
 **Files likely touched:** `vitest.config.ts`, `playwright.config.ts`, `tests/setup.ts`, `tests/msw/server.ts`, `package.json`  
@@ -82,16 +82,18 @@
 
 ## T05 — OpenAPI snapshot and generated types
 
+**Status:** ✅ Completed
+
 **Description:** Сохранить live OpenAPI snapshot, генерировать типы и проверять drift.
 
 **Acceptance criteria:**
-- [ ] Snapshot содержит 41 path, 52 операции, 30 схем.
-- [ ] `api:sync` воспроизводимо генерирует TypeScript types.
-- [ ] `api:check` падает при несовместимом drift.
+- [x] Snapshot содержит 41 path, 52 операции, 30 схем.
+- [x] `api:sync` воспроизводимо генерирует TypeScript types.
+- [x] `api:check` падает при несовместимом drift.
 
 **Verification:**
-- [ ] `pnpm api:sync`
-- [ ] `pnpm api:check`
+- [x] `pnpm api:sync`
+- [x] `pnpm api:check`
 
 **Dependencies:** T02  
 **Files likely touched:** `openapi/qadam.json`, `scripts/sync-openapi.mjs`, `src/shared/api/schema.d.ts`, `package.json`  
