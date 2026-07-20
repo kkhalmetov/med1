@@ -8,6 +8,7 @@ import { PasswordForm } from '@/features/auth/password-form'
 import { useSafePolling } from '@/features/chat/polling'
 import { apiRequest } from '@/shared/api/client'
 import { fetchDownload, saveDownload } from '@/shared/api/download'
+import { ApiError } from '@/shared/api/error'
 import type { components } from '@/shared/api/schema'
 import { useApiQuery } from '@/shared/api/use-api-query'
 import { prepareImages } from '@/shared/media/image-pipeline'
@@ -54,6 +55,18 @@ const patientTones = { GREEN: 'success', YELLOW: 'warning', RED: 'danger' } as c
 
 function common(t: ReturnType<typeof useTranslations>) {
   return { loading: t('common.loading'), error: t('errors.generic'), empty: t('common.empty') }
+}
+
+function apiActionError(error: unknown, t: ReturnType<typeof useTranslations>) {
+  if (!(error instanceof ApiError)) return t('errors.generic')
+  if (error.code === 'UNAUTHORIZED') return t('errors.unauthorized')
+  if (error.code === 'FORBIDDEN') return t('errors.forbidden')
+  if (error.code === 'NOT_FOUND') return t('errors.notFound')
+  if (error.code === 'BAD_REQUEST') return t('errors.badRequest')
+  if (error.code === 'CONFLICT') return t('errors.conflict')
+  if (error.code === 'TIMEOUT') return t('errors.timeout')
+  if (error.code === 'SERVER_ERROR' || error.code === 'NETWORK') return t('errors.server')
+  return t('errors.generic')
 }
 
 async function download(path: string, filename: string) {
@@ -157,6 +170,11 @@ function PatientStatusCard({ patient, onChanged }: { patient: Patient; onChanged
     ['patient', patient.id, 'status-history'],
     `/patients/${patient.id}/status-history`,
   )
+  const historyErrorLabel =
+    history.error instanceof ApiError &&
+    (history.error.code === 'SERVER_ERROR' || history.error.code === 'NETWORK')
+      ? t('practitioner.statusHistoryUnavailable')
+      : apiActionError(history.error, t)
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
@@ -230,7 +248,7 @@ function PatientStatusCard({ patient, onChanged }: { patient: Patient; onChanged
         error={history.isError}
         empty={!history.data?.length}
         loadingLabel={t('common.loading')}
-        errorLabel={t('errors.generic')}
+        errorLabel={historyErrorLabel}
         emptyLabel={t('common.empty')}
       />
       {history.data?.length ? (
@@ -351,10 +369,13 @@ function PractitionerReports() {
     if (!selected?.id) return
     const ok = await action.run(
       async () => {
-        await apiRequest(`/reports/${selected.id}/check`, { method: 'PATCH' })
+        const checked = await apiRequest<Report>(`/reports/${selected.id}/check`, {
+          method: 'PATCH',
+        })
+        setSelected((current) => (current ? { ...current, ...checked } : checked))
       },
       t('practitioner.reportChecked'),
-      t('errors.generic'),
+      (error) => apiActionError(error, t),
     )
     if (ok) await reports.refetch()
   }
@@ -363,7 +384,7 @@ function PractitionerReports() {
     await action.run(
       () => download(`/patients/${selected.patientId}/reports/export-pdf`, 'qadam-reports.pdf'),
       t('practitioner.downloadReady'),
-      t('errors.generic'),
+      (error) => apiActionError(error, t),
     )
   }
   return (
@@ -413,25 +434,27 @@ function PractitionerReports() {
         <ProductPanel title={selected?.patientFullName || t('practitioner.reportCard')}>
           {selected ? (
             <>
-              <DetailList
-                entries={[
-                  [t('reports.pain'), selected.painLevel],
-                  [t('reports.discomfort'), selected.discomfortLevel],
-                  [t('reports.mobility'), selected.mobilityLevel],
-                  [t('reports.sleep'), selected.sleepQuality],
-                  [t('reports.comment'), selected.comment],
-                  [t('fields.issuedAt'), formatDate(selected.submittedAt, locale)],
-                ]}
-              />
-              <div className="toolbar">
-                <Button disabled={Boolean(selected.checkedAt)} onClick={check}>
-                  {t('reports.markChecked')}
-                </Button>
-                <Button onClick={exportPdf} variant="secondary">
-                  <Download aria-hidden="true" size={17} /> {t('practitioner.downloadPdf')}
-                </Button>
+              <div className="report-review">
+                <DetailList
+                  entries={[
+                    [t('reports.pain'), selected.painLevel],
+                    [t('reports.discomfort'), selected.discomfortLevel],
+                    [t('reports.mobility'), selected.mobilityLevel],
+                    [t('reports.sleep'), selected.sleepQuality],
+                    [t('reports.comment'), selected.comment],
+                    [t('fields.issuedAt'), formatDate(selected.submittedAt, locale)],
+                  ]}
+                />
+                <div className="toolbar">
+                  <Button disabled={action.pending || Boolean(selected.checkedAt)} onClick={check}>
+                    {t('reports.markChecked')}
+                  </Button>
+                  <Button disabled={action.pending} onClick={exportPdf} variant="secondary">
+                    <Download aria-hidden="true" size={17} /> {t('practitioner.downloadPdf')}
+                  </Button>
+                </div>
+                <ActionMessage error={action.error} message={action.message} />
               </div>
-              <ActionMessage error={action.error} message={action.message} />
               {patientReports}
             </>
           ) : (
@@ -457,7 +480,7 @@ function PatientReportHistory({ patientId, unchecked }: { patientId: string; unc
     { query: { is_unchecked: unchecked } },
   )
   return (
-    <div>
+    <div className="report-history">
       <h3>{t('reports.history')}</h3>
       <AsyncNotice
         loading={reports.isLoading}

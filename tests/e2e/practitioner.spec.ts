@@ -10,9 +10,26 @@ test.beforeEach(async ({ context, page }) => {
       await route.fulfill({
         json: [{ id: 'p1', firstName: 'Айша', lastName: 'Серик', status: 'RED' }],
       })
+    } else if (url.pathname.endsWith('/reports/r1/check')) {
+      await route.fulfill({
+        json: { id: 'r1', patientId: 'p1', checkedAt: '2026-07-20T18:12:30.000000' },
+      })
     } else if (url.pathname.endsWith('/reports')) {
       await route.fulfill({
-        json: [{ id: 'r1', patientFullName: 'Айша Серик', statusColor: 'RED' }],
+        json: [
+          {
+            id: 'r1',
+            patientId: 'p1',
+            patientFullName: 'Айша Серик',
+            statusColor: 'RED',
+            submittedAt: '2026-07-20T17:14:41.579395',
+            painLevel: 3,
+            discomfortLevel: 3,
+            mobilityLevel: 3,
+            sleepQuality: 3,
+            comment: 'Тестовый отчёт',
+          },
+        ],
       })
     } else {
       await route.fulfill({ json: [] })
@@ -57,6 +74,74 @@ test('practitioner checks a report from the patient queue', async ({ page }) => 
   await page.getByRole('button', { name: 'Отметить проверенным' }).click()
   await requestPromise
   await expect(page.getByText(/\b(GET|POST|PATCH)\b/)).toHaveCount(0)
+})
+
+test('checked report updates immediately and keeps actions visually separated', async ({
+  page,
+}) => {
+  await page.route('**/api/backend/reports/r1/check', (route) =>
+    route.fulfill({
+      json: {
+        id: 'r1',
+        patientId: 'p1',
+        patientFullName: 'Айша Серик',
+        checkedAt: '2026-07-20T18:12:30.000000',
+      },
+    }),
+  )
+  await page.goto('/ru/practitioner/reports')
+  await page.getByRole('button', { name: /Айша Серик/ }).click()
+
+  const reportPanel = page.locator('.product-layout .product-panel').nth(1)
+  const details = reportPanel.locator('.detail-list')
+  const actions = reportPanel.locator('.toolbar')
+  await page.getByRole('button', { name: 'Отметить проверенным' }).click()
+  const notice = reportPanel.getByRole('status').filter({ hasText: 'Отчёт отмечен проверенным' })
+
+  await expect(page.getByRole('button', { name: 'Отметить проверенным' })).toBeDisabled()
+  await expect(notice).toBeVisible()
+  const [detailsBox, actionsBox, noticeBox] = await Promise.all([
+    details.boundingBox(),
+    actions.boundingBox(),
+    notice.boundingBox(),
+  ])
+  expect(actionsBox!.y - (detailsBox!.y + detailsBox!.height)).toBeGreaterThanOrEqual(16)
+  expect(noticeBox!.y - (actionsBox!.y + actionsBox!.height)).toBeGreaterThanOrEqual(12)
+})
+
+test('report check shows a specific service error instead of a generic failure', async ({
+  page,
+}) => {
+  await page.route('**/api/backend/reports/r1/check', (route) =>
+    route.fulfill({
+      status: 500,
+      contentType: 'application/json',
+      body: JSON.stringify({ message: 'Внутренняя ошибка сервера' }),
+    }),
+  )
+  await page.goto('/ru/practitioner/reports')
+  await page.getByRole('button', { name: /Айша Серик/ }).click()
+  await page.getByRole('button', { name: 'Отметить проверенным' }).click()
+
+  await expect(page.locator('.form-alert')).toHaveText('Сервис временно недоступен.')
+  await expect(page.getByText('Не удалось выполнить действие. Попробуйте ещё раз.')).toHaveCount(0)
+})
+
+test('patient status history distinguishes a backend outage from empty history', async ({
+  page,
+}) => {
+  await page.route('**/api/backend/patients/p1/status-history', (route) =>
+    route.fulfill({
+      status: 500,
+      contentType: 'application/json',
+      body: JSON.stringify({ message: 'Внутренняя ошибка сервера' }),
+    }),
+  )
+  await page.goto('/ru/practitioner/patients')
+  await page.getByRole('button', { name: /Серик Айша/ }).click()
+
+  await expect(page.getByText('История статусов временно недоступна.')).toBeVisible()
+  await expect(page.getByText('Не удалось выполнить действие. Попробуйте ещё раз.')).toHaveCount(0)
 })
 
 test('practitioner photo attachment uses the Qadam file picker', async ({ page }) => {

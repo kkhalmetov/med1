@@ -370,7 +370,11 @@ export function useActionState() {
   const [message, setMessage] = useState<string>()
   const [error, setError] = useState<string>()
 
-  async function run(action: () => Promise<void>, successMessage: string, errorMessage: string) {
+  async function run(
+    action: () => Promise<void>,
+    successMessage: string,
+    errorMessage: string | ((error: unknown) => string),
+  ) {
     setPending(true)
     setMessage(undefined)
     setError(undefined)
@@ -378,8 +382,8 @@ export function useActionState() {
       await action()
       setMessage(successMessage)
       return true
-    } catch {
-      setError(errorMessage)
+    } catch (caught) {
+      setError(typeof errorMessage === 'function' ? errorMessage(caught) : errorMessage)
       return false
     } finally {
       setPending(false)

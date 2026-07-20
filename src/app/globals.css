@@ -1456,6 +1456,13 @@ svg {
   align-items: center;
   gap: 10px;
 }
+.report-review {
+  display: grid;
+  gap: 18px;
+}
+.report-history {
+  margin-top: 26px;
+}
 .product-notice {
   min-height: 64px;
   display: flex;
