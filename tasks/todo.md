@@ -5,13 +5,13 @@
 
 ## T46–T49 — Daily report, Q brand and practitioner report check
 
-**Status:** 🚧 In progress
+**Status:** ✅ Completed
 
 **Acceptance criteria:**
 - [x] Сегодняшний отчёт блокирует повторную форму в dashboard и reports.
 - [x] Bodyless Swagger PATCH проверки отчёта получает backend response вместо BFF `415`.
 - [x] Hero assurance удалён, все brand/icon consumers используют новый Q-icon.
-- [ ] RU/KK, unit/integration, patient/practitioner/public E2E и production smoke зелёные.
+- [x] RU/KK, unit/integration, patient/practitioner/public E2E и production smoke зелёные.
 
 **Verification:** см. `docs/qadam-daily-report-brand-review-spec.md`.
 
