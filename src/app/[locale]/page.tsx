@@ -11,6 +11,7 @@ import {
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { Brand } from '@/shared/ui/brand'
+import { GithubLink } from '@/shared/ui/github-link'
 import { LocaleSwitcher } from '@/shared/ui/locale-switcher'
 
 export default async function LocaleHomePage() {
@@ -21,6 +22,7 @@ export default async function LocaleHomePage() {
       <header className="public-header">
         <Brand />
         <nav className="public-header__actions" aria-label="Primary">
+          <GithubLink />
           <LocaleSwitcher />
           <Link className="button button--secondary button--compact" href="/login">
             {t('signIn')}

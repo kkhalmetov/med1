@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { Button } from '@/shared/ui/button'
 import { Field } from '@/shared/ui/field'
+import { GithubLink } from '@/shared/ui/github-link'
 import { StatusBadge } from '@/shared/ui/status-badge'
 
 describe('accessible UI primitives', () => {
@@ -31,5 +32,19 @@ describe('accessible UI primitives', () => {
 
     expect(screen.getByRole('status')).toHaveTextContent('Требует внимания')
     expect(screen.getByRole('status')).toHaveAttribute('data-tone', 'danger')
+  })
+
+  it('opens the project repository safely in a new tab', () => {
+    render(<GithubLink />)
+
+    expect(screen.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
+      'href',
+      'https://github.com/yevgn/shymkent-hub-hackathon',
+    )
+    expect(screen.getByRole('link', { name: 'GitHub' })).toHaveAttribute('target', '_blank')
+    expect(screen.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
+      'rel',
+      'noopener noreferrer',
+    )
   })
 })

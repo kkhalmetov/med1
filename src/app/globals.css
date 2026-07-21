@@ -386,6 +386,31 @@ svg {
   gap: 12px;
 }
 
+.github-link {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: var(--ink-650);
+  background: rgb(255 254 251 / 65%);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  text-decoration: none;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.github-link:hover {
+  color: var(--brand-800);
+  background: var(--brand-50);
+  border-color: #b9d5cc;
+  transform: translateY(-1px);
+}
+
 .locale-switcher {
   min-height: 40px;
   display: inline-flex;
@@ -913,6 +938,22 @@ svg {
   .public-header {
     width: min(100% - 28px, 1180px);
     min-height: 74px;
+  }
+  .public-shell .public-header {
+    gap: 8px;
+  }
+  .public-shell .public-header__actions {
+    gap: 6px;
+  }
+  .public-shell .public-header .locale-switcher {
+    gap: 3px;
+    padding: 4px 5px;
+  }
+  .public-shell .public-header .locale-switcher > svg {
+    display: none;
+  }
+  .public-shell .public-header .locale-switcher button {
+    min-width: 30px;
   }
   .brand small {
     display: none;
