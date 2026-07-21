@@ -62,6 +62,54 @@ describe('backend operation policy', () => {
 })
 
 describe('backend proxy', () => {
+  it('forwards an empty streamed body as a bodyless Swagger mutation', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(Response.json({ checkedAt: '2026-07-21' }))
+    vi.stubGlobal('fetch', fetchMock)
+    const request = new Request(
+      'http://qadam.test/api/backend/reports/00000000-0000-4000-8000-000000000001/check',
+      {
+        method: 'PATCH',
+        body: new ReadableStream({
+          start(controller) {
+            controller.close()
+          },
+        }),
+        duplex: 'half',
+      } as RequestInit & { duplex: 'half' },
+    )
+
+    const response = await proxyBackendRequest(
+      request,
+      '/reports/00000000-0000-4000-8000-000000000001/check',
+      createSession({ qadam_access: 'access' }),
+    )
+
+    expect(response.status).toBe(200)
+    expect(fetchMock).toHaveBeenCalledOnce()
+    expect(fetchMock.mock.calls[0]?.[1]).not.toHaveProperty('body')
+  })
+
+  it('rejects bytes sent to a bodyless Swagger mutation', async () => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    const request = new Request(
+      'http://qadam.test/api/backend/reports/00000000-0000-4000-8000-000000000001/check',
+      {
+        method: 'PATCH',
+        body: 'unexpected',
+      },
+    )
+
+    const response = await proxyBackendRequest(
+      request,
+      '/reports/00000000-0000-4000-8000-000000000001/check',
+      createSession({ qadam_access: 'access' }),
+    )
+
+    expect(response.status).toBe(415)
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
   it('forwards JSON without exposing the access token', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
       new Response(JSON.stringify({ ok: true }), {

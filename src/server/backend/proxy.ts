@@ -56,9 +56,26 @@ async function refreshSession(store: SessionStore, requestId: string) {
 }
 
 function validateContentType(contentTypes: string[], request: Request) {
-  if (contentTypes.length === 0) return request.body === null
+  if (contentTypes.length === 0) return true
   const contentType = request.headers.get('content-type')?.split(';')[0]?.trim()
   return Boolean(contentType && contentTypes.includes(contentType))
+}
+
+async function hasBodyBytes(request: Request) {
+  if (!request.body) return false
+  const reader = request.body.getReader()
+  try {
+    while (true) {
+      const chunk = await reader.read()
+      if (chunk.done) return false
+      if (chunk.value.byteLength > 0) {
+        await reader.cancel()
+        return true
+      }
+    }
+  } finally {
+    reader.releaseLock()
+  }
 }
 
 async function performBackendRequest(
@@ -75,8 +92,12 @@ async function performBackendRequest(
   if (!validateContentType(operation.contentTypes, request)) {
     return Response.json({ code: 'UNSUPPORTED_CONTENT_TYPE' }, { status: 415 })
   }
+  if (operation.contentTypes.length === 0 && (await hasBodyBytes(request))) {
+    return Response.json({ code: 'UNSUPPORTED_CONTENT_TYPE' }, { status: 415 })
+  }
+  const rawBody =
+    operation.contentTypes.length > 0 && request.body ? await request.arrayBuffer() : undefined
 
-  const rawBody = request.body ? await request.arrayBuffer() : undefined
   const contentType = request.headers.get('content-type')
   const send = (accessToken?: string) => {
     const headers: Record<string, string> = {
