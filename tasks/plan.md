@@ -151,6 +151,20 @@ Admin registries and exports
 - [x] Все восемь пунктов production-ревью исправлены и покрыты тестами.
 - [x] GitHub `main` и Vercel production содержат verified release.
 
+### Фаза 8 — Дневной отчёт, Q-брендинг и проверка отчёта
+
+- [x] T46 Ограничить доступную отправку отчёта одним локальным календарным днём
+- [x] T47 Исправить bodyless PATCH в BFF и проверку отчёта специалистом
+- [x] T48 Обновить знак Q, favicon/PWA cache и удалить hero-блок со щитом
+- [ ] T49 Проверить RU/KK, роли, production, выполнить review и release
+
+### Checkpoint H
+
+- [x] Повторная отправка отчёта недоступна в день уже существующего отчёта.
+- [x] `PATCH /reports/{id}/check` проходит через BFF без ложного `415`.
+- [x] Публичная главная и PWA используют новый Q-знак без блока слогана со щитом.
+- [ ] GitHub `main` и Vercel production содержат verified release.
+
 ## Verification strategy
 
 - After every task: focused unit/component/integration test plus typecheck for touched area.
