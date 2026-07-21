@@ -170,14 +170,14 @@ Admin registries and exports
 - [x] T50 Зафиксировать live-контракт `/patients/{id}/short-review` и синхронизировать OpenAPI
 - [x] T51 Добавить contract и practitioner E2E regression tests
 - [x] T52 Реализовать двуязычный краткий обзор в карточке пациента
-- [ ] T53 Выполнить live smoke, review, push и Vercel production deployment
+- [x] T53 Выполнить live smoke, review, push и Vercel production deployment
 
 ### Checkpoint I
 
-- [ ] Специалист получает краткую сводку выбранного пациента из реального backend.
-- [ ] В UI есть loading, empty, error/retry и безопасное отображение недоверенного текста.
-- [ ] Новая операция учтена в полном OpenAPI coverage без необоснованных допущений о контракте.
-- [ ] GitHub `main` и Vercel production содержат verified release.
+- [x] Специалист получает краткую сводку выбранного пациента из реального backend.
+- [x] В UI есть loading, empty, error/retry и безопасное отображение недоверенного текста.
+- [x] Новая операция учтена в полном OpenAPI coverage без необоснованных допущений о контракте.
+- [x] GitHub `main` и Vercel production содержат verified release.
 
 ## Verification strategy
 

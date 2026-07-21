@@ -857,11 +857,11 @@
 
 ## T53 — Short-review release
 
-**Status:** 🚧 In progress
+**Status:** ✅ Completed
 
 **Description:** Выполнить live smoke, полный review, push и production deployment.
 
 **Acceptance criteria:**
 - [x] Синтетический practitioner live smoke вернул `200 application/json` и ожидаемую форму.
-- [ ] `pnpm verify`, role E2E, API drift check, review и secret scan зелёные.
-- [ ] GitHub `main` и Vercel production содержат проверенный commit.
+- [x] `pnpm verify`, role E2E, API drift check, review и secret scan зелёные.
+- [x] GitHub `main` и Vercel production содержат проверенный commit.

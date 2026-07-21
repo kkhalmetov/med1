@@ -28,5 +28,22 @@ for (const [role, email, password] of accounts) {
     expect(result).toMatchObject({ status: 200, role })
     await page.goto(`/ru/${role.toLowerCase()}`)
     await expect(page).toHaveURL(new RegExp(`/ru/${role.toLowerCase()}/?$`))
+    if (role === 'PRACTITIONER') {
+      await page.goto('/ru/practitioner/patients')
+      const patientCards = page.locator('button.entity-card')
+      await expect(patientCards.first()).toBeVisible()
+      expect(await patientCards.count()).toBeGreaterThan(0)
+      const reviewResponse = page.waitForResponse(
+        (response) =>
+          response.url().includes('/api/backend/patients/') &&
+          response.url().endsWith('/short-review'),
+      )
+      await patientCards.first().click()
+
+      expect((await reviewResponse).status()).toBe(200)
+      const review = page.getByRole('region', { name: 'Краткий обзор пациента' })
+      await expect(review).toBeVisible()
+      await expect(review.getByRole('button', { name: 'Обновить обзор' })).toBeVisible()
+    }
   })
 }
