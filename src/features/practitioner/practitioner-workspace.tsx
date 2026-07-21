@@ -5,6 +5,7 @@ import { Download, Plus } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useState, type FormEvent } from 'react'
 import { PasswordForm } from '@/features/auth/password-form'
+import { MessageThread } from '@/features/chat/message-thread'
 import { useSafePolling } from '@/features/chat/polling'
 import { PatientShortReview } from '@/features/patients/patient-short-review'
 import { apiRequest } from '@/shared/api/client'
@@ -731,7 +732,13 @@ function PractitionerComplaints() {
   )
 }
 
-function PractitionerChatPanel({ patient }: { patient: Patient }) {
+function PractitionerChatPanel({
+  patient,
+  onChangePatient,
+}: {
+  patient: Patient
+  onChangePatient: () => void
+}) {
   const t = useTranslations()
   const locale = useLocale()
   const action = useActionState()
@@ -769,7 +776,20 @@ function PractitionerChatPanel({ patient }: { patient: Patient }) {
     }
   }
   return (
-    <ProductPanel title={fullName(patient)}>
+    <ProductPanel
+      action={
+        <Button
+          className="chat-panel__back"
+          onClick={onChangePatient}
+          size="compact"
+          variant="secondary"
+        >
+          {t('chat.changePatient')}
+        </Button>
+      }
+      className="chat-panel chat-panel--combined"
+      title={fullName(patient)}
+    >
       <AsyncNotice
         loading={messages.isLoading}
         error={messages.isError}
@@ -779,30 +799,25 @@ function PractitionerChatPanel({ patient }: { patient: Patient }) {
         emptyLabel={t('chat.empty')}
       />
       {messages.data?.length ? (
-        <div className="message-list">
-          {messages.data.map((message) => (
-            <article
-              className={`message-bubble ${message.senderType === 'PRACTITIONER' ? 'message-bubble--own' : ''}`}
-              key={message.id}
-            >
-              {message.imageUrl ? (
-                <ProtectedImage
-                  alt={t('chat.photo')}
-                  height={180}
-                  src={`/api/backend/files?path=${encodeURIComponent(message.imageUrl)}`}
-                  width={260}
-                />
-              ) : null}
-              <p>{message.content}</p>
-              <small>{formatDate(message.sentAt, locale)}</small>
-            </article>
-          ))}
-        </div>
+        <MessageThread
+          label={t('product.conversation')}
+          locale={locale}
+          messages={messages.data}
+          ownSenderType="PRACTITIONER"
+          photoLabel={t('chat.photo')}
+        />
       ) : null}
-      <ProductForm onSubmit={submit}>
-        <TextareaField label={t('chat.message')} name="content" />
+      <ProductForm className="chat-composer" onSubmit={submit}>
+        <TextareaField
+          className="chat-composer__text"
+          label={t('chat.message')}
+          name="content"
+          placeholder={t('chat.messagePlaceholder')}
+          rows={1}
+        />
         <FileField
           accept="image/*"
+          className="chat-composer__file"
           chooseLabel={t('common.choosePhoto')}
           emptyLabel={t('common.noFileSelected')}
           label={t('chat.photo')}
@@ -831,9 +846,16 @@ function PractitionerChat() {
   const unread = useApiQuery<unknown[]>(['practitioner', 'chat', 'unread'], '/chat/unread')
   useSafePolling(() => unread.refetch(), 30_000, true)
   return (
-    <ProductPage title={t('nav.chat')} description={t('practitioner.chatDescription')}>
-      <div className="product-layout">
+    <ProductPage
+      className="chat-page"
+      title={t('nav.chat')}
+      description={t('practitioner.chatDescription')}
+    >
+      <div
+        className={`product-layout chat-layout chat-layout--practitioner ${selected ? 'chat-layout--selected' : ''}`}
+      >
         <ProductPanel
+          className="chat-patient-picker"
           title={t('practitioner.choosePatient')}
           action={
             unread.data?.length ? <StatusBadge tone="info">{unread.data.length}</StatusBadge> : null
@@ -862,7 +884,10 @@ function PractitionerChat() {
           ) : null}
         </ProductPanel>
         {selected ? (
-          <PractitionerChatPanel patient={selected} />
+          <PractitionerChatPanel
+            patient={selected}
+            onChangePatient={() => setSelected(undefined)}
+          />
         ) : (
           <ProductPanel title={t('chat.message')}>
             <AsyncNotice

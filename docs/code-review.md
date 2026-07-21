@@ -71,3 +71,13 @@
 - **Verification:** RED/GREEN Playwright для RU/KK; `pnpm verify` — 82/82; production Playwright — 45 passed и 4 expected skipped; desktop/mobile screenshots проверены визуально; `pnpm audit --audit-level high` — 0 findings.
 - **Verdict:** APPROVE. Critical/required findings отсутствуют.
 - **Production:** remote RU/KK desktop/mobile smoke — 13 passed и 1 expected skipped; manifest публикует `QadamAI`; rollback target — `a0d5436`.
+
+## Mobile chat release review
+
+- **Correctness:** пациент и специалист открывают переписку на последнем сообщении; изменение доступной высоты повторно выравнивает журнал после layout/keyboard resize, а composer остаётся выше нижней навигации.
+- **Readability/architecture:** дублированный вывод сообщений заменён единым `MessageThread`; backend routes, polling и payload отправки текста/фото не изменены.
+- **Security:** текст сообщений выводится только через React escaping, защищённые изображения продолжают загружаться через same-origin BFF; новые зависимости и browser storage не добавлены.
+- **Performance:** форматтер даты мемоизирован на локаль, `ResizeObserver` привязан только к открытому журналу и корректно освобождается; дополнительные сетевые запросы не выполняются.
+- **Accessibility/responsive:** журнал имеет `role="log"`, локализованное имя и live-region; скрытые mobile labels остаются доступны assistive technology, а элементы управления проходят проверку на 320 px.
+- **Verification:** `pnpm verify` — 82/82 tests и production build; production-mode Playwright — 47 passed и 4 expected skipped; RU/KK и patient/practitioner screenshots на 320 px проверены визуально; `pnpm audit --audit-level high` — 0 findings.
+- **Verdict:** APPROVE. Critical/required findings отсутствуют.

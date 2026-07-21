@@ -16,19 +16,21 @@ import { Button } from './button'
 
 export function ProductPage({
   eyebrow = 'QadamAI',
+  className = '',
   title,
   description,
   actions,
   children,
 }: {
   eyebrow?: string
+  className?: string
   title: string
   description?: string | undefined
   actions?: ReactNode
   children: ReactNode
 }) {
   return (
-    <div className="dashboard-page product-page">
+    <div className={`dashboard-page product-page ${className}`.trim()}>
       <header className="page-heading product-page__heading">
         <div>
           <p className="eyebrow">{eyebrow}</p>

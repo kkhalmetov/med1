@@ -5,6 +5,7 @@ import { Plus } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useState, type FormEvent } from 'react'
 import { PasswordForm } from '@/features/auth/password-form'
+import { MessageThread } from '@/features/chat/message-thread'
 import { useSafePolling } from '@/features/chat/polling'
 import { isSameLocalDay } from '@/features/reports/report-day'
 import { apiRequest } from '@/shared/api/client'
@@ -579,10 +580,17 @@ function MessageComposer({ onSent }: { onSent: () => void }) {
     }
   }
   return (
-    <ProductForm onSubmit={submit}>
-      <TextareaField label={t('chat.message')} name="content" />
+    <ProductForm className="chat-composer" onSubmit={submit}>
+      <TextareaField
+        className="chat-composer__text"
+        label={t('chat.message')}
+        name="content"
+        placeholder={t('chat.messagePlaceholder')}
+        rows={1}
+      />
       <FileField
         accept="image/*"
+        className="chat-composer__file"
         chooseLabel={t('common.choosePhoto')}
         emptyLabel={t('common.noFileSelected')}
         label={t('chat.photo')}
@@ -609,9 +617,14 @@ function PatientChat() {
   useSafePolling(() => messages.refetch(), 10_000, true)
   useSafePolling(() => unread.refetch(), 30_000, true)
   return (
-    <ProductPage title={t('chat.title')} description={t('product.chatDescription')}>
-      <div className="product-layout">
+    <ProductPage
+      className="chat-page"
+      title={t('chat.title')}
+      description={t('product.chatDescription')}
+    >
+      <div className="product-layout chat-layout chat-layout--patient">
         <ProductPanel
+          className="chat-panel chat-panel--thread"
           title={t('product.conversation')}
           action={
             unread.data?.length ? (
@@ -630,28 +643,16 @@ function PatientChat() {
             emptyLabel={t('chat.empty')}
           />
           {messages.data?.length ? (
-            <div className="message-list">
-              {messages.data.map((message) => (
-                <article
-                  className={`message-bubble ${message.senderType === 'PATIENT' ? 'message-bubble--own' : ''}`}
-                  key={message.id}
-                >
-                  {message.imageUrl ? (
-                    <ProtectedImage
-                      alt={t('chat.photo')}
-                      height={180}
-                      width={260}
-                      src={`/api/backend/files?path=${encodeURIComponent(message.imageUrl)}`}
-                    />
-                  ) : null}
-                  <p>{message.content}</p>
-                  <small>{formatDate(message.sentAt, locale)}</small>
-                </article>
-              ))}
-            </div>
+            <MessageThread
+              label={t('product.conversation')}
+              locale={locale}
+              messages={messages.data}
+              ownSenderType="PATIENT"
+              photoLabel={t('chat.photo')}
+            />
           ) : null}
         </ProductPanel>
-        <ProductPanel title={t('chat.message')}>
+        <ProductPanel className="chat-panel chat-panel--composer">
           <MessageComposer onSent={() => messages.refetch()} />
         </ProductPanel>
       </div>

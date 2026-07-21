@@ -194,3 +194,85 @@ test('patient mobile shell marks only the current route and keeps account action
   await expect(page).toHaveURL(/\/ru\/patient$/)
   await expect(page.getByRole('button', { name: 'Выйти' })).toBeVisible()
 })
+
+test('patient mobile chat keeps the latest messages and composer above navigation', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 820 })
+  await page.route('**/api/backend/chat/messages', async (route) => {
+    if (route.request().method() !== 'GET') return route.fallback()
+    await route.fulfill({
+      json: Array.from({ length: 12 }, (_, index) => ({
+        id: `chat-${index + 1}`,
+        senderType: index % 2 ? 'PATIENT' : 'PRACTITIONER',
+        content: `Сообщение ${index + 1} с уточнением по самочувствию пациента`,
+        sentAt: `2026-07-21T0${Math.min(index, 9)}:15:00.000000`,
+      })),
+    })
+  })
+
+  await page.goto('/ru/patient/chat')
+
+  const messageLog = page.getByRole('log', { name: 'Переписка' })
+  const composer = page.locator('.chat-composer')
+  const bottomNavigation = page.locator('.bottom-nav')
+  await expect(messageLog).toBeVisible()
+  const latestMessage = page.getByText(/Сообщение 12 с уточнением/)
+  const chatMetrics = await messageLog.evaluate((element) => {
+    const latest = element.lastElementChild?.getBoundingClientRect()
+    const log = element.getBoundingClientRect()
+    return {
+      clientHeight: element.clientHeight,
+      scrollHeight: element.scrollHeight,
+      scrollTop: element.scrollTop,
+      latestBottom: latest?.bottom ?? 0,
+      latestTop: latest?.top ?? 0,
+      logBottom: log.bottom,
+      logTop: log.top,
+    }
+  })
+  expect(
+    chatMetrics.latestTop >= chatMetrics.logTop &&
+      chatMetrics.latestBottom <= chatMetrics.logBottom,
+    JSON.stringify(chatMetrics),
+  ).toBe(true)
+  await expect(latestMessage).toBeInViewport()
+  await expect(composer).toBeInViewport()
+  await expect(page.getByLabel('Сообщение')).toHaveAttribute('placeholder', 'Напишите сообщение…')
+  await expect(page.getByRole('button', { name: 'Отправить' })).toBeInViewport()
+  expect(
+    await messageLog.evaluate(
+      (element) => element.scrollHeight - element.scrollTop - element.clientHeight,
+    ),
+  ).toBeLessThanOrEqual(2)
+
+  const [composerBox, navigationBox, textareaBox] = await Promise.all([
+    composer.boundingBox(),
+    bottomNavigation.boundingBox(),
+    page.getByLabel('Сообщение').boundingBox(),
+  ])
+  expect(composerBox!.y + composerBox!.height).toBeLessThanOrEqual(navigationBox!.y)
+  expect(textareaBox!.height).toBeLessThanOrEqual(64)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
+    true,
+  )
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
+  const shellMetrics = await page.evaluate(() => {
+    const topbar = document.querySelector('.app-shell__topbar')?.getBoundingClientRect()
+    const heading = document.querySelector('.chat-page h1')?.getBoundingClientRect()
+    return { topbarTop: topbar?.top ?? -1, headingTop: heading?.top ?? -1 }
+  })
+  expect(shellMetrics.topbarTop).toBeGreaterThanOrEqual(0)
+  expect(shellMetrics.headingTop).toBeGreaterThanOrEqual(68)
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      ),
+  )
+  await page.screenshot({ path: 'test-results/qadam-mobile-patient-chat.png' })
+
+  await page.goto('/kk/patient/chat')
+  await expect(page.getByLabel('Хабарлама')).toHaveAttribute('placeholder', 'Хабарлама жазыңыз…')
+  await expect(page.getByRole('button', { name: 'Жіберу' })).toBeInViewport()
+})

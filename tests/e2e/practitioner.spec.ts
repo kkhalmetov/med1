@@ -273,3 +273,44 @@ test('practitioner workspace fits a 360 px viewport', async ({ page }) => {
     true,
   )
 })
+
+test('practitioner mobile chat focuses the selected conversation and can return to patients', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 820 })
+  await page.route('**/api/backend/patients/p1/chat/messages', (route) =>
+    route.fulfill({
+      json: Array.from({ length: 8 }, (_, index) => ({
+        id: `practitioner-chat-${index + 1}`,
+        senderType: index % 2 ? 'PRACTITIONER' : 'PATIENT',
+        content: `Сообщение пациента ${index + 1}`,
+        sentAt: `2026-07-21T0${index}:30:00.000000`,
+      })),
+    }),
+  )
+
+  await page.goto('/ru/practitioner/chat')
+  await page.getByRole('button', { name: /Серик Айша/ }).click()
+
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
+  await expect(page.getByRole('heading', { name: 'Выберите пациента' })).toBeHidden()
+  await expect(page.getByRole('button', { name: 'Сменить пациента' })).toBeInViewport()
+  await expect(page.getByRole('log', { name: 'Переписка' })).toBeVisible()
+  await expect(page.getByText('Сообщение пациента 8')).toBeInViewport()
+  await expect(page.locator('.chat-composer')).toBeInViewport()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
+    true,
+  )
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      ),
+  )
+  await page.screenshot({ path: 'test-results/qadam-mobile-practitioner-chat.png' })
+
+  await page.getByRole('button', { name: 'Сменить пациента' }).click()
+  await expect(page.getByRole('heading', { name: 'Выберите пациента' })).toBeVisible()
+  await expect(page.getByRole('log', { name: 'Переписка' })).toHaveCount(0)
+})
