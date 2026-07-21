@@ -1,6 +1,6 @@
 # Qadam — implementable task list
 
-Статус: `COMPLETED — corrected release verified`
+Статус: `COMPLETED — QadamAI release verified`
 Правило: задача отмечается завершённой только после acceptance и verification.
 
 ## T46–T49 — Daily report, Q brand and practitioner report check
@@ -899,11 +899,11 @@
 
 ## T57 — QadamAI verification and release
 
-**Status:** 🟡 In progress
+**Status:** ✅ Completed
 
 **Description:** Проверить изменение, провести review и выпустить на GitHub/Vercel.
 
 **Acceptance criteria:**
-- [ ] `pnpm verify`, build, Playwright и visual QA зелёные.
-- [ ] Secret scan и code review не содержат блокирующих замечаний.
-- [ ] GitHub `main` и Vercel production содержат проверенный commit.
+- [x] `pnpm verify`, build, Playwright и visual QA зелёные.
+- [x] Secret scan и code review не содержат блокирующих замечаний.
+- [x] GitHub `main` и Vercel production содержат проверенный commit.

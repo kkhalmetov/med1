@@ -70,3 +70,4 @@
 - **Accessibility:** один именованный `section`, последовательный `ol`, декоративные иконки скрыты от accessibility tree; axe не выявил serious/critical нарушений.
 - **Verification:** RED/GREEN Playwright для RU/KK; `pnpm verify` — 82/82; production Playwright — 45 passed и 4 expected skipped; desktop/mobile screenshots проверены визуально; `pnpm audit --audit-level high` — 0 findings.
 - **Verdict:** APPROVE. Critical/required findings отсутствуют.
+- **Production:** remote RU/KK desktop/mobile smoke — 13 passed и 1 expected skipped; manifest публикует `QadamAI`; rollback target — `a0d5436`.

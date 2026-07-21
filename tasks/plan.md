@@ -1,6 +1,6 @@
 # План реализации Qadam
 
-Статус: `COMPLETED — corrected product UX released to GitHub and Vercel`
+Статус: `COMPLETED — QadamAI released to GitHub and Vercel`
 Основание: `docs/qadam-spec.md`, `docs/qadam-ux-correction-spec.md`, `docs/api-coverage.md`
 Дата: 2026-07-20
 
@@ -184,14 +184,14 @@ Admin registries and exports
 - [x] T54 Зафиксировать спецификацию ребрендинга и границы AI-коммуникации
 - [x] T55 Добавить регрессионные тесты бренда и двуязычного AI-блока
 - [x] T56 Обновить видимый бренд, metadata, manifest и лендинг RU/KK
-- [ ] T57 Выполнить responsive-проверку, review, push и Vercel production deployment
+- [x] T57 Выполнить responsive-проверку, review, push и Vercel production deployment
 
 ### Checkpoint J
 
 - [x] Все пользовательские поверхности используют точное имя `QadamAI`.
 - [x] Главная RU/KK объясняет источники и назначение AI-выжимки без медицинских обещаний.
 - [x] Новый раздел доступен и не создаёт горизонтальный overflow на 320–1440 px.
-- [ ] GitHub `main` и Vercel production содержат verified release.
+- [x] GitHub `main` и Vercel production содержат verified release.
 
 ## Verification strategy
 
