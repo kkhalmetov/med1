@@ -82,3 +82,13 @@
 - **Verification:** `pnpm verify` — 82/82 tests и production build; production-mode Playwright — 47 passed и 4 expected skipped; RU/KK и patient/practitioner screenshots на 320 px проверены визуально; `pnpm audit --audit-level high` — 0 findings.
 - **Verdict:** APPROVE. Critical/required findings отсутствуют.
 - **Production:** Vercel status `success` для `9413316`; публичный remote smoke RU/KK desktop/mobile — 13 passed и 1 expected skipped. Четыре fixture-auth сценария намеренно не используются как remote gate, поскольку их локальные session cookies не принадлежат домену Vercel.
+
+## Production login recovery review
+
+- **Root cause:** production BFF в `fra1` стабильно получал `TimeoutError` при обращении к backend, поэтому `/api/auth/login` возвращал `503 BACKEND_UNAVAILABLE`; backend напрямую отвечал `200` всем трём synthetic accounts примерно за 0,3 секунды.
+- **Correctness:** preview deployment с тем же приложением в `arn1` успешно вернул ожидаемые роли `PATIENT`, `PRACTITIONER` и `ADMIN`; отдельный config-test блокирует возврат на недоступный регион.
+- **Architecture/security:** auth-контракт, BFF routes, HttpOnly cookies, origin validation, токены и пользовательский интерфейс не изменены; credentials и ответы с токенами не попали в Git или runtime logs.
+- **Performance:** Stockholm preview устранил 10-секундный timeout и завершил login через backend; дополнительных запросов, retry или зависимостей не добавлено.
+- **Verification:** RED/GREEN deployment-config test; `pnpm verify` — 83/83 tests и production build; production-mode Playwright — 47 passed и 4 expected skipped; `pnpm audit --audit-level high` — 0 findings.
+- **Rollback:** до подтверждения production login предыдущая вершина — `1960001`; при ошибке регион возвращается обычным `git revert`, без миграции данных.
+- **Verdict:** APPROVE для production rollout. Critical/required findings отсутствуют.

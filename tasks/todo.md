@@ -920,3 +920,15 @@
 - [x] Поле и прикрепление фото компактны, нижняя навигация ничего не перекрывает.
 - [x] У специалиста есть явный возврат от диалога к списку пациентов.
 - [x] RU/KK, visual QA, full verify/E2E, review и production smoke зелёные.
+
+## T62–T64 — Production login recovery
+
+**Status:** 🟡 In progress
+
+**Description:** Восстановить связность Vercel BFF с HTTP backend без изменения auth-контракта или хранения токенов.
+
+**Acceptance criteria:**
+- [x] Production failure воспроизводится как `503 BACKEND_UNAVAILABLE`, а runtime log фиксирует `TimeoutError`.
+- [x] Прямой backend login и preview login в `arn1` возвращают ожидаемые роли для всех трёх synthetic accounts.
+- [x] Deployment config test блокирует возврат на недоступный `fra1`.
+- [ ] Полные verify/E2E, review, production deployment и live login smoke зелёные.

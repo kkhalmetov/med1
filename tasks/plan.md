@@ -207,6 +207,18 @@ Admin registries and exports
 - [x] Специалист переключается между списком пациентов и одним выбранным диалогом.
 - [x] GitHub `main` и Vercel production содержат verified release.
 
+### Фаза 12 — Восстановление production login
+
+- [x] T62 Воспроизвести вход всеми ролями и локализовать timeout между Vercel и backend
+- [x] T63 Проверить альтернативную compute-region на preview и закрепить конфигурацию тестом
+- [ ] T64 Выполнить полный regression suite, review, push и production live smoke
+
+### Checkpoint L
+
+- [x] Backend напрямую принимает все три синтетических аккаунта и возвращает корректные роли.
+- [x] Preview в `arn1` успешно выполняет login для `PATIENT`, `PRACTITIONER` и `ADMIN`.
+- [ ] GitHub `main` и Vercel production содержат verified login recovery.
+
 ## Verification strategy
 
 - After every task: focused unit/component/integration test plus typecheck for touched area.
