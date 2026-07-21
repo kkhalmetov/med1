@@ -1,20 +1,20 @@
 # Qadam — полная матрица покрытия backend API
 
-Статус: `VERIFIED — 52/52 operations, 30/30 schemas, live login 3/3 roles`
-Проверено: 2026-07-20  
+Статус: `VERIFIED — 53/53 operations, 31/31 schemas, live login 3/3 roles`
+Проверено: 2026-07-21
 Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 
 ## Результат сверки
 
 - Live OpenAPI: `3.1.0`, HTTP `200`.
-- Live Swagger: **41 path, 52 операции, 30 схем, 11 групп**.
-- Локальный `swagger.md`: **52 операции**.
+- Live Swagger: **42 path, 53 операции, 31 схема, 11 групп**.
+- Локальный `swagger.md`: **53 операции**.
 - Разница множеств `METHOD + PATH`: **0** в обе стороны.
-- Frontend action registry: **52/52**; проверяется командой `pnpm api:coverage`.
-- Product scenario map: **52/52**; каждая операция привязана к предметному экрану/действию без пользовательски видимых HTTP-методов.
-- Runtime/form schema coverage: **30/30**; поля, required, enum и диапазоны строятся из OpenAPI snapshot.
+- Frontend action registry: **53/53**; проверяется командой `pnpm api:coverage`.
+- Product scenario map: **53/53**; каждая операция привязана к предметному экрану/действию без пользовательски видимых HTTP-методов.
+- Runtime/form schema coverage: **31/31**; поля, required, enum и диапазоны строятся из OpenAPI snapshot.
 - Публичные операции: только `POST /auth/make-auth` и `POST /auth/refresh-access-token`.
-- Остальные 50 операций требуют Bearer JWT.
+- Остальные 51 операция требует Bearer JWT.
 
 Обозначения статуса:
 
@@ -22,7 +22,7 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 - `✅` — UI подключён, mock/contract tests и разрешённый live smoke пройдены.
 - Строка может стать `✅` только после проверки success path, документированных ошибок и ролевого доступа.
 
-## 1. Аутентификация — 4/52
+## 1. Аутентификация — 4/53
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
@@ -31,7 +31,7 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 | ✅ | `POST /auth/logout` | Все авторизованные | Выход из меню каждой роли, очистка cookies/cache query | `200`, `401`, повторный logout безопасен |
 | ✅ | `PATCH /auth/password/update` | Все авторизованные | Форма смены пароля в настройках каждой роли | `200`, `400`, `401`, очистка полей |
 
-## 2. Отчёты пациентов — 6/52
+## 2. Отчёты пациентов — 6/53
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
@@ -42,7 +42,7 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 | ✅ | `GET /patients/{patientId}/reports?is_unchecked=` | Practitioner | Вкладка отчётов пациента с фильтром | `false/true`, `401/403/404` |
 | ✅ | `GET /patients/{patientId}/reports/export-pdf` | Practitioner | Скачивание PDF из карточки пациента | PDF filename/content-type, `401/403/404` |
 
-## 3. Квалификации — 3/52
+## 3. Квалификации — 3/53
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
@@ -50,7 +50,7 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 | ✅ | `POST /qualifications` | Admin | Форма/диалог создания квалификации | `201`, `401/403/409` |
 | ✅ | `GET /qualifications/{id}` | Авторизованные | Страница/панель деталей квалификации | `200`, `401/404` |
 
-## 4. Медицинские специалисты — 6/52
+## 4. Медицинские специалисты — 6/53
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
@@ -61,7 +61,7 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 | ✅ | `GET /practitioners/{id}` | Авторизованные | Детали специалиста в разрешённом контексте | `200`, `401/404` |
 | ✅ | `GET /practitioners/export` | Admin | Экспорт реестра специалистов в CSV | CSV filename/content-type, `401/403/500` |
 
-## 5. Пациенты — 7/52
+## 5. Пациенты — 8/53
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
@@ -71,9 +71,10 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 | ✅ | `GET /patients/me?only_observable=` | Patient | Профиль/главная пациента; toggle актуальных изделий | `false/true`, `401/403` |
 | ✅ | `PATCH /patients/me` | Patient | Изменение телефона и/или адреса | `200`, `401/403/404` |
 | ✅ | `GET /patients/{id}/status-history` | Авторизованные в разрешённом контексте | Timeline статусов в карточке пациента | `200`, `401/404` |
+| ✅ | `GET /patients/{id}/short-review` | Practitioner, Admin | Безопасная AI-сводка в карточке пациента специалиста и контексте актов администратора | `200`, empty, refresh, `401/403/404/503`, live smoke |
 | ✅ | `GET /patients/export` | Admin | Экспорт пациентов в CSV | CSV filename/content-type, `401/403/500` |
 
-## 6. Чат — 8/52
+## 6. Чат — 8/53
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
@@ -86,7 +87,7 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 | ✅ | `GET /chat/unread` | Practitioner | Сводные unread-бейджи по пациентам | `200`, polling, `401/403` |
 | ✅ | `GET /chat/messages/unread` | Patient | Unread-бейдж сообщений специалиста | `200`, polling, `401/403` |
 
-## 7. Медицинские организации — 3/52
+## 7. Медицинские организации — 3/53
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
@@ -94,7 +95,7 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 | ✅ | `POST /organizations` | Admin | Форма создания организации | `201`, `401/403/409` |
 | ✅ | `GET /organizations/{id}` | Авторизованные | Детальная страница/панель организации | `200`, `401/404` |
 
-## 8. Изделия — 3/52
+## 8. Изделия — 3/53
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
@@ -102,7 +103,7 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 | ✅ | `POST /devices` | Admin, Practitioner | Форма создания протеза/ортеза | `201`, `401/403/404` |
 | ✅ | `GET /devices/{id}` | Авторизованные | Детальная карточка изделия | `200`, `401/404` |
 
-## 9. Акты выдачи изделий — 4/52
+## 9. Акты выдачи изделий — 4/53
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
@@ -111,7 +112,7 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 | ✅ | `GET /device-dispenses/{id}` | Авторизованные | Детали акта выдачи из доступных списков | `200`, `401/404` |
 | ✅ | `GET /device-dispenses/me?only_observable=` | Patient | Мои акты выдачи; фильтр действующего наблюдения | `false/true`, `401/403/404` |
 
-## 10. Жалобы на изделия — 7/52
+## 10. Жалобы на изделия — 7/53
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
@@ -123,13 +124,13 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 | ✅ | `GET /device-complains/{id}` | Авторизованные в разрешённом контексте | Детальная карточка жалобы и фото | `200`, `401/404` |
 | ✅ | `GET /device-complains/my?reviewed=` | Patient | Мои жалобы; переключатель reviewed | `false/true`, `401/403` |
 
-## 11. Защищённые файлы — 1/52
+## 11. Защищённые файлы — 1/53
 
 | Статус | Метод и путь | Роль | Frontend-интеграция | Проверка |
 |---|---|---|---|---|
 | ✅ | `GET /files?path=` | Авторизованные | Same-origin media proxy для аватаров, фото чата и жалоб | `200`, content-type, placeholder, `401/404`, path allowlist |
 
-## Покрытие 30 схем
+## Покрытие 31 схемы
 
 | Группа | Схемы | Потребитель на фронтенде |
 |---|---|---|
@@ -138,6 +139,7 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 | Специалисты | `PractitionerRegisterRequest`, `PractitionerResponse`, `PractitionerSelfUpdateRequest` | Admin registration/detail/export, профиль |
 | Пациенты | `PatientRegisterRequest`, `PatientDeviceSummaryResponse`, `PatientResponse`, `PatientSelfUpdateRequest` | Регистрация, профиль, список и карточка |
 | Статусы пациентов | `PatientStatusChangeRequest`, `PatientStatusChangeResponse` | Смена статуса и timeline |
+| Краткий обзор пациента | `ShortPatientReview` | AI-сводка, статус, loading/empty/error/retry для Practitioner и Admin |
 | Чат | `ChatMessageCreateRequest`, `ChatMessageWithPhotoCreateRequest`, `ChatMessageResponse` | Обе стороны чата, фото, unread |
 | Организации | `OrganizationCreateRequest`, `OrganizationResponse` | Admin create/list/detail и selectors |
 | Изделия | `DeviceCreateRequest`, `DeviceResponse` | Каталог, create/detail, selectors |
@@ -145,7 +147,7 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 | Жалобы | `DeviceComplainCreateRequest`, `DeviceComplainPhotoResponse`, `DeviceComplainResponse`, `DeviceComplainReviewRequest` | Создание, фото, очереди, review/detail |
 | Auth | `AuthRequestDto`, `AuthResponseDto`, `RefreshAccessTokenRequestDto`, `UpdatePasswordRequest` | Login, HttpOnly session, refresh, password |
 
-Итого в таблице: **30 уникальных схем**.
+Итого в таблице: **31 уникальная схема**.
 
 ## Покрытие enum
 
@@ -167,8 +169,8 @@ Backend: `http://45.141.100.245:8080/disabled-support-service/api/v1`
 
 Полное подключение backend считается выполненным, только если:
 
-1. Все 52 строки имеют статус `✅`.
-2. Все 30 схем представлены сгенерированными TypeScript-типами и runtime-валидацией входных форм/критичных ответов.
+1. Все 53 строки имеют статус `✅`.
+2. Все 31 схемы представлены сгенерированными TypeScript-типами и runtime-валидацией входных форм/критичных ответов.
 3. Все query/path parameters доступны из нужного UI и проверены в обоих состояниях, где есть boolean-фильтр.
 4. Все JSON и multipart body формируются по OpenAPI; файлы и экспорты проходят через BFF без повреждения content type/body.
 5. Для всех трёх ролей проверены разрешённые действия и ожидаемые `403` на запрещённых.

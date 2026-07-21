@@ -4,6 +4,7 @@ import { Download, Plus } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { PasswordForm } from '@/features/auth/password-form'
+import { PatientShortReview } from '@/features/patients/patient-short-review'
 import { apiRequest } from '@/shared/api/client'
 import { fetchDownload, saveDownload } from '@/shared/api/download'
 import { ApiError } from '@/shared/api/error'
@@ -794,43 +795,46 @@ function AdminDispenseResults({
       ? t('admin.patientNotFound')
       : t('errors.generic')
   return (
-    <div className="product-layout">
-      <ProductPanel title={t('admin.dispenseTitle')}>
-        <AsyncNotice
-          loading={query.isLoading}
-          error={query.isError}
-          empty={!query.data?.length}
-          loadingLabel={t('common.loading')}
-          errorLabel={errorLabel}
-          emptyLabel={t('common.empty')}
-        />
-        {query.data?.length ? (
-          <EntityGrid>
-            {query.data.map((item) => (
-              <EntityCard
-                key={item.id}
-                title={item.deviceName || t('admin.dispenseCard')}
-                meta={formatDate(item.issuedAt, locale)}
-                detail={item.patientFullName}
-                selected={selected?.id === item.id}
-                onClick={() => onSelect(item)}
-              />
-            ))}
-          </EntityGrid>
-        ) : null}
-      </ProductPanel>
-      {selected ? (
-        <DispenseDetails item={selected} />
-      ) : (
-        <ProductPanel title={t('admin.dispenseCard')}>
+    <div className="admin-patient-context">
+      {query.isSuccess ? <PatientShortReview patientId={patientId} /> : null}
+      <div className="product-layout">
+        <ProductPanel title={t('admin.dispenseTitle')}>
           <AsyncNotice
-            empty
-            emptyLabel={t('admin.chooseDispense')}
+            loading={query.isLoading}
+            error={query.isError}
+            empty={!query.data?.length}
             loadingLabel={t('common.loading')}
-            errorLabel={t('errors.generic')}
+            errorLabel={errorLabel}
+            emptyLabel={t('common.empty')}
           />
+          {query.data?.length ? (
+            <EntityGrid>
+              {query.data.map((item) => (
+                <EntityCard
+                  key={item.id}
+                  title={item.deviceName || t('admin.dispenseCard')}
+                  meta={formatDate(item.issuedAt, locale)}
+                  detail={item.patientFullName}
+                  selected={selected?.id === item.id}
+                  onClick={() => onSelect(item)}
+                />
+              ))}
+            </EntityGrid>
+          ) : null}
         </ProductPanel>
-      )}
+        {selected ? (
+          <DispenseDetails item={selected} />
+        ) : (
+          <ProductPanel title={t('admin.dispenseCard')}>
+            <AsyncNotice
+              empty
+              emptyLabel={t('admin.chooseDispense')}
+              loadingLabel={t('common.loading')}
+              errorLabel={t('errors.generic')}
+            />
+          </ProductPanel>
+        )}
+      </div>
     </div>
   )
 }

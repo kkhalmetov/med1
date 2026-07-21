@@ -1,12 +1,12 @@
 # Qadam multi-axis code review
 
-Дата: 2026-07-20
+Дата: 2026-07-21
 Объём: frontend, BFF/auth, OpenAPI contract, PWA, tests и release configuration.
 Вердикт: **APPROVE для release**.
 
 ## Correctness
 
-- Contract snapshot содержит 41 path, 52 операции и 30 схем; frontend registry покрывает 52/52 и намеренно падает при пропуске.
+- Contract snapshot содержит 42 path, 53 операции и 31 схему; frontend registry покрывает 53/53 и намеренно падает при пропуске.
 - Unit/integration suite покрывает allow/deny proxy policy, JSON/multipart, refresh loop guard, binary hashes, auth token boundary, translation parity, exact report ranges, upload policy и polling lifecycle.
 - Controlled-browser suites покрывают обе локали, mobile/desktop shell, три роли, report/practitioner/admin mutations, role isolation и offline cache policy.
 - Финальный live drift выявил и синхронизировал расширение `discomfortLevel` с `1–10` до `0–10`; после этого contract-check и регрессионный тест прошли.
@@ -18,7 +18,7 @@
 - OpenAPI form-contract остаётся источником contract-тестов required/type/enum/range, а пользовательские payload builders сгруппированы по предметным сценариям трёх ролей.
 - `operation-workbench.tsx` и `workspace-page.tsx` удалены: HTTP-методы, operationId, raw JSON и ручной запуск endpoint больше не входят в user-facing bundle.
 - Patient, practitioner и admin workspaces используют generated schema types, один Query adapter и общие доступные product primitives; mutations/downloads вызываются только из контекстных действий.
-- Независимая `product-operation-map.ts` сопоставляет все 52 operationId с ролевым экраном/действием и проверяется против OpenAPI в CI.
+- Независимая `product-operation-map.ts` сопоставляет все 53 operationId с ролевым экраном/действием и проверяется против OpenAPI в CI.
 - `schema.d.ts` большой, но generated и исключён из lint/format review. Role workspace files крупные из-за полного Swagger-scope; дальнейшее разбиение по bounded feature modules — optional follow-up, не release blocker.
 
 ## Security and privacy
@@ -51,3 +51,12 @@
 - Все ролевые маршруты проверяют отсутствие пользовательски видимых `GET/POST/PATCH` и universal run controls.
 - Report mutation E2E подтверждает payload с `discomfortLevel: 0`; live OpenAPI и snapshot задают диапазон `0–10`.
 - Practitioner report check и admin qualification create выполняют реальные BFF requests в browser fixture suite.
+
+## Short-review release review
+
+- **Correctness:** `shortReview` подключён по live-контракту `GET /patients/{id}/short-review` для `PRACTITIONER` и `ADMIN`; success, empty, invalid payload, error/retry, refresh и 360 px покрыты browser-тестами.
+- **Readability/architecture:** один feature-компонент используется в двух ролевых контекстах; generated `ShortPatientReview` остаётся типовой границей, а runtime parser отклоняет неизвестные поля типов и enum.
+- **Security:** LLM-ответ рассматривается как недоверенный plain text, React-экранирование не обходится, сырые backend errors не выводятся, автоматические retry отключены.
+- **Performance:** один запрос выполняется при открытии контекста пациента, повторная генерация запускается только явным действием; live latency составила менее 2 секунд.
+- **Verification:** `pnpm verify` — 82/82 tests и production build; fixture Playwright — 43 passed, 4 expected skipped; live `PRACTITIONER` и `ADMIN` — `200 application/json` с полями `statusColor,review`.
+- **Verdict:** APPROVE. Critical/required findings отсутствуют после добавления runtime-валидации и точечного security override.

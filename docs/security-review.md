@@ -1,6 +1,6 @@
 # Qadam security review
 
-Дата: 2026-07-20
+Дата: 2026-07-21
 Вердикт: **PASS — high/critical findings отсутствуют**
 
 ## Threat model
@@ -11,13 +11,13 @@
 
 - JWT доступны только серверу в `HttpOnly`, `SameSite=Lax`, production `Secure` cookies; browser получает только `role` и `userId`.
 - Mutating route handlers требуют точного same-origin `Origin`; login, password, logout и общий proxy используют один origin policy. За reverse proxy public origin восстанавливается из platform-owned `X-Forwarded-Host`/`X-Forwarded-Proto`, foreign и missing origins отклоняются тестами.
-- Proxy разрешает только 52 пары `method + path` из сохранённого OpenAPI, только документированные query keys/content types и отклоняет traversal/небезопасные file paths.
+- Proxy разрешает только 53 пары `method + path` из сохранённого OpenAPI, только документированные query keys/content types и отклоняет traversal/небезопасные file paths.
 - Token refresh имеет один повтор; неуспех очищает session. Backend/network failure преобразуется в no-store `503` без stack/token output.
 - API, auth, protected media и authenticated HTML не попадают в Service Worker Cache Storage; browser E2E это подтверждает.
 - Binary proxy не меняет bytes/content type/disposition и не копирует потенциально неверный `Content-Length`.
 - Upload policy: JPEG/PNG/WebP, source до 10 MB, complaint до 5 файлов/chat до 1, max dimension 1600 px, WebP compression и общий target до 4 MB.
-- React экранирует backend/user text; `dangerouslySetInnerHTML`, browser token storage и analytics отсутствуют.
-- Supply chain: exact versions, lockfile, minimum release age и explicit `allowBuilds` map для пяти проверенных native/tooling packages; остальные lifecycle scripts запрещены pnpm. `postcss >=8.5.10` override закрывает advisory, `pnpm audit --audit-level=moderate` — 0 findings.
+- React экранирует backend/user/LLM text; `dangerouslySetInnerHTML`, browser token storage и analytics отсутствуют. `ShortPatientReview` дополнительно проходит runtime-проверку объекта, строки и enum до отображения.
+- Supply chain: exact versions, lockfile, minimum release age и explicit `allowBuilds` map для пяти проверенных native/tooling packages; остальные lifecycle scripts запрещены pnpm. Overrides `postcss >=8.5.10` и `js-yaml >=4.3.0` закрывают advisories, `pnpm audit --audit-level=moderate` — 0 findings.
 - Secret scan по значениям трёх demo accounts — clean; credentials доступны только через ignored local/Vercel environment variables.
 
 ## Исправления по итогам review
@@ -30,12 +30,15 @@
 6. Origin validation адаптирован к public host за Vercel/Next proxy без ослабления foreign-origin deny policy.
 7. Live E2E переведён на in-page request без заполнения DOM, чтобы Playwright error context не мог сохранить credentials.
 8. После замены workbench формы по-прежнему используют только allowlisted BFF; protected image paths проходят существующую path policy, а CSV/PDF — binary transport.
+9. AI-обзор выводится только как plain text после runtime-валидации; автоматические повторы генерации отключены, повтор доступен явной кнопкой.
+10. Транзитивный `js-yaml` в OpenAPI tooling закреплён на исправленной совместимой версии `4.3.0` после high advisory.
 
 ## Остаточные ограничения
 
 - Backend доступен по HTTP. Соединение выполняется только server-to-server; решение использовать synthetic data и не добавлять пользовательское предупреждение подтверждено владельцем проекта.
 - Backend остаётся окончательным источником ролевой авторизации. UI guards и BFF route allowlist уменьшают поверхность, но не заменяют backend `403`.
 - API не предоставляет pagination; frontend не изобретает несовместимый контракт.
+- Backend для запрещённого вызова short-review из роли `PATIENT` возвращает `500` вместо документированного `403`; frontend не показывает операцию пациенту, разрешённые роли получают `200`, отклонение передано backend-команде.
 - Environment-gated Playwright project `live` не сохраняет trace/video/screenshots и не заполняет credential values в DOM. Live login трёх ролей прошёл после восстановления backend.
 
 ## Verification
@@ -43,7 +46,7 @@
 ```text
 pnpm audit --audit-level=moderate  -> 0 vulnerabilities
 pnpm verify                        -> pass
-pnpm api:coverage                   -> 52/52 operations, 30/30 schemas
+pnpm api:coverage                   -> 53/53 operations, 31/31 schemas
 playwright fixture + live suites   -> pass (PATIENT/PRACTITIONER/ADMIN)
 specific demo-secret scan          -> clean
 ```

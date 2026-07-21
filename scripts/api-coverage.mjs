@@ -24,7 +24,7 @@ const missing = [...backendIds].filter((operationId) => !frontendIds.has(operati
 const extra = [...frontendIds].filter((operationId) => !backendIds.has(operationId))
 const schemaCount = Object.keys(snapshot.components?.schemas ?? {}).length
 
-if (backendIds.size !== 52 || schemaCount !== 30 || missing.length > 0 || extra.length > 0) {
+if (backendIds.size !== 53 || schemaCount !== 31 || missing.length > 0 || extra.length > 0) {
   console.error(
     JSON.stringify({ operations: backendIds.size, schemas: schemaCount, missing, extra }),
   )

@@ -85,6 +85,25 @@ test('admin sees patient guidance instead of a generic dispense lookup error', a
   await expect(page.getByText('Не удалось выполнить действие. Попробуйте ещё раз.')).toHaveCount(0)
 })
 
+test('admin sees the short patient review in the dispense context', async ({ page }) => {
+  const patientId = 'a8a71537-9b95-4ae0-ba84-4986424d98f1'
+  await page.route(`**/api/backend/patients/${patientId}/short-review`, (route) =>
+    route.fulfill({
+      json: {
+        statusColor: 'GREEN',
+        review: 'Состояние стабильное, срочных жалоб в последних обращениях нет.',
+      },
+    }),
+  )
+
+  await page.goto('/ru/admin/dispenses')
+  await page.getByLabel('Идентификатор пациента').fill(patientId)
+
+  const review = page.getByRole('region', { name: 'Краткий обзор пациента' })
+  await expect(review.getByText(/Состояние стабильное/)).toBeVisible()
+  await expect(review.getByText('Стабильное состояние', { exact: true })).toBeVisible()
+})
+
 test('admin photo attachment uses the Qadam file picker', async ({ page }) => {
   await page.goto('/ru/admin/practitioners')
   await page.getByRole('button', { name: 'Зарегистрировать специалиста' }).click()

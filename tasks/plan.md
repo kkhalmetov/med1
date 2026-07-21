@@ -165,6 +165,20 @@ Admin registries and exports
 - [x] Публичная главная и PWA используют новый Q-знак без блока слогана со щитом.
 - [x] GitHub `main` и Vercel production содержат verified release.
 
+### Фаза 9 — AI-обзор пациента
+
+- [x] T50 Зафиксировать live-контракт `/patients/{id}/short-review` и синхронизировать OpenAPI
+- [x] T51 Добавить contract и practitioner E2E regression tests
+- [x] T52 Реализовать двуязычный краткий обзор в карточке пациента
+- [ ] T53 Выполнить live smoke, review, push и Vercel production deployment
+
+### Checkpoint I
+
+- [ ] Специалист получает краткую сводку выбранного пациента из реального backend.
+- [ ] В UI есть loading, empty, error/retry и безопасное отображение недоверенного текста.
+- [ ] Новая операция учтена в полном OpenAPI coverage без необоснованных допущений о контракте.
+- [ ] GitHub `main` и Vercel production содержат verified release.
+
 ## Verification strategy
 
 - After every task: focused unit/component/integration test plus typecheck for touched area.

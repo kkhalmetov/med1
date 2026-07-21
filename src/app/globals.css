@@ -1290,6 +1290,66 @@ svg {
 .product-panel__action {
   flex: 0 0 auto;
 }
+.admin-patient-context {
+  display: grid;
+  gap: 18px;
+}
+.patient-review {
+  min-width: 0;
+  display: grid;
+  gap: 14px;
+  margin: 20px 0;
+  padding: clamp(16px, 3vw, 20px);
+  background: linear-gradient(145deg, #f0faf6, #fbfdfc);
+  border: 1px solid #b9d5cc;
+  border-radius: 16px;
+}
+.admin-patient-context > .patient-review {
+  margin: 0;
+}
+.patient-review__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.patient-review__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--brand-800);
+}
+.patient-review__title h3,
+.patient-review__header p,
+.patient-review__content p,
+.patient-review__note {
+  margin: 0;
+}
+.patient-review__header p {
+  margin-top: 5px;
+  color: var(--ink-650);
+  font-size: 0.88rem;
+}
+.patient-review__content {
+  min-width: 0;
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+}
+.patient-review__content p {
+  max-width: 75ch;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.65;
+}
+.patient-review__retry {
+  display: flex;
+  justify-content: center;
+}
+.patient-review__note {
+  color: var(--ink-500);
+  font-size: 0.78rem;
+}
 .action-panel {
   padding: clamp(18px, 3vw, 28px);
   background: var(--paper);
@@ -1640,6 +1700,13 @@ button.entity-card[aria-pressed='true'] {
   .product-panel__header {
     align-items: stretch;
     flex-direction: column;
+  }
+  .patient-review__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .patient-review__header .button {
+    width: 100%;
   }
   .product-panel__action .button {
     width: 100%;

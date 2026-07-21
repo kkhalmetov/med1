@@ -17,6 +17,7 @@ export const operationGroups = {
     'register_1',
     'changeStatus',
     'statusHistory',
+    'shortReview',
     'findAll',
     'findById',
     'findAll_2',
@@ -50,6 +51,6 @@ export const operationGroups = {
   adminOrganizations: ['findAll_2', 'create_2', 'findById_2'],
   adminPractitioners: ['findAll_1', 'register', 'findById_1', 'exportCsv'],
   adminDevices: ['findAll_3', 'create_3', 'findById_3'],
-  adminDispenses: ['findByPatient_1', 'findById_4', 'exportCsv_1', 'getFile'],
+  adminDispenses: ['findByPatient_1', 'findById_4', 'exportCsv_1', 'shortReview', 'getFile'],
   adminProfile: [],
 } as const

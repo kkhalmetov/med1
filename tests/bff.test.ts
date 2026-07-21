@@ -38,8 +38,8 @@ afterEach(() => {
 })
 
 describe('backend operation policy', () => {
-  it('contains and resolves every one of the 52 Swagger operations', () => {
-    expect(backendOperations).toHaveLength(52)
+  it('contains and resolves every one of the 53 Swagger operations', () => {
+    expect(backendOperations).toHaveLength(53)
     for (const operation of backendOperations) {
       expect(
         resolveBackendOperation(

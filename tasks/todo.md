@@ -821,3 +821,47 @@
 **Dependencies:** T37  
 **Files likely touched:** No source changes expected; release metadata only  
 **Estimated scope:** Small
+
+## T50 — Short-review contract sync
+
+**Status:** ✅ Completed
+
+**Description:** Зафиксировать новый live-контракт `GET /patients/{id}/short-review`.
+
+**Acceptance criteria:**
+- [x] OpenAPI snapshot содержит `shortReview` и `ShortPatientReview`.
+- [x] Generated types, BFF allowlist и coverage отражают 42 пути, 53 операции и 31 схему.
+- [x] Роли `PRACTITIONER` и `ADMIN` подтверждены live Swagger.
+
+## T51 — Short-review regression tests
+
+**Status:** ✅ Completed
+
+**Description:** Зафиксировать пользовательские и контрактные ожидания до реализации.
+
+**Acceptance criteria:**
+- [x] Practitioner E2E проверяет success, refresh и service error/retry.
+- [x] Admin E2E проверяет обзор в контексте поиска пациента.
+- [x] Operation catalog и BFF policy требуют 53/53 операций.
+
+## T52 — Short-review UI
+
+**Status:** ✅ Completed
+
+**Description:** Реализовать единый двуязычный обзор пациента для двух разрешённых ролей.
+
+**Acceptance criteria:**
+- [x] Типизированный ответ отображается как безопасный plain text.
+- [x] Loading, empty, status, error, timeout, retry и refresh локализованы RU/KK.
+- [x] Карточка адаптируется к ширине 360 px и не показывает HTTP/API-термины.
+
+## T53 — Short-review release
+
+**Status:** 🚧 In progress
+
+**Description:** Выполнить live smoke, полный review, push и production deployment.
+
+**Acceptance criteria:**
+- [x] Синтетический practitioner live smoke вернул `200 application/json` и ожидаемую форму.
+- [ ] `pnpm verify`, role E2E, API drift check, review и secret scan зелёные.
+- [ ] GitHub `main` и Vercel production содержат проверенный commit.

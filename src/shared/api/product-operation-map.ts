@@ -28,6 +28,7 @@ export const productOperationMap = {
   findMe_1: 'patient/profile-and-dashboard/view',
   updateMe_1: 'patient/profile/update',
   statusHistory: 'practitioner/patients/status-timeline',
+  shortReview: 'practitioner-and-admin/patients/short-review',
   exportCsv_1: 'admin/dispenses/download-patients-csv',
   findAllAsPractitionerForPatient: 'practitioner/chat/conversation',
   sendAsPractitioner: 'practitioner/chat/send-text',

@@ -9,6 +9,7 @@ minimumReleaseAgeExclude:
   - '@tanstack/react-query@5.101.3'
 
 overrides:
+  js-yaml: 4.3.0
   postcss: 8.5.10
 
 allowBuilds:

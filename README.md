@@ -4,7 +4,7 @@
 
 Qadam — адаптивная двуязычная PWA для цифрового сопровождения пациента после выдачи протеза или ортеза. Один интерфейс объединяет ежедневные отчёты, изделия, жалобы с фотографиями, защищённый чат и рабочие кабинеты `PATIENT`, `PRACTITIONER` и `ADMIN`.
 
-Frontend реализует весь опубликованный backend-контракт: **52 из 52 операций** и **30 из 30 схем**. Русский и казахский языки доступны во всех пользовательских сценариях.
+Frontend реализует весь опубликованный backend-контракт: **53 из 53 операций** и **31 из 31 схемы**. Русский и казахский языки доступны во всех пользовательских сценариях.
 
 Production: [qadamm-alpha.vercel.app](https://qadamm-alpha.vercel.app)
 
@@ -12,7 +12,7 @@ Production: [qadamm-alpha.vercel.app](https://qadamm-alpha.vercel.app)
 
 - отдельные защищённые кабинеты пациента, специалиста и администратора;
 - авторизация, обновление сессии, выход и смена пароля через `HttpOnly` cookies;
-- отчёты, жалобы, чат, изделия, справочники и CSV/PDF-файлы;
+- отчёты, жалобы, чат, изделия, краткий обзор пациента, справочники и CSV/PDF-файлы;
 - безопасная подготовка изображений перед загрузкой;
 - installable PWA без кеширования медицинских данных и API-ответов;
 - same-origin Next.js BFF с allowlist, сформированным из OpenAPI;
@@ -50,7 +50,7 @@ pnpm dev
 | `pnpm verify`                       | lint, formatting, types, unit/integration tests и production build |
 | `pnpm test:e2e`                     | Playwright для desktop/mobile и всех трёх ролей                    |
 | `pnpm test:a11y`                    | accessibility-проверки axe                                         |
-| `pnpm api:coverage`                 | доказательство покрытия 52 операций и 30 схем                      |
+| `pnpm api:coverage`                 | доказательство покрытия 53 операций и 31 схемы                     |
 | `pnpm api:check`                    | сравнение сохранённого OpenAPI с live backend                      |
 | `pnpm api:sync`                     | осознанное обновление snapshot и TypeScript-типов                  |
 | `pnpm audit --audit-level=moderate` | аудит цепочки поставки                                             |

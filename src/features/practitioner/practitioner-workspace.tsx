@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { useState, type FormEvent } from 'react'
 import { PasswordForm } from '@/features/auth/password-form'
 import { useSafePolling } from '@/features/chat/polling'
+import { PatientShortReview } from '@/features/patients/patient-short-review'
 import { apiRequest } from '@/shared/api/client'
 import { fetchDownload, saveDownload } from '@/shared/api/download'
 import { ApiError } from '@/shared/api/error'
@@ -217,6 +218,7 @@ function PatientStatusCard({ patient, onChanged }: { patient: Patient; onChanged
           ],
         ]}
       />
+      {patient.id ? <PatientShortReview patientId={patient.id} /> : null}
       <ProductForm onSubmit={submit}>
         <FormGrid>
           <SelectField

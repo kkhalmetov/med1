@@ -2727,6 +2727,77 @@
         ]
       }
     },
+    "/patients/{id}/short-review": {
+      "get": {
+        "tags": [
+          "Пациенты"
+        ],
+        "summary": "Краткая выжимка информации о пациенте",
+        "description": "Требуется роль PRACTITIONER или ADMIN. Ответ содержит краткую выжимку о пациента на основе используемых устройств, отчетов, жалоб и истории чата. ",
+        "operationId": "shortReview",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShortPatientReview"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Не авторизован",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "401",
+                  "message": "Требуется авторизация"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Нет доступа",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "403",
+                  "message": "Недостаточно прав для выполнения операции"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найдено",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "404",
+                  "message": "Пациент с таким id не найден"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/patients/export": {
       "get": {
         "tags": [
@@ -4411,6 +4482,22 @@
           "new_password",
           "old_password"
         ]
+      },
+      "ShortPatientReview": {
+        "type": "object",
+        "properties": {
+          "statusColor": {
+            "type": "string",
+            "enum": [
+              "GREEN",
+              "YELLOW",
+              "RED"
+            ]
+          },
+          "review": {
+            "type": "string"
+          }
+        }
       }
     },
     "securitySchemes": {

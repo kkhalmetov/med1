@@ -8,7 +8,7 @@ describe('frontend operation catalog', () => {
   it('assigns every Swagger operation to auth or at least one visible role workspace', () => {
     const visible = new Set<string>(Object.values(operationGroups).flat())
     const covered = new Set<string>([...visible, ...authOperationIds])
-    expect(covered.size).toBe(52)
+    expect(covered.size).toBe(53)
     expect(
       backendOperations.map(({ operationId }) => operationId).filter((id) => !covered.has(id)),
     ).toEqual([])

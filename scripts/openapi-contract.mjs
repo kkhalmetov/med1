@@ -8,7 +8,7 @@ const sourceUrl =
   process.env.QADAM_OPENAPI_URL ??
   'http://45.141.100.245:8080/disabled-support-service/api/v1/v3/api-docs'
 const methods = new Set(['get', 'post', 'put', 'patch', 'delete', 'options', 'head', 'trace'])
-const expected = { paths: 41, operations: 52, schemas: 30 }
+const expected = { paths: 42, operations: 53, schemas: 31 }
 
 function summarize(spec) {
   const paths = spec.paths ?? {}

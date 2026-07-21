@@ -1513,6 +1513,64 @@ Media type
 
 	No links
 GET
+/patients/{id}/short-review
+Краткая выжимка информации о пациенте
+
+Требуется роль PRACTITIONER или ADMIN. Ответ содержит краткую выжимку о пациенте на основе используемых устройств, отчётов, жалоб и истории чата.
+Parameters
+Name\tDescription
+id *
+string($uuid)
+(path)
+
+Responses
+Code\tDescription\tLinks
+200
+
+Успех
+Media type
+Controls Accept header.
+
+{
+  "statusColor": "GREEN",
+  "review": "string"
+}
+
+	No links
+401
+
+Не авторизован
+Media type
+
+{
+  "status": "401",
+  "message": "Требуется авторизация"
+}
+
+	No links
+403
+
+Нет доступа
+Media type
+
+{
+  "status": "403",
+  "message": "Недостаточно прав для выполнения операции"
+}
+
+	No links
+404
+
+Не найдено
+Media type
+
+{
+  "status": "404",
+  "message": "Пациент с таким id не найден"
+}
+
+	No links
+GET
 /patients/export
 Экспорт информации о пациентах в CSV
 

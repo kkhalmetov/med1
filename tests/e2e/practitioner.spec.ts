@@ -10,6 +10,14 @@ test.beforeEach(async ({ context, page }) => {
       await route.fulfill({
         json: [{ id: 'p1', firstName: 'Айша', lastName: 'Серик', status: 'RED' }],
       })
+    } else if (url.pathname.endsWith('/patients/p1/short-review')) {
+      await route.fulfill({
+        json: {
+          statusColor: 'YELLOW',
+          review:
+            'За последние дни пациент отмечал умеренную боль. В переписке новых срочных жалоб нет.',
+        },
+      })
     } else if (url.pathname.endsWith('/reports/r1/check')) {
       await route.fulfill({
         json: { id: 'r1', patientId: 'p1', checkedAt: '2026-07-20T18:12:30.000000' },
@@ -144,6 +152,75 @@ test('patient status history distinguishes a backend outage from empty history',
   await expect(page.getByText('Не удалось выполнить действие. Попробуйте ещё раз.')).toHaveCount(0)
 })
 
+test('practitioner sees and refreshes the AI patient review', async ({ page }) => {
+  let reviewRequests = 0
+  await page.route('**/api/backend/patients/p1/short-review', async (route) => {
+    reviewRequests += 1
+    await route.fulfill({
+      json: {
+        statusColor: 'YELLOW',
+        review:
+          'За последние дни пациент отмечал умеренную боль. В переписке новых срочных жалоб нет.',
+      },
+    })
+  })
+
+  await page.goto('/ru/practitioner/patients')
+  await page.getByRole('button', { name: /Серик Айша/ }).click()
+
+  const review = page.getByRole('region', { name: 'Краткий обзор пациента' })
+  await expect(review.getByText(/пациент отмечал умеренную боль/)).toBeVisible()
+  const initialRequests = reviewRequests
+  await review.getByRole('button', { name: 'Обновить обзор' }).click()
+  await expect.poll(() => reviewRequests).toBeGreaterThan(initialRequests)
+  await expect(review.getByText(/\b(GET|POST|PATCH)\b/)).toHaveCount(0)
+})
+
+test('patient review has a specific retry state when the service is unavailable', async ({
+  page,
+}) => {
+  await page.route('**/api/backend/patients/p1/short-review', (route) =>
+    route.fulfill({
+      status: 503,
+      contentType: 'application/json',
+      body: JSON.stringify({ code: 'BACKEND_UNAVAILABLE' }),
+    }),
+  )
+
+  await page.goto('/ru/practitioner/patients')
+  await page.getByRole('button', { name: /Серик Айша/ }).click()
+
+  const review = page.getByRole('region', { name: 'Краткий обзор пациента' })
+  await expect(review.getByText('Обзор временно недоступен. Попробуйте ещё раз.')).toBeVisible()
+  await expect(review.getByRole('button', { name: 'Повторить' })).toBeVisible()
+})
+
+test('patient review distinguishes an empty summary from an error', async ({ page }) => {
+  await page.route('**/api/backend/patients/p1/short-review', (route) =>
+    route.fulfill({ json: { statusColor: null, review: '' } }),
+  )
+
+  await page.goto('/ru/practitioner/patients')
+  await page.getByRole('button', { name: /Серик Айша/ }).click()
+
+  const review = page.getByRole('region', { name: 'Краткий обзор пациента' })
+  await expect(review.getByText('Для обзора пока недостаточно данных.')).toBeVisible()
+  await expect(review.getByText('Обзор временно недоступен. Попробуйте ещё раз.')).toHaveCount(0)
+})
+
+test('patient review rejects an invalid backend payload', async ({ page }) => {
+  await page.route('**/api/backend/patients/p1/short-review', (route) =>
+    route.fulfill({ json: { statusColor: 'BLUE', review: { html: '<script>bad()</script>' } } }),
+  )
+
+  await page.goto('/ru/practitioner/patients')
+  await page.getByRole('button', { name: /Серик Айша/ }).click()
+
+  const review = page.getByRole('region', { name: 'Краткий обзор пациента' })
+  await expect(review.getByText('Обзор временно недоступен. Попробуйте ещё раз.')).toBeVisible()
+  await expect(review.getByText(/bad\(\)/)).toHaveCount(0)
+})
+
 test('practitioner sees the status timeline returned by the recovered backend', async ({
   page,
 }) => {
@@ -190,4 +267,9 @@ test('practitioner workspace fits a 360 px viewport', async ({ page }) => {
     page.locator('.app-shell__topbar').getByRole('link', { name: 'Qadam' }),
   ).toHaveAttribute('href', '/ru/practitioner')
   await expect(page.getByRole('button', { name: 'Выйти' })).toBeVisible()
+  await page.getByRole('button', { name: /Серик Айша/ }).click()
+  await expect(page.getByRole('region', { name: 'Краткий обзор пациента' })).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
+    true,
+  )
 })

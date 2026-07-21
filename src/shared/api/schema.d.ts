@@ -644,6 +644,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/patients/{id}/short-review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Краткая выжимка информации о пациенте
+         * @description Требуется роль PRACTITIONER или ADMIN. Ответ содержит краткую выжимку о пациента на основе используемых устройств, отчетов, жалоб и истории чата.
+         */
+        get: operations["shortReview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/patients/export": {
         parameters: {
             query?: never;
@@ -1201,6 +1221,11 @@ export interface components {
         UpdatePasswordRequest: {
             old_password: string;
             new_password: string;
+        };
+        ShortPatientReview: {
+            /** @enum {string} */
+            statusColor?: "GREEN" | "YELLOW" | "RED";
+            review?: string;
         };
     };
     responses: never;
@@ -3738,6 +3763,73 @@ export interface operations {
                      * @example {
                      *       "status": "401",
                      *       "message": "Требуется авторизация"
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Не найдено */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "status": "404",
+                     *       "message": "Пациент с таким id не найден"
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    shortReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успех */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ShortPatientReview"];
+                };
+            };
+            /** @description Не авторизован */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "status": "401",
+                     *       "message": "Требуется авторизация"
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Нет доступа */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "status": "403",
+                     *       "message": "Недостаточно прав для выполнения операции"
                      *     }
                      */
                     "application/json": unknown;
