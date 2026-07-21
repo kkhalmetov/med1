@@ -19,6 +19,13 @@ test.beforeEach(async ({ context, page }) => {
       await route.fulfill({
         json: [{ id: 'dispense-1', deviceId: 'device-1', deviceName: 'Ортез для ноги' }],
       })
+    } else if (pathname.endsWith('/chat/messages/unread')) {
+      await route.fulfill({
+        json: [
+          { id: 'message-1', senderType: 'PRACTITIONER', content: 'Первое сообщение' },
+          { id: 'message-2', senderType: 'PRACTITIONER', content: 'Второе сообщение' },
+        ],
+      })
     } else if (route.request().method() === 'POST') {
       await route.fulfill({ json: { id: 'created-1', statusColor: 'GREEN' }, status: 201 })
     } else {
@@ -31,6 +38,10 @@ test('patient dashboard, report and role accessibility @a11y', async ({ page }) 
   await page.goto('/ru/patient')
   await expect(page.getByRole('heading', { name: 'Здравствуйте, Алия' })).toBeVisible()
   await expect(page.getByText('Только под наблюдением')).toHaveCount(0)
+  const chatCard = page
+    .getByRole('heading', { name: 'Чат со специалистом' })
+    .locator('xpath=ancestor::section[1]')
+  await expect(chatCard.locator('strong')).toHaveText('2')
   expect(
     (await new AxeBuilder({ page }).analyze()).violations.filter(
       ({ impact }) => impact === 'critical' || impact === 'serious',
@@ -62,6 +73,9 @@ test('patient complaint, chat, devices and profile actions are exposed', async (
   ] as const) {
     await page.goto(path)
     await expect(page.getByText(label).first()).toBeVisible()
+    if (path.endsWith('/chat')) {
+      await expect(page.getByText('2 непрочитанных')).toBeVisible()
+    }
     await expect(page.getByText(/\b(GET|POST|PATCH)\b/)).toHaveCount(0)
   }
 })

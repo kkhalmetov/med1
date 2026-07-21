@@ -574,7 +574,7 @@ function PatientChat() {
   const locale = useLocale()
   const labels = sharedLabels(t)
   const messages = useApiQuery<Message[]>(['patient', 'chat'], '/chat/messages')
-  const unread = useApiQuery<number>(['patient', 'chat', 'unread'], '/chat/messages/unread')
+  const unread = useApiQuery<Message[]>(['patient', 'chat', 'unread'], '/chat/messages/unread')
   useSafePolling(() => messages.refetch(), 10_000, true)
   useSafePolling(() => unread.refetch(), 30_000, true)
   return (
@@ -583,9 +583,9 @@ function PatientChat() {
         <ProductPanel
           title={t('product.conversation')}
           action={
-            typeof unread.data === 'number' && unread.data > 0 ? (
+            unread.data?.length ? (
               <StatusBadge tone="info">
-                {unread.data} {t('product.unread')}
+                {unread.data.length} {t('product.unread')}
               </StatusBadge>
             ) : null
           }

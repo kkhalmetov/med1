@@ -11,6 +11,7 @@ import { StatusBadge } from '@/shared/ui/status-badge'
 type Patient = components['schemas']['PatientResponse']
 type Dispense = components['schemas']['DeviceDispenseResponse']
 type Report = components['schemas']['QuestionnaireResponseResponse']
+type Message = components['schemas']['ChatMessageResponse']
 
 const tones = { GREEN: 'success', YELLOW: 'warning', RED: 'danger' } as const
 
@@ -27,7 +28,7 @@ export function PatientDashboard() {
     },
   )
   const reports = useApiQuery<Report[]>(['reports', 'my'], '/reports/my')
-  const unread = useApiQuery<unknown>(['chat', 'unread', 'patient'], '/chat/messages/unread')
+  const unread = useApiQuery<Message[]>(['chat', 'unread', 'patient'], '/chat/messages/unread')
   const status = patient.data?.status ?? 'GREEN'
 
   return (
@@ -85,7 +86,7 @@ export function PatientDashboard() {
         <Card title={t('chat.title')}>
           <div className="metric-row">
             <MessageCircle />
-            <strong>{typeof unread.data === 'number' ? unread.data : '—'}</strong>
+            <strong>{unread.data?.length ?? '—'}</strong>
             <Link href="/patient/chat">{t('common.open')}</Link>
           </div>
         </Card>
