@@ -136,7 +136,7 @@ test('patient complaint, chat, devices and profile actions are exposed', async (
   }
 })
 
-test('patient photo attachment uses the Qadam file picker', async ({ page }) => {
+test('patient photo attachment uses the QadamAI file picker', async ({ page }) => {
   await page.goto('/ru/patient/complaints')
   await page.getByRole('button', { name: 'Создать жалобу' }).click()
   const picker = page.locator('.product-file-control')
@@ -183,14 +183,14 @@ test('patient mobile shell marks only the current route and keeps account action
     'page',
   )
   await expect(
-    page.locator('.app-shell__topbar').getByRole('link', { name: 'Qadam' }),
+    page.locator('.app-shell__topbar').getByRole('link', { name: 'QadamAI' }),
   ).toHaveAttribute('href', '/ru/patient')
   await expect(page.getByRole('button', { name: 'Выйти' })).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   )
   await page.screenshot({ path: 'test-results/qadam-mobile-shell.png', fullPage: true })
-  await page.locator('.app-shell__topbar').getByRole('link', { name: 'Qadam' }).click()
+  await page.locator('.app-shell__topbar').getByRole('link', { name: 'QadamAI' }).click()
   await expect(page).toHaveURL(/\/ru\/patient$/)
   await expect(page.getByRole('button', { name: 'Выйти' })).toBeVisible()
 })

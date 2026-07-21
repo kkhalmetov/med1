@@ -16,7 +16,7 @@ test.beforeEach(async ({ context, page }) => {
 
 test('admin dashboard and registries are accessible @a11y', async ({ page }) => {
   await page.goto('/ru/admin')
-  await expect(page.getByRole('heading', { name: 'Управление Qadam' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Управление QadamAI' })).toBeVisible()
   expect(
     (await new AxeBuilder({ page }).analyze()).violations.filter(
       ({ impact }) => impact === 'critical' || impact === 'serious',
@@ -104,7 +104,7 @@ test('admin sees the short patient review in the dispense context', async ({ pag
   await expect(review.getByText('Стабильное состояние', { exact: true })).toBeVisible()
 })
 
-test('admin photo attachment uses the Qadam file picker', async ({ page }) => {
+test('admin photo attachment uses the QadamAI file picker', async ({ page }) => {
   await page.goto('/ru/admin/practitioners')
   await page.getByRole('button', { name: 'Зарегистрировать специалиста' }).click()
   const picker = page.locator('.product-file-control')
@@ -120,7 +120,7 @@ test('admin registry fits a 360 px viewport', async ({ page }) => {
     true,
   )
   await expect(
-    page.locator('.app-shell__topbar').getByRole('link', { name: 'Qadam' }),
+    page.locator('.app-shell__topbar').getByRole('link', { name: 'QadamAI' }),
   ).toHaveAttribute('href', '/ru/admin')
   await expect(page.getByRole('button', { name: 'Выйти' })).toBeVisible()
 })

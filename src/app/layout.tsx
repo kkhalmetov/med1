@@ -5,11 +5,11 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Qadam',
-    template: '%s · Qadam',
+    default: 'QadamAI',
+    template: '%s · QadamAI',
   },
-  description: 'Цифровое сопровождение после выдачи протеза или ортеза',
-  applicationName: 'Qadam',
+  description: 'Цифровое сопровождение и ИИ-обзор после выдачи ТСР',
+  applicationName: 'QadamAI',
   manifest: '/manifest.webmanifest',
   icons: {
     icon: '/icons/qadamm-q.svg',

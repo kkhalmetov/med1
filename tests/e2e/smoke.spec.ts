@@ -1,24 +1,46 @@
 import { expect, test } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 
-test('opens the localized Qadam shell', async ({ page }) => {
+test('opens the localized QadamAI shell and explains the AI overview', async ({ page }) => {
   await page.goto('/ru')
 
-  await expect(page).toHaveTitle(/Qadam/)
+  await expect(page).toHaveTitle(/QadamAI/)
   await expect(page.getByRole('heading', { name: 'Поддержка после выдачи ТСР' })).toBeVisible()
-  const signIn = page.getByRole('link', { name: 'Войти в Qadam' }).first()
+  const signIn = page.getByRole('link', { name: 'Войти в QadamAI' }).first()
   const howItWorks = page.getByRole('link', { name: 'Как это работает' })
   await expect(signIn).toBeVisible()
   await expect(signIn).toHaveCSS('text-decoration-line', 'none')
   await expect(howItWorks).toHaveCSS('text-decoration-line', 'none')
   await expect(page.locator('.hero__assurance')).toHaveCount(0)
   await expect(page.locator('.brand img').first()).toHaveAttribute('src', /\/icons\/qadamm-q\.svg/)
-  const footerLogo = page.locator('footer').getByRole('link', { name: 'Qadam' })
+  await expect(page.getByRole('heading', { name: 'ИИ собирает важное в один обзор' })).toBeVisible()
+  await expect(page.getByText('Собирает контекст', { exact: true })).toBeVisible()
+  await expect(page.getByText('Выделяет важное', { exact: true })).toBeVisible()
+  await expect(page.getByText('Помогает специалисту', { exact: true })).toBeVisible()
+  await expect(
+    page.getByText('ИИ не ставит диагноз и не заменяет клиническое решение.'),
+  ).toBeVisible()
+  const footerLogo = page.locator('footer').getByRole('link', { name: 'QadamAI' })
   await expect(footerLogo).toHaveAttribute('href', /#top$/)
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
   await footerLogo.click()
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
   await page.screenshot({ path: 'test-results/qadam-landing.png', fullPage: true })
+})
+
+test('explains the QadamAI overview in Kazakh', async ({ page }) => {
+  await page.goto('/kk')
+
+  await expect(page).toHaveTitle(/QadamAI/)
+  await expect(
+    page.getByRole('heading', { name: 'ЖИ маңызды деректерді бір шолуға жинайды' }),
+  ).toBeVisible()
+  await expect(page.getByText('Контексті жинайды', { exact: true })).toBeVisible()
+  await expect(page.getByText('Маңыздысын бөліп көрсетеді', { exact: true })).toBeVisible()
+  await expect(page.getByText('Маманға көмектеседі', { exact: true })).toBeVisible()
+  await expect(
+    page.getByText('ЖИ диагноз қоймайды және клиникалық шешімді алмастырмайды.'),
+  ).toBeVisible()
 })
 
 test('login copy, error and submit content fit at 320 px', async ({ page }) => {

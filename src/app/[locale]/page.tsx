@@ -1,4 +1,13 @@
-import { Activity, ArrowRight, HeartHandshake, MessageCircleMore } from 'lucide-react'
+import {
+  Activity,
+  ArrowRight,
+  Database,
+  HeartHandshake,
+  MessageCircleMore,
+  ScanText,
+  ShieldCheck,
+  UserRoundCheck,
+} from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { Brand } from '@/shared/ui/brand'
@@ -40,7 +49,7 @@ export default async function LocaleHomePage() {
             <span className="hero-visual__pulse">
               <Activity size={25} />
             </span>
-            <small>Qadam</small>
+            <small>QadamAI</small>
             <strong>{t('stepOne')}</strong>
             <div className="hero-visual__scale">
               <i />
@@ -62,7 +71,7 @@ export default async function LocaleHomePage() {
 
       <section className="journey" id="how-it-works">
         <div className="journey__heading">
-          <p className="eyebrow">Qadam</p>
+          <p className="eyebrow">QadamAI</p>
           <h2>{t('howItWorks')}</h2>
         </div>
         <ol className="journey__grid">
@@ -87,9 +96,53 @@ export default async function LocaleHomePage() {
         </ol>
       </section>
 
+      <section className="ai-overview" aria-labelledby="ai-overview-title">
+        <div className="ai-overview__intro">
+          <p className="eyebrow">{t('aiEyebrow')}</p>
+          <h2 id="ai-overview-title">{t('aiTitle')}</h2>
+          <p className="ai-overview__lead">{t('aiDescription')}</p>
+          <p className="ai-overview__note">
+            <ShieldCheck aria-hidden="true" size={21} />
+            <span>{t('aiNote')}</span>
+          </p>
+        </div>
+        <ol className="ai-overview__flow">
+          <li>
+            <span className="ai-overview__number">01</span>
+            <span className="ai-overview__icon">
+              <Database aria-hidden="true" size={22} />
+            </span>
+            <span className="ai-overview__copy">
+              <strong>{t('aiCollectTitle')}</strong>
+              <small>{t('aiCollectDescription')}</small>
+            </span>
+          </li>
+          <li>
+            <span className="ai-overview__number">02</span>
+            <span className="ai-overview__icon">
+              <ScanText aria-hidden="true" size={22} />
+            </span>
+            <span className="ai-overview__copy">
+              <strong>{t('aiHighlightTitle')}</strong>
+              <small>{t('aiHighlightDescription')}</small>
+            </span>
+          </li>
+          <li>
+            <span className="ai-overview__number">03</span>
+            <span className="ai-overview__icon">
+              <UserRoundCheck aria-hidden="true" size={22} />
+            </span>
+            <span className="ai-overview__copy">
+              <strong>{t('aiAssistTitle')}</strong>
+              <small>{t('aiAssistDescription')}</small>
+            </span>
+          </li>
+        </ol>
+      </section>
+
       <footer className="public-footer">
         <Brand compact href="#top" />
-        <span>© 2026 Qadam</span>
+        <span>© 2026 QadamAI</span>
       </footer>
     </main>
   )

@@ -37,7 +37,7 @@ export function PatientDashboard() {
     <div className="dashboard-page">
       <header className="page-heading">
         <div>
-          <p className="eyebrow">Qadam</p>
+          <p className="eyebrow">QadamAI</p>
           <h1>
             {patient.data?.firstName
               ? t('dashboard.hello', { name: patient.data.firstName })

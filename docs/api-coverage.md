@@ -1,4 +1,4 @@
-# Qadam — полная матрица покрытия backend API
+# QadamAI — полная матрица покрытия backend API
 
 Статус: `VERIFIED — 53/53 operations, 31/31 schemas, live login 3/3 roles`
 Проверено: 2026-07-21

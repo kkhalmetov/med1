@@ -8,18 +8,18 @@ export function Brand({ compact = false, href = '/' }: { compact?: boolean; href
     <>
       <Image alt="" height={42} priority src="/icons/qadamm-q.svg" width={42} />
       <span>
-        <strong>Qadam</strong>
+        <strong>{t('name')}</strong>
         {compact ? null : <small>{t('slogan')}</small>}
       </span>
     </>
   )
 
   return href === '#top' ? (
-    <a className="brand" href="#top" aria-label="Qadam">
+    <a className="brand" href="#top" aria-label={t('name')}>
       {content}
     </a>
   ) : (
-    <Link className="brand" href={href} aria-label="Qadam">
+    <Link className="brand" href={href} aria-label={t('name')}>
       {content}
     </Link>
   )

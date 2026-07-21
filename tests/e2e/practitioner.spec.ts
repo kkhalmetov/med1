@@ -248,7 +248,7 @@ test('practitioner sees the status timeline returned by the recovered backend', 
   await expect(page.getByText('История статусов временно недоступна.')).toHaveCount(0)
 })
 
-test('practitioner photo attachment uses the Qadam file picker', async ({ page }) => {
+test('practitioner photo attachment uses the QadamAI file picker', async ({ page }) => {
   await page.goto('/ru/practitioner/patients')
   await page.getByRole('button', { name: 'Зарегистрировать пациента' }).click()
   const picker = page.locator('.product-file-control')
@@ -264,7 +264,7 @@ test('practitioner workspace fits a 360 px viewport', async ({ page }) => {
     true,
   )
   await expect(
-    page.locator('.app-shell__topbar').getByRole('link', { name: 'Qadam' }),
+    page.locator('.app-shell__topbar').getByRole('link', { name: 'QadamAI' }),
   ).toHaveAttribute('href', '/ru/practitioner')
   await expect(page.getByRole('button', { name: 'Выйти' })).toBeVisible()
   await page.getByRole('button', { name: /Серик Айша/ }).click()

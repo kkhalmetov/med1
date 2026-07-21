@@ -34,7 +34,7 @@ export function PractitionerDashboard() {
     <div className="dashboard-page">
       <header className="page-heading">
         <div>
-          <p className="eyebrow">Qadam</p>
+          <p className="eyebrow">QadamAI</p>
           <h1>{t('dashboard.practitionerTitle')}</h1>
         </div>
       </header>

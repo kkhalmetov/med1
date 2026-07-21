@@ -1,4 +1,4 @@
-# Qadam security review
+# QadamAI security review
 
 Дата: 2026-07-21
 Вердикт: **PASS — high/critical findings отсутствуют**

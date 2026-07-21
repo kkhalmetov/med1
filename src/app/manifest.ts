@@ -2,9 +2,9 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Qadam — каждый шаг под контролем',
-    short_name: 'Qadam',
-    description: 'Цифровое сопровождение после выдачи протеза или ортеза',
+    name: 'QadamAI — каждый шаг под контролем',
+    short_name: 'QadamAI',
+    description: 'Цифровое сопровождение и ИИ-обзор после выдачи ТСР',
     start_url: '/ru',
     display: 'standalone',
     background_color: '#f4f7f4',

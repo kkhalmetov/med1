@@ -179,6 +179,20 @@ Admin registries and exports
 - [x] Новая операция учтена в полном OpenAPI coverage без необоснованных допущений о контракте.
 - [x] GitHub `main` и Vercel production содержат verified release.
 
+### Фаза 10 — QadamAI и публичное объяснение ИИ
+
+- [x] T54 Зафиксировать спецификацию ребрендинга и границы AI-коммуникации
+- [x] T55 Добавить регрессионные тесты бренда и двуязычного AI-блока
+- [x] T56 Обновить видимый бренд, metadata, manifest и лендинг RU/KK
+- [ ] T57 Выполнить responsive-проверку, review, push и Vercel production deployment
+
+### Checkpoint J
+
+- [x] Все пользовательские поверхности используют точное имя `QadamAI`.
+- [x] Главная RU/KK объясняет источники и назначение AI-выжимки без медицинских обещаний.
+- [x] Новый раздел доступен и не создаёт горизонтальный overflow на 320–1440 px.
+- [ ] GitHub `main` и Vercel production содержат verified release.
+
 ## Verification strategy
 
 - After every task: focused unit/component/integration test plus typecheck for touched area.

@@ -17,7 +17,7 @@ export default async function LoginPage() {
           <span className="auth-path auth-path--one">1</span>
           <span className="auth-path auth-path--two">2</span>
           <span className="auth-path auth-path--three">3</span>
-          <p>Qadam</p>
+          <p>QadamAI</p>
         </div>
         <div>
           <LoginForm />

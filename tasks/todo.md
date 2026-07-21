@@ -865,3 +865,45 @@
 - [x] Синтетический practitioner live smoke вернул `200 application/json` и ожидаемую форму.
 - [x] `pnpm verify`, role E2E, API drift check, review и secret scan зелёные.
 - [x] GitHub `main` и Vercel production содержат проверенный commit.
+
+## T54 — QadamAI brand specification
+
+**Status:** ✅ Completed
+
+**Description:** Зафиксировать границы переименования и честное описание уже подключённого AI-обзора.
+
+**Acceptance criteria:**
+- [x] Определены пользовательские и технические поверхности бренда.
+- [x] Зафиксированы фактические источники выжимки и медицинские границы коммуникации.
+
+## T55 — Brand and AI landing regression tests
+
+**Status:** ✅ Completed
+
+**Description:** До реализации зафиксировать ожидания для RU/KK, metadata, accessible names и responsive.
+
+**Acceptance criteria:**
+- [x] Тесты падают на старом имени и отсутствующем AI-разделе.
+- [x] Проверки охватывают desktop и 320 px без горизонтального overflow.
+
+## T56 — QadamAI UI and localized AI section
+
+**Status:** ✅ Completed
+
+**Description:** Обновить пользовательский бренд и добавить отдельный AI-раздел в существующей визуальной системе.
+
+**Acceptance criteria:**
+- [x] Metadata, manifest, лого, вход, кабинеты и футер показывают `QadamAI`.
+- [x] RU/KK-раздел объясняет сбор контекста, выжимку и роль специалиста.
+- [x] Не изменены URL, backend-контракт и внутренние ключи.
+
+## T57 — QadamAI verification and release
+
+**Status:** 🟡 In progress
+
+**Description:** Проверить изменение, провести review и выпустить на GitHub/Vercel.
+
+**Acceptance criteria:**
+- [ ] `pnpm verify`, build, Playwright и visual QA зелёные.
+- [ ] Secret scan и code review не содержат блокирующих замечаний.
+- [ ] GitHub `main` и Vercel production содержат проверенный commit.

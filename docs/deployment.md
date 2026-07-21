@@ -1,4 +1,4 @@
-# Qadam: deployment и rollback runbook
+# QadamAI: deployment и rollback runbook
 
 ## Цель
 
@@ -88,7 +88,7 @@ Backend outage должен возвращать контролируемый `5
 4. Если дефект в коде — сделать обычный `git revert <commit>`, прогнать release gate и push; не переписывать историю `main`.
 5. Зафиксировать причину и последующее исправление в changelog/review.
 
-Rollback не требует миграции данных: Qadam frontend не владеет базой данных и не выполняет schema migrations.
+Rollback не требует миграции данных: QadamAI frontend не владеет базой данных и не выполняет schema migrations.
 
 ## Управление конфигурацией
 

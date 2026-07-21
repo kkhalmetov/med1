@@ -60,7 +60,7 @@ export function LoginForm() {
         <LockKeyhole size={25} />
       </div>
       <div>
-        <p className="eyebrow">Qadam</p>
+        <p className="eyebrow">QadamAI</p>
         <h1>{t('title')}</h1>
         <p className="login-form__subtitle">{t('subtitle')}</p>
       </div>

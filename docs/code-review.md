@@ -1,4 +1,4 @@
-# Qadam multi-axis code review
+# QadamAI multi-axis code review
 
 Дата: 2026-07-21
 Объём: frontend, BFF/auth, OpenAPI contract, PWA, tests и release configuration.
@@ -60,3 +60,13 @@
 - **Performance:** один запрос выполняется при открытии контекста пациента, повторная генерация запускается только явным действием; live latency составила менее 2 секунд.
 - **Verification:** `pnpm verify` — 82/82 tests и production build; fixture Playwright — 43 passed, 4 expected skipped; live `PRACTITIONER` и `ADMIN` — `200 application/json` с полями `statusColor,review`.
 - **Verdict:** APPROVE. Critical/required findings отсутствуют после добавления runtime-валидации и точечного security override.
+
+## QadamAI brand release review
+
+- **Correctness:** видимый бренд, metadata, manifest, SVG title, вход, ролевые кабинеты и футер согласованно используют `QadamAI`; внутренние URL, cookie и API identifiers не изменены.
+- **Readability/architecture:** AI-коммуникация локализована в `landing`, UI использует существующие tokens и Lucide icons; новые зависимости и runtime-запросы не добавлены.
+- **Security:** публичный текст описывает только фактические источники backend-выжимки, не выводит недоверенные данные и явно исключает диагноз и автоматическое клиническое решение.
+- **Performance:** раздел серверный и статический, не добавляет JavaScript state, сетевых запросов или raster assets; responsive layout проверен на 320–1440 px.
+- **Accessibility:** один именованный `section`, последовательный `ol`, декоративные иконки скрыты от accessibility tree; axe не выявил serious/critical нарушений.
+- **Verification:** RED/GREEN Playwright для RU/KK; `pnpm verify` — 82/82; production Playwright — 45 passed и 4 expected skipped; desktop/mobile screenshots проверены визуально; `pnpm audit --audit-level high` — 0 findings.
+- **Verdict:** APPROVE. Critical/required findings отсутствуют.

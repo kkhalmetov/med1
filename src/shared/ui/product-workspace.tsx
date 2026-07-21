@@ -15,7 +15,7 @@ import {
 import { Button } from './button'
 
 export function ProductPage({
-  eyebrow = 'Qadam',
+  eyebrow = 'QadamAI',
   title,
   description,
   actions,
