@@ -144,6 +144,33 @@ test('patient status history distinguishes a backend outage from empty history',
   await expect(page.getByText('Не удалось выполнить действие. Попробуйте ещё раз.')).toHaveCount(0)
 })
 
+test('practitioner sees the status timeline returned by the recovered backend', async ({
+  page,
+}) => {
+  await page.route('**/api/backend/patients/p1/status-history', (route) =>
+    route.fulfill({
+      json: [
+        {
+          id: 'history-1',
+          patientId: 'p1',
+          status: 'YELLOW',
+          changedByPractitionerId: 'practitioner-1',
+          changedByFullName: 'Тестовый Специалист',
+          changedAt: '2026-07-21T06:00:00.000000',
+          comment: 'Статус обновлён',
+        },
+      ],
+    }),
+  )
+  await page.goto('/ru/practitioner/patients')
+  await page.getByRole('button', { name: /Серик Айша/ }).click()
+
+  const history = page.getByRole('heading', { name: 'История статусов' }).locator('..')
+  await expect(history.getByText('Тестовый Специалист')).toBeVisible()
+  await expect(history.getByText(/Статус обновлён/)).toBeVisible()
+  await expect(page.getByText('История статусов временно недоступна.')).toHaveCount(0)
+})
+
 test('practitioner photo attachment uses the Qadam file picker', async ({ page }) => {
   await page.goto('/ru/practitioner/patients')
   await page.getByRole('button', { name: 'Зарегистрировать пациента' }).click()
