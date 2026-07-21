@@ -92,3 +92,4 @@
 - **Verification:** RED/GREEN deployment-config test; `pnpm verify` — 83/83 tests и production build; production-mode Playwright — 47 passed и 4 expected skipped; `pnpm audit --audit-level high` — 0 findings.
 - **Rollback:** до подтверждения production login предыдущая вершина — `1960001`; при ошибке регион возвращается обычным `git revert`, без миграции данных.
 - **Verdict:** APPROVE для production rollout. Critical/required findings отсутствуют.
+- **Production:** Vercel status `success` для `f373b4e`; все три login-flow вернули `200`, создали HttpOnly session cookies и открыли соответствующие кабинеты за 0,46–1,09 секунды. Live Playwright — 3/3 passed, новые production error logs отсутствуют.

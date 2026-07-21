@@ -211,13 +211,13 @@ Admin registries and exports
 
 - [x] T62 Воспроизвести вход всеми ролями и локализовать timeout между Vercel и backend
 - [x] T63 Проверить альтернативную compute-region на preview и закрепить конфигурацию тестом
-- [ ] T64 Выполнить полный regression suite, review, push и production live smoke
+- [x] T64 Выполнить полный regression suite, review, push и production live smoke
 
 ### Checkpoint L
 
 - [x] Backend напрямую принимает все три синтетических аккаунта и возвращает корректные роли.
 - [x] Preview в `arn1` успешно выполняет login для `PATIENT`, `PRACTITIONER` и `ADMIN`.
-- [ ] GitHub `main` и Vercel production содержат verified login recovery.
+- [x] GitHub `main` и Vercel production содержат verified login recovery.
 
 ## Verification strategy
 
