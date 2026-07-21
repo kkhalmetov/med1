@@ -13,7 +13,7 @@ describe('PWA cache policy', () => {
 
   it.each([
     ['/_next/static/chunks/app-abc.js', 'script'],
-    ['/icons/qadam.svg', 'image'],
+    ['/icons/qadamm-q.svg', 'image'],
   ])('caches immutable application asset %s', (pathname, destination) => {
     expect(getPwaCacheDisposition(pathname, destination)).toBe('cache-first')
   })

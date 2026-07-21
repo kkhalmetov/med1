@@ -1,4 +1,4 @@
-import { Activity, ArrowRight, HeartHandshake, MessageCircleMore, ShieldCheck } from 'lucide-react'
+import { Activity, ArrowRight, HeartHandshake, MessageCircleMore } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { Brand } from '@/shared/ui/brand'
@@ -31,10 +31,6 @@ export default async function LocaleHomePage() {
             <a className="button button--ghost" href="#how-it-works">
               {t('howItWorks')}
             </a>
-          </div>
-          <div className="hero__assurance">
-            <ShieldCheck aria-hidden="true" size={19} />
-            <span>{t('slogan')}</span>
           </div>
         </div>
 

@@ -1,5 +1,5 @@
-const CACHE_NAME = 'qadam-static-v1'
-const PRECACHE = ['/icons/qadam.svg', '/icons/qadam-maskable.svg']
+const CACHE_NAME = 'qadam-static-v2'
+const PRECACHE = ['/icons/qadamm-q.svg', '/icons/qadamm-q-maskable.svg']
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE)))

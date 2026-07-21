@@ -11,6 +11,8 @@ test('opens the localized Qadam shell', async ({ page }) => {
   await expect(signIn).toBeVisible()
   await expect(signIn).toHaveCSS('text-decoration-line', 'none')
   await expect(howItWorks).toHaveCSS('text-decoration-line', 'none')
+  await expect(page.locator('.hero__assurance')).toHaveCount(0)
+  await expect(page.locator('.brand img').first()).toHaveAttribute('src', /\/icons\/qadamm-q\.svg/)
   const footerLogo = page.locator('footer').getByRole('link', { name: 'Qadam' })
   await expect(footerLogo).toHaveAttribute('href', /#top$/)
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))

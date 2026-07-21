@@ -12,8 +12,8 @@ export const metadata: Metadata = {
   applicationName: 'Qadam',
   manifest: '/manifest.webmanifest',
   icons: {
-    icon: '/icons/qadam.svg',
-    apple: '/icons/qadam.svg',
+    icon: '/icons/qadamm-q.svg',
+    apple: '/icons/qadamm-q.svg',
   },
 }
 

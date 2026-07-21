@@ -6,7 +6,7 @@ export function Brand({ compact = false, href = '/' }: { compact?: boolean; href
   const t = useTranslations('brand')
   const content = (
     <>
-      <Image alt="" height={42} priority src="/icons/qadam.svg" width={42} />
+      <Image alt="" height={42} priority src="/icons/qadamm-q.svg" width={42} />
       <span>
         <strong>Qadam</strong>
         {compact ? null : <small>{t('slogan')}</small>}

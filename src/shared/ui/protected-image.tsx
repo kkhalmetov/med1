@@ -10,7 +10,7 @@ export interface ProtectedImageProps extends Omit<ImageProps, 'src' | 'onError'>
 
 export function ProtectedImage({
   src,
-  fallbackSrc = '/icons/qadam.svg',
+  fallbackSrc = '/icons/qadamm-q.svg',
   alt,
   ...props
 }: ProtectedImageProps) {

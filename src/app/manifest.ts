@@ -12,13 +12,13 @@ export default function manifest(): MetadataRoute.Manifest {
     lang: 'ru',
     icons: [
       {
-        src: '/icons/qadam.svg',
+        src: '/icons/qadamm-q.svg',
         sizes: 'any',
         type: 'image/svg+xml',
         purpose: 'any',
       },
       {
-        src: '/icons/qadam-maskable.svg',
+        src: '/icons/qadamm-q-maskable.svg',
         sizes: 'any',
         type: 'image/svg+xml',
         purpose: 'maskable',
