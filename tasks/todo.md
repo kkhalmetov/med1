@@ -910,7 +910,7 @@
 
 ## T58–T61 — Mobile chat UX
 
-**Status:** 🟡 In progress
+**Status:** ✅ Completed
 
 **Description:** Перестроить чат пациента и специалиста под телефон без изменения backend-контракта.
 
@@ -919,4 +919,4 @@
 - [x] RED-тесты фиксируют доступный журнал, автопрокрутку, видимый composer и focus выбранного пациента.
 - [x] Поле и прикрепление фото компактны, нижняя навигация ничего не перекрывает.
 - [x] У специалиста есть явный возврат от диалога к списку пациентов.
-- [ ] RU/KK, visual QA, full verify/E2E, review и production smoke зелёные.
+- [x] RU/KK, visual QA, full verify/E2E, review и production smoke зелёные.

@@ -81,3 +81,4 @@
 - **Accessibility/responsive:** журнал имеет `role="log"`, локализованное имя и live-region; скрытые mobile labels остаются доступны assistive technology, а элементы управления проходят проверку на 320 px.
 - **Verification:** `pnpm verify` — 82/82 tests и production build; production-mode Playwright — 47 passed и 4 expected skipped; RU/KK и patient/practitioner screenshots на 320 px проверены визуально; `pnpm audit --audit-level high` — 0 findings.
 - **Verdict:** APPROVE. Critical/required findings отсутствуют.
+- **Production:** Vercel status `success` для `9413316`; публичный remote smoke RU/KK desktop/mobile — 13 passed и 1 expected skipped. Четыре fixture-auth сценария намеренно не используются как remote gate, поскольку их локальные session cookies не принадлежат домену Vercel.

@@ -198,14 +198,14 @@ Admin registries and exports
 - [x] T58 Воспроизвести проблемы чата пациента и специалиста на телефоне
 - [x] T59 Зафиксировать mobile UX и RED-регрессионные тесты
 - [x] T60 Реализовать компактный журнал, composer и выбранный диалог специалиста
-- [ ] T61 Выполнить responsive/a11y review, push и Vercel production deployment
+- [x] T61 Выполнить responsive/a11y review, push и Vercel production deployment
 
 ### Checkpoint K
 
 - [x] Composer пациента и специалиста не перекрывается нижней навигацией.
 - [x] Чат открывается на последних сообщениях и показывает дату со временем.
 - [x] Специалист переключается между списком пациентов и одним выбранным диалогом.
-- [ ] GitHub `main` и Vercel production содержат verified release.
+- [x] GitHub `main` и Vercel production содержат verified release.
 
 ## Verification strategy
 
