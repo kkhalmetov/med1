@@ -2,6 +2,7 @@
 
 import { Activity, MessageCircle, PackageOpen, UserRound } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { isSameLocalDay } from '@/features/reports/report-day'
 import type { components } from '@/shared/api/schema'
 import { useApiQuery } from '@/shared/api/use-api-query'
 import { Link } from '@/i18n/navigation'
@@ -30,6 +31,7 @@ export function PatientDashboard() {
   const reports = useApiQuery<Report[]>(['reports', 'my'], '/reports/my')
   const unread = useApiQuery<Message[]>(['chat', 'unread', 'patient'], '/chat/messages/unread')
   const status = patient.data?.status ?? 'GREEN'
+  const submittedToday = reports.data?.some((report) => isSameLocalDay(report.submittedAt)) ?? false
 
   return (
     <div className="dashboard-page">
@@ -50,10 +52,14 @@ export function PatientDashboard() {
         </div>
       ) : null}
       <section className="dashboard-grid dashboard-grid--patient">
-        <Card className="dashboard-action" eyebrow={t('common.today')} title={t('reports.new')}>
-          <p>{t('landing.stepOne')}</p>
+        <Card
+          className="dashboard-action"
+          eyebrow={t('common.today')}
+          title={submittedToday ? t('reports.todaySubmitted') : t('reports.new')}
+        >
+          <p>{submittedToday ? t('reports.nextTomorrow') : t('landing.stepOne')}</p>
           <Link className="button button--primary" href="/patient/reports">
-            {t('reports.new')} →
+            {submittedToday ? t('reports.viewHistory') : t('reports.new')} →
           </Link>
         </Card>
         <Card title={t('devices.title')}>

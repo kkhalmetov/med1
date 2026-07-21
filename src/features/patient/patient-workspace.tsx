@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { useState, type FormEvent } from 'react'
 import { PasswordForm } from '@/features/auth/password-form'
 import { useSafePolling } from '@/features/chat/polling'
+import { isSameLocalDay } from '@/features/reports/report-day'
 import { apiRequest } from '@/shared/api/client'
 import type { components } from '@/shared/api/schema'
 import { useApiQuery } from '@/shared/api/use-api-query'
@@ -58,7 +59,13 @@ function sharedLabels(t: ReturnType<typeof useTranslations>) {
   }
 }
 
-function ReportForm({ dispenses, onCreated }: { dispenses: Dispense[]; onCreated: () => void }) {
+function ReportForm({
+  dispenses,
+  onCreated,
+}: {
+  dispenses: Dispense[]
+  onCreated: (report: Report) => void
+}) {
   const t = useTranslations()
   const action = useActionState()
 
@@ -66,9 +73,10 @@ function ReportForm({ dispenses, onCreated }: { dispenses: Dispense[]; onCreated
     event.preventDefault()
     const target = event.currentTarget
     const data = new FormData(target)
+    let created: Report | undefined
     const ok = await action.run(
       async () => {
-        await apiRequest('/reports', {
+        created = await apiRequest<Report>('/reports', {
           method: 'POST',
           body: {
             deviceId: formValue(data, 'deviceId'),
@@ -83,9 +91,9 @@ function ReportForm({ dispenses, onCreated }: { dispenses: Dispense[]; onCreated
       t('product.reportSent'),
       t('errors.badRequest'),
     )
-    if (ok) {
+    if (ok && created) {
       target.reset()
-      onCreated()
+      onCreated(created)
     }
   }
 
@@ -146,6 +154,7 @@ function PatientReports() {
   const t = useTranslations()
   const locale = useLocale()
   const labels = sharedLabels(t)
+  const queryClient = useQueryClient()
   const [formOpen, setFormOpen] = useState(false)
   const reports = useApiQuery<Report[]>(['patient', 'reports'], '/reports/my')
   const dispenses = useApiQuery<Dispense[]>(
@@ -155,25 +164,47 @@ function PatientReports() {
       query: { only_observable: true },
     },
   )
+  const submittedToday = reports.data?.some((report) => isSameLocalDay(report.submittedAt)) ?? false
+
+  function handleCreated(report: Report) {
+    const optimisticReport = report.submittedAt
+      ? report
+      : { ...report, submittedAt: new Date().toISOString() }
+    queryClient.setQueryData<Report[]>(['patient', 'reports'], (current = []) => [
+      optimisticReport,
+      ...current,
+    ])
+    queryClient.setQueryData<Report[]>(['reports', 'my'], (current = []) => [
+      optimisticReport,
+      ...current,
+    ])
+    setFormOpen(false)
+    void reports.refetch()
+  }
 
   return (
     <ProductPage
       title={t('reports.title')}
       description={t('product.reportsDescription')}
       actions={
-        <Button onClick={() => setFormOpen(true)}>
-          <Plus aria-hidden="true" size={18} /> {t('reports.new')}
-        </Button>
+        reports.isLoading || reports.isError ? null : submittedToday ? (
+          <StatusBadge tone="success">{t('reports.todaySubmitted')}</StatusBadge>
+        ) : (
+          <Button onClick={() => setFormOpen(true)}>
+            <Plus aria-hidden="true" size={18} /> {t('reports.new')}
+          </Button>
+        )
       }
     >
       <ActionPanel
-        open={formOpen}
+        open={formOpen && !submittedToday && !reports.isError}
         title={t('reports.new')}
         closeLabel={t('common.close')}
         onClose={() => setFormOpen(false)}
       >
-        <ReportForm dispenses={dispenses.data ?? []} onCreated={() => reports.refetch()} />
+        <ReportForm dispenses={dispenses.data ?? []} onCreated={handleCreated} />
       </ActionPanel>
+      {submittedToday ? <ActionMessage message={t('reports.nextTomorrow')} /> : null}
       <ProductPanel title={t('reports.history')} description={t('product.reportsHistoryHint')}>
         <AsyncNotice
           loading={reports.isLoading}
