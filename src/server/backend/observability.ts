@@ -6,8 +6,8 @@ function errorField(error: unknown, field: 'code' | 'name') {
   return typeof value === 'string' ? value : undefined
 }
 
-export function backendRequestSignal() {
-  return AbortSignal.timeout(BACKEND_TIMEOUT_MS)
+export function backendRequestSignal(timeoutMs = BACKEND_TIMEOUT_MS) {
+  return AbortSignal.timeout(timeoutMs)
 }
 
 export function logBackendRequestFailure(

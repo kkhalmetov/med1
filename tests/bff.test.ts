@@ -62,6 +62,22 @@ describe('backend operation policy', () => {
 })
 
 describe('backend proxy', () => {
+  it('allows the AI short review its documented long-running timeout', async () => {
+    const timeoutSpy = vi.spyOn(AbortSignal, 'timeout')
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ review: 'Stable' })))
+
+    const response = await proxyBackendRequest(
+      new Request(
+        'http://qadam.test/api/backend/patients/00000000-0000-4000-8000-000000000001/short-review',
+      ),
+      '/patients/00000000-0000-4000-8000-000000000001/short-review',
+      createSession({ qadam_access: 'access' }),
+    )
+
+    expect(response.status).toBe(200)
+    expect(timeoutSpy).toHaveBeenCalledWith(60_000)
+  })
+
   it('forwards an empty streamed body as a bodyless Swagger mutation', async () => {
     const fetchMock = vi.fn().mockResolvedValue(Response.json({ checkedAt: '2026-07-21' }))
     vi.stubGlobal('fetch', fetchMock)

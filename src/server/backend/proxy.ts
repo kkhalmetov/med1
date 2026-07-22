@@ -18,6 +18,9 @@ const PRIVATE_AUTH_OPERATIONS = new Set([
   'logout',
   'updatePassword',
 ])
+const OPERATION_TIMEOUTS_MS: Readonly<Partial<Record<string, number>>> = {
+  shortReview: 60_000,
+}
 
 function backendBaseUrl() {
   const value = process.env.BACKEND_API_BASE_URL ?? DEFAULT_BACKEND_BASE_URL
@@ -112,7 +115,7 @@ async function performBackendRequest(
       ...(rawBody === undefined ? {} : { body: rawBody }),
       cache: 'no-store',
       redirect: 'manual',
-      signal: backendRequestSignal(),
+      signal: backendRequestSignal(OPERATION_TIMEOUTS_MS[operation.operationId]),
     })
   }
 
