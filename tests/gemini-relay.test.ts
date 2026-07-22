@@ -81,6 +81,7 @@ describe('Gemini server relay', () => {
       candidates: [{ content: { parts: [{ text: 'Stable follow-up.' }] } }],
     }
     const fetchMock = vi.fn().mockResolvedValue(Response.json(geminiResponse))
+    const timeoutSpy = vi.spyOn(AbortSignal, 'timeout')
     vi.stubGlobal('fetch', fetchMock)
 
     const response = await POST(relayRequest(validPayload, 'relay-secret'))
@@ -99,6 +100,7 @@ describe('Gemini server relay', () => {
         body: JSON.stringify(validPayload),
       }),
     )
+    expect(timeoutSpy).toHaveBeenCalledWith(90_000)
     expect(JSON.stringify(responseBody)).not.toContain('server-api-key')
   })
 

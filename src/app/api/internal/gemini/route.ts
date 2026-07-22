@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'
 const GEMINI_URL =
   'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent'
 const MAX_BODY_BYTES = 256 * 1024
-const UPSTREAM_TIMEOUT_MS = 60_000
+const UPSTREAM_TIMEOUT_MS = 90_000
 
 const geminiRequestSchema = z
   .object({

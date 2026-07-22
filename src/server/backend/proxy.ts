@@ -19,7 +19,7 @@ const PRIVATE_AUTH_OPERATIONS = new Set([
   'updatePassword',
 ])
 const OPERATION_TIMEOUTS_MS: Readonly<Partial<Record<string, number>>> = {
-  shortReview: 60_000,
+  shortReview: 100_000,
 }
 
 function backendBaseUrl() {
