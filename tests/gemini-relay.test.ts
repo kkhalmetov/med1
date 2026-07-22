@@ -100,29 +100,43 @@ describe('Gemini server relay', () => {
         body: JSON.stringify(validPayload),
       }),
     )
-    expect(timeoutSpy).toHaveBeenCalledWith(90_000)
+    expect(timeoutSpy).toHaveBeenCalledWith(30_000)
     expect(JSON.stringify(responseBody)).not.toContain('server-api-key')
   })
 
-  it('converts Gemini and network failures to safe responses', async () => {
+  it('retries one transient Gemini network failure', async () => {
     process.env.GEMINI_API_KEY = 'server-api-key'
     process.env.GEMINI_RELAY_SECRET = 'relay-secret'
     const errorLog = vi.spyOn(console, 'error').mockImplementation(() => undefined)
     const fetchMock = vi
       .fn()
-      .mockResolvedValueOnce(
-        Response.json({ error: { message: 'sensitive detail' } }, { status: 429 }),
-      )
       .mockRejectedValueOnce(new TypeError('network failure'))
+      .mockResolvedValueOnce(
+        Response.json({ candidates: [{ content: { parts: [{ text: 'OK' }] } }] }),
+      )
     vi.stubGlobal('fetch', fetchMock)
 
-    const upstreamFailure = await POST(relayRequest(validPayload, 'relay-secret'))
-    const networkFailure = await POST(relayRequest(validPayload, 'relay-secret'))
+    const response = await POST(relayRequest(validPayload, 'relay-secret'))
 
-    expect(upstreamFailure.status).toBe(503)
-    await expect(upstreamFailure.json()).resolves.toEqual({ code: 'AI_UPSTREAM_UNAVAILABLE' })
-    expect(networkFailure.status).toBe(503)
-    await expect(networkFailure.json()).resolves.toEqual({ code: 'AI_UPSTREAM_UNAVAILABLE' })
+    expect(response.status).toBe(200)
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+    expect(errorLog).toHaveBeenCalledOnce()
+  })
+
+  it('converts a final Gemini failure to a safe response', async () => {
+    process.env.GEMINI_API_KEY = 'server-api-key'
+    process.env.GEMINI_RELAY_SECRET = 'relay-secret'
+    const errorLog = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(Response.json({ error: { message: 'sensitive detail' } }, { status: 503 }))
+    vi.stubGlobal('fetch', fetchMock)
+
+    const response = await POST(relayRequest(validPayload, 'relay-secret'))
+
+    expect(response.status).toBe(503)
+    await expect(response.json()).resolves.toEqual({ code: 'AI_UPSTREAM_UNAVAILABLE' })
+    expect(fetchMock).toHaveBeenCalledTimes(2)
     expect(errorLog).toHaveBeenCalledTimes(2)
   })
 })

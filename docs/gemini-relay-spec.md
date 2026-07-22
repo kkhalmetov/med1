@@ -11,7 +11,7 @@ Restore the existing patient short-review feature without exposing the Gemini AP
 - The endpoint accepts only the Gemini `generateContent` request shape currently produced by the Spring backend: `contents[].parts[].text`.
 - The relay always calls the fixed Gemini model `gemini-3.1-flash-lite`; callers cannot choose a model or upstream URL.
 - The Gemini API key is read only from the server-side `GEMINI_API_KEY` environment variable and is forwarded in the `x-goog-api-key` header.
-- Requests are limited to 256 KiB and upstream calls time out after 90 seconds. The frontend backend-proxy allows 100 seconds for this operation so it can receive the relay response.
+- Requests are limited to 256 KiB. Transient network failures, timeouts, `429`, and `5xx` responses are retried once; each Gemini attempt is limited to 30 seconds. The frontend backend-proxy allows 100 seconds for this operation so it can receive the final relay response.
 - Responses never include either server secret. Authentication, validation, configuration, timeout, network, and upstream failures return safe machine-readable errors.
 
 ## Acceptance criteria

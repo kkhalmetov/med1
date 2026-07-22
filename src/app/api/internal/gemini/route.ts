@@ -7,7 +7,9 @@ export const dynamic = 'force-dynamic'
 const GEMINI_URL =
   'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent'
 const MAX_BODY_BYTES = 256 * 1024
-const UPSTREAM_TIMEOUT_MS = 90_000
+const UPSTREAM_ATTEMPT_TIMEOUT_MS = 30_000
+const MAX_UPSTREAM_ATTEMPTS = 2
+const RETRY_DELAY_MS = 250
 
 const geminiRequestSchema = z
   .object({
@@ -63,6 +65,14 @@ function logRelayFailure(requestId: string, reason: string, upstreamStatus?: num
   )
 }
 
+function isRetryableStatus(status: number) {
+  return status === 429 || status >= 500
+}
+
+function retryDelay() {
+  return new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
+}
+
 export async function POST(request: Request) {
   const requestId = randomUUID()
   const apiKey = process.env.GEMINI_API_KEY
@@ -103,39 +113,52 @@ export async function POST(request: Request) {
     return jsonResponse({ code: 'INVALID_REQUEST' }, 400, requestId)
   }
 
-  try {
-    const upstreamResponse = await fetch(GEMINI_URL, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-goog-api-key': apiKey,
-      },
-      body: JSON.stringify(validatedBody.data),
-      cache: 'no-store',
-      signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
-    })
+  const upstreamBody = JSON.stringify(validatedBody.data)
+  for (let attempt = 1; attempt <= MAX_UPSTREAM_ATTEMPTS; attempt += 1) {
+    try {
+      const upstreamResponse = await fetch(GEMINI_URL, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-goog-api-key': apiKey,
+        },
+        body: upstreamBody,
+        cache: 'no-store',
+        signal: AbortSignal.timeout(UPSTREAM_ATTEMPT_TIMEOUT_MS),
+      })
 
-    if (!upstreamResponse.ok) {
+      if (upstreamResponse.ok) {
+        const responseBody = await upstreamResponse.text()
+        return new Response(responseBody, {
+          status: 200,
+          headers: {
+            'cache-control': 'no-store',
+            'content-type': 'application/json',
+            'x-request-id': requestId,
+          },
+        })
+      }
+
       logRelayFailure(requestId, 'upstream_response', upstreamResponse.status)
+      if (attempt < MAX_UPSTREAM_ATTEMPTS && isRetryableStatus(upstreamResponse.status)) {
+        await retryDelay()
+        continue
+      }
       return jsonResponse({ code: 'AI_UPSTREAM_UNAVAILABLE' }, 503, requestId)
+    } catch (error) {
+      const timedOut = error instanceof DOMException && error.name === 'TimeoutError'
+      logRelayFailure(requestId, timedOut ? 'upstream_timeout' : 'upstream_network')
+      if (attempt < MAX_UPSTREAM_ATTEMPTS) {
+        await retryDelay()
+        continue
+      }
+      return jsonResponse(
+        { code: timedOut ? 'AI_UPSTREAM_TIMEOUT' : 'AI_UPSTREAM_UNAVAILABLE' },
+        timedOut ? 504 : 503,
+        requestId,
+      )
     }
-
-    const responseBody = await upstreamResponse.text()
-    return new Response(responseBody, {
-      status: 200,
-      headers: {
-        'cache-control': 'no-store',
-        'content-type': 'application/json',
-        'x-request-id': requestId,
-      },
-    })
-  } catch (error) {
-    const timedOut = error instanceof DOMException && error.name === 'TimeoutError'
-    logRelayFailure(requestId, timedOut ? 'upstream_timeout' : 'upstream_network')
-    return jsonResponse(
-      { code: timedOut ? 'AI_UPSTREAM_TIMEOUT' : 'AI_UPSTREAM_UNAVAILABLE' },
-      timedOut ? 504 : 503,
-      requestId,
-    )
   }
+
+  return jsonResponse({ code: 'AI_UPSTREAM_UNAVAILABLE' }, 503, requestId)
 }
