@@ -1878,6 +1878,55 @@ button.entity-card[aria-pressed='true'] {
   border-radius: 12px;
 }
 
+@media (min-width: 761px) {
+  .chat-panel--combined {
+    height: clamp(440px, calc(100dvh - 280px), 720px);
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 14px;
+    overflow: hidden;
+  }
+  .chat-panel--combined .product-panel__header {
+    margin-bottom: 0;
+  }
+  .chat-panel--combined .message-list {
+    min-height: 0;
+    max-height: none;
+  }
+  .chat-panel--combined .chat-composer {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+  .chat-panel--combined .chat-composer__text {
+    grid-row: 1;
+    grid-column: 1 / -1;
+  }
+  .chat-panel--combined .chat-composer__text textarea {
+    min-height: 64px;
+    max-height: 96px;
+  }
+  .chat-panel--combined .chat-composer__file {
+    grid-row: 2;
+    grid-column: 1;
+  }
+  .chat-panel--combined .chat-composer__file .product-file-control {
+    min-height: 48px;
+  }
+  .chat-panel--combined .chat-composer > .form-alert,
+  .chat-panel--combined .chat-composer > .form-notice {
+    grid-column: 1 / -1;
+  }
+  .chat-panel--combined .chat-composer .product-form__actions {
+    width: auto;
+    grid-row: 2;
+    grid-column: 2;
+    align-self: end;
+  }
+  .chat-panel--combined .chat-composer .product-form__actions .button {
+    min-height: 48px;
+  }
+}
+
 @media (max-width: 900px) {
   .product-layout {
     grid-template-columns: 1fr;

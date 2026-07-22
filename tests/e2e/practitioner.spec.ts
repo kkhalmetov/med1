@@ -314,3 +314,41 @@ test('practitioner mobile chat focuses the selected conversation and can return 
   await expect(page.getByRole('heading', { name: 'Выберите пациента' })).toBeVisible()
   await expect(page.getByRole('log', { name: 'Переписка' })).toHaveCount(0)
 })
+
+test('practitioner desktop chat keeps the composer visible and scrolls the conversation', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 720 })
+  await page.route('**/api/backend/patients/p1/chat/messages', (route) =>
+    route.fulfill({
+      json: Array.from({ length: 30 }, (_, index) => ({
+        id: `practitioner-desktop-chat-${index + 1}`,
+        senderType: index % 2 ? 'PRACTITIONER' : 'PATIENT',
+        content: `Длинная переписка со специалистом ${index + 1}`,
+        sentAt: `2026-07-21T10:${String(index).padStart(2, '0')}:00.000000`,
+      })),
+    }),
+  )
+
+  await page.goto('/ru/practitioner/chat')
+  await page.getByRole('button', { name: /Серик Айша/ }).click()
+
+  const messageLog = page.getByRole('log', { name: 'Переписка' })
+  const composer = page.locator('.chat-composer')
+  await expect(messageLog).toBeVisible()
+  await expect(composer).toBeInViewport()
+  const metrics = await messageLog.evaluate((element) => {
+    const panel = element.closest('.chat-panel')?.getBoundingClientRect()
+    return {
+      clientHeight: element.clientHeight,
+      overflowY: getComputedStyle(element).overflowY,
+      panelBottom: panel?.bottom ?? Number.POSITIVE_INFINITY,
+      scrollHeight: element.scrollHeight,
+      viewportHeight: window.innerHeight,
+    }
+  })
+  expect(metrics.panelBottom).toBeLessThanOrEqual(metrics.viewportHeight)
+  expect(metrics.scrollHeight).toBeGreaterThan(metrics.clientHeight)
+  expect(metrics.overflowY).toBe('auto')
+  await page.screenshot({ path: 'test-results/qadam-desktop-practitioner-chat.png' })
+})
