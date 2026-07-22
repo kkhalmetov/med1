@@ -59,7 +59,7 @@ export function PatientShortReview({ patientId }: { patientId: string }) {
       parseShortPatientReview(
         await apiRequest<unknown>(`/patients/${patientId}/short-review`, {
           signal,
-          timeoutMs: 65_000,
+          timeoutMs: 45_000,
         }),
       ),
     retry: false,

@@ -90,17 +90,20 @@ describe('Gemini server relay', () => {
     const responseBody = await response.json()
     expect(responseBody).toEqual(geminiResponse)
     expect(fetchMock).toHaveBeenCalledWith(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent',
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent',
       expect.objectContaining({
         method: 'POST',
         headers: expect.objectContaining({
           'content-type': 'application/json',
           'x-goog-api-key': 'server-api-key',
         }),
-        body: JSON.stringify(validPayload),
+        body: JSON.stringify({
+          ...validPayload,
+          generationConfig: { maxOutputTokens: 1024 },
+        }),
       }),
     )
-    expect(timeoutSpy).toHaveBeenCalledWith(30_000)
+    expect(timeoutSpy).toHaveBeenCalledWith(15_000)
     expect(JSON.stringify(responseBody)).not.toContain('server-api-key')
   })
 
@@ -120,7 +123,34 @@ describe('Gemini server relay', () => {
 
     expect(response.status).toBe(200)
     expect(fetchMock).toHaveBeenCalledTimes(2)
+    expect(fetchMock.mock.calls.map((call) => call[0])).toEqual([
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent',
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent',
+    ])
     expect(errorLog).toHaveBeenCalledOnce()
+  })
+
+  it('falls back to the established Flash-Lite model when the primary model rejects a request', async () => {
+    process.env.GEMINI_API_KEY = 'server-api-key'
+    process.env.GEMINI_RELAY_SECRET = 'relay-secret'
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        Response.json({ error: { message: 'not available' } }, { status: 404 }),
+      )
+      .mockResolvedValueOnce(
+        Response.json({ candidates: [{ content: { parts: [{ text: 'Fallback OK' }] } }] }),
+      )
+    vi.stubGlobal('fetch', fetchMock)
+
+    const response = await POST(relayRequest(validPayload, 'relay-secret'))
+
+    expect(response.status).toBe(200)
+    expect(fetchMock.mock.calls.map((call) => call[0])).toEqual([
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent',
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent',
+    ])
   })
 
   it('converts a final Gemini failure to a safe response', async () => {

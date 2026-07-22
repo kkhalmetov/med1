@@ -4,11 +4,11 @@ import { z } from 'zod'
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-const GEMINI_URL =
-  'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent'
+const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models'
+const GEMINI_MODELS = ['gemini-3.5-flash-lite', 'gemini-2.5-flash-lite'] as const
 const MAX_BODY_BYTES = 256 * 1024
-const UPSTREAM_ATTEMPT_TIMEOUT_MS = 30_000
-const MAX_UPSTREAM_ATTEMPTS = 2
+const UPSTREAM_ATTEMPT_TIMEOUT_MS = 15_000
+const MAX_OUTPUT_TOKENS = 1024
 const RETRY_DELAY_MS = 250
 
 const geminiRequestSchema = z
@@ -65,10 +65,6 @@ function logRelayFailure(requestId: string, reason: string, upstreamStatus?: num
   )
 }
 
-function isRetryableStatus(status: number) {
-  return status === 429 || status >= 500
-}
-
 function retryDelay() {
   return new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
 }
@@ -113,10 +109,15 @@ export async function POST(request: Request) {
     return jsonResponse({ code: 'INVALID_REQUEST' }, 400, requestId)
   }
 
-  const upstreamBody = JSON.stringify(validatedBody.data)
-  for (let attempt = 1; attempt <= MAX_UPSTREAM_ATTEMPTS; attempt += 1) {
+  const upstreamBody = JSON.stringify({
+    ...validatedBody.data,
+    generationConfig: { maxOutputTokens: MAX_OUTPUT_TOKENS },
+  })
+  for (const [modelIndex, model] of GEMINI_MODELS.entries()) {
+    const hasFallback = modelIndex < GEMINI_MODELS.length - 1
+    const upstreamUrl = `${GEMINI_BASE_URL}/${model}:generateContent`
     try {
-      const upstreamResponse = await fetch(GEMINI_URL, {
+      const upstreamResponse = await fetch(upstreamUrl, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
@@ -140,7 +141,7 @@ export async function POST(request: Request) {
       }
 
       logRelayFailure(requestId, 'upstream_response', upstreamResponse.status)
-      if (attempt < MAX_UPSTREAM_ATTEMPTS && isRetryableStatus(upstreamResponse.status)) {
+      if (hasFallback) {
         await retryDelay()
         continue
       }
@@ -148,7 +149,7 @@ export async function POST(request: Request) {
     } catch (error) {
       const timedOut = error instanceof DOMException && error.name === 'TimeoutError'
       logRelayFailure(requestId, timedOut ? 'upstream_timeout' : 'upstream_network')
-      if (attempt < MAX_UPSTREAM_ATTEMPTS) {
+      if (hasFallback) {
         await retryDelay()
         continue
       }

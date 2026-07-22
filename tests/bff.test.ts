@@ -75,7 +75,7 @@ describe('backend proxy', () => {
     )
 
     expect(response.status).toBe(200)
-    expect(timeoutSpy).toHaveBeenCalledWith(100_000)
+    expect(timeoutSpy).toHaveBeenCalledWith(40_000)
   })
 
   it('forwards an empty streamed body as a bodyless Swagger mutation', async () => {
